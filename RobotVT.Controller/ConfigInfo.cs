@@ -22,9 +22,7 @@ namespace RobotVT.Controller
         /// 报告保存主目录
         /// </summary>
         public string ReportHomePath { get; set; }
-
-        //public SystemEnum.ApplicatinType ApplicatinType { get; set; }
-
+        
         /// <summary>
         /// 创建出厂编号
         /// </summary>

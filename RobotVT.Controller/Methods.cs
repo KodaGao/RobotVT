@@ -146,5 +146,11 @@ namespace RobotVT.Controller
                 throw new Exception("关闭数据库失败，错误信息：" + _Ex.Message);
             }
         }
+
+
+        public static string GetApplicationTitle()
+        {
+            return StaticInfo.AppPlatformTitle;
+        }
     }
 }

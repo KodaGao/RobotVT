@@ -43,27 +43,35 @@ namespace RobotVT
         public HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
         public HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
         public HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
-        //private PlayCtrl.DECCBFUN m_fDisplayFun = null;
+        private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
         public delegate void MyDebugInfo(string str);
         public VisualTracking()
         {
             InitializeComponent();
-
-            m_bInitSDK = HIK_NetSDK.NET_DVR_Init();
-            if (m_bInitSDK == false)
-            {
-                MessageBox.Show("NET_DVR_Init error!");
-                return;
-            }
-            else
-            {
-                //保存SDK日志 To save the SDK log
-                HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
-            }
-
+            Init();
+            //m_bInitSDK = HIK_NetSDK.NET_DVR_Init();
+            //if (m_bInitSDK == false)
+            //{
+            //    MessageBox.Show("NET_DVR_Init error!");
+            //    return;
+            //}
+            //else
+            //{
+            //    //保存SDK日志 To save the SDK log
+            //    HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
+            //}
         }
 
-        private void VisualTracking_Load(object sender, EventArgs e)
+
+        private void Init()
+        {
+            this.Text = RobotVT.Controller.Methods.GetApplicationTitle();
+            //this.Icon = Properties.Resources.R128X128;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.WindowState = FormWindowState.Normal;
+        }
+
+            private void VisualTracking_Load(object sender, EventArgs e)
         {
             RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
             RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
@@ -71,7 +79,6 @@ namespace RobotVT
             thread.IsBackground = true;
             thread.Start();
 
-            panel1.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_5;
 
             Event_SystemLoadFinish?.Invoke();
         }

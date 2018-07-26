@@ -8,8 +8,8 @@ namespace RobotVT.Controller
 {
     public class StaticInfo
     {
-        public static string ApplicationTitle = "地面站跟踪管理平台";
-        public static string AppPlatformTitle = ApplicationTitle + "（平台端）";
+        public static string ApplicationTitle = "地面站视觉跟踪管理";
+        public static string AppPlatformTitle = ApplicationTitle + "（终端）";
         public static string AppManageTitle = ApplicationTitle + "（管理端）";
         public static string SystemStartPath = System.Windows.Forms.Application.StartupPath + "\\";
         public static string LogFileHomePath = SystemStartPath + "\\SysLog\\";
