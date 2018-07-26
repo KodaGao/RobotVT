@@ -75,7 +75,7 @@ namespace RobotVT
             try
             {
                 Exception _Ex = (Exception)e.ExceptionObject;
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Exception, "未处理异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace, RobotVT.Controller.StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "未处理异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace RobotVT
         {
             try
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Exception, "未处理异常：" + e.Exception.Message + "\r\n" + e.Exception.StackTrace, RobotVT.Controller.StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "未处理异常：" + e.Exception.Message + "\r\n" + e.Exception.StackTrace);
             }
             catch (Exception ex)
             {

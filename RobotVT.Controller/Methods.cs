@@ -10,6 +10,22 @@ namespace RobotVT.Controller
     public class Methods
     {
         /// <summary>
+        /// 保存异常日志
+        /// </summary>
+        /// <param name="Info"></param>
+        public static void SaveExceptionLog(SK_FModel.SystemEnum.LogType LogType, string Info)
+        {
+            try
+            {
+                SK_FCommon.LogHelper.SaveLog(LogType, Info, StaticInfo.LogFileHomePath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("保存异常日志失败，错误信息：" + ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 初始化配置信息
         /// </summary>
         public static void InitConfig()
@@ -45,7 +61,7 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "初始化配置信息异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("初始化配置信息失败，错误信息：" + _Ex.Message);
             }
         }
@@ -62,7 +78,7 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "清楚系统资源异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("清除系统资源失败，错误信息：" + _Ex.Message);
             }
         }
@@ -85,7 +101,7 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "初始化临时资源异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("初始化临时资源失败，错误信息：" + _Ex.Message);
             }
         }
@@ -104,6 +120,9 @@ namespace RobotVT.Controller
         }
 
 
+        /// <summary>
+        /// 初始化Firebird数据库
+        /// </summary>
         public static void InitDB()
         {
             try
@@ -116,11 +135,14 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "初始化数据库异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("初始化数据库失败，错误信息：" + _Ex.Message);
             }
         }
-        
+
+        /// <summary>
+        /// 连接数据库
+        /// </summary>
         public static void DBOpen()
         {
             try
@@ -129,11 +151,14 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "打开数据库异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("打开数据库失败，错误信息：" + _Ex.Message);
             }
         }
 
+        /// <summary>
+        /// 断开数据库
+        /// </summary>
         public static void DBClose()
         {
             try
@@ -142,15 +167,20 @@ namespace RobotVT.Controller
             }
             catch (Exception _Ex)
             {
-                SK_FCommon.LogHelper.SaveLog(SK_FModel.SystemEnum.LogType.Error, "" + _Ex.Message + "\r\n" + _Ex.StackTrace, StaticInfo.LogFileHomePath);
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "关闭数据库异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
                 throw new Exception("关闭数据库失败，错误信息：" + _Ex.Message);
             }
         }
 
 
+        /// <summary>
+        /// 获取程序Title
+        /// </summary>
         public static string GetApplicationTitle()
         {
             return StaticInfo.AppPlatformTitle;
         }
+
+
     }
 }

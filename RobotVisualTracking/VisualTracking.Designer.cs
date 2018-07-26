@@ -53,6 +53,7 @@
             this.power1 = new System.Windows.Forms.Panel();
             this.power1_number = new System.Windows.Forms.Label();
             this.signal = new System.Windows.Forms.Panel();
+            this.RealPlayWnd = new System.Windows.Forms.PictureBox();
             this.centerMain.SuspendLayout();
             this.mainWindow.SuspendLayout();
             this.backCamera.SuspendLayout();
@@ -65,10 +66,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.frontPictureBox)).BeginInit();
             this.cloudCamera.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cloudPictureBox)).BeginInit();
+            this.mainCamera.SuspendLayout();
             this.topMain.SuspendLayout();
             this.robotPower.SuspendLayout();
             this.power2.SuspendLayout();
             this.power1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.SuspendLayout();
             // 
             // centerMain
@@ -84,12 +87,14 @@
             // 
             // mainWindow
             // 
+            this.mainWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.mainWindow.Controls.Add(this.backCamera);
             this.mainWindow.Controls.Add(this.leftCamera);
             this.mainWindow.Controls.Add(this.rightCamera);
             this.mainWindow.Controls.Add(this.frontCamera);
             this.mainWindow.Controls.Add(this.cloudCamera);
             this.mainWindow.Controls.Add(this.mainCamera);
+            this.mainWindow.ForeColor = System.Drawing.Color.Black;
             this.mainWindow.Location = new System.Drawing.Point(12, 3);
             this.mainWindow.Name = "mainWindow";
             this.mainWindow.Size = new System.Drawing.Size(1116, 789);
@@ -109,6 +114,8 @@
             // 
             // backPictureBox
             // 
+            this.backPictureBox.BackColor = System.Drawing.Color.White;
+            this.backPictureBox.ForeColor = System.Drawing.Color.Black;
             this.backPictureBox.Location = new System.Drawing.Point(19, 30);
             this.backPictureBox.Name = "backPictureBox";
             this.backPictureBox.Size = new System.Drawing.Size(323, 208);
@@ -117,9 +124,11 @@
             // 
             // leftCamera
             // 
+            this.leftCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.leftCamera.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("leftCamera.BackgroundImage")));
             this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.leftCamera.Controls.Add(this.rightPictureBox);
+            this.leftCamera.ForeColor = System.Drawing.Color.Black;
             this.leftCamera.Location = new System.Drawing.Point(379, 532);
             this.leftCamera.Name = "leftCamera";
             this.leftCamera.Size = new System.Drawing.Size(360, 254);
@@ -127,6 +136,8 @@
             // 
             // rightPictureBox
             // 
+            this.rightPictureBox.BackColor = System.Drawing.Color.White;
+            this.rightPictureBox.ForeColor = System.Drawing.Color.Black;
             this.rightPictureBox.Location = new System.Drawing.Point(20, 30);
             this.rightPictureBox.Name = "rightPictureBox";
             this.rightPictureBox.Size = new System.Drawing.Size(323, 208);
@@ -135,9 +146,11 @@
             // 
             // rightCamera
             // 
+            this.rightCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.rightCamera.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("rightCamera.BackgroundImage")));
             this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.rightCamera.Controls.Add(this.leftPictureBox);
+            this.rightCamera.ForeColor = System.Drawing.Color.Black;
             this.rightCamera.Location = new System.Drawing.Point(3, 532);
             this.rightCamera.Name = "rightCamera";
             this.rightCamera.Size = new System.Drawing.Size(360, 254);
@@ -145,6 +158,8 @@
             // 
             // leftPictureBox
             // 
+            this.leftPictureBox.BackColor = System.Drawing.Color.White;
+            this.leftPictureBox.ForeColor = System.Drawing.Color.Black;
             this.leftPictureBox.Location = new System.Drawing.Point(16, 30);
             this.leftPictureBox.Name = "leftPictureBox";
             this.leftPictureBox.Size = new System.Drawing.Size(323, 208);
@@ -153,9 +168,11 @@
             // 
             // frontCamera
             // 
+            this.frontCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.frontCamera.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("frontCamera.BackgroundImage")));
             this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.frontCamera.Controls.Add(this.frontPictureBox);
+            this.frontCamera.ForeColor = System.Drawing.Color.Black;
             this.frontCamera.Location = new System.Drawing.Point(756, 264);
             this.frontCamera.Name = "frontCamera";
             this.frontCamera.Size = new System.Drawing.Size(360, 254);
@@ -163,6 +180,8 @@
             // 
             // frontPictureBox
             // 
+            this.frontPictureBox.BackColor = System.Drawing.Color.White;
+            this.frontPictureBox.ForeColor = System.Drawing.Color.Black;
             this.frontPictureBox.Location = new System.Drawing.Point(19, 32);
             this.frontPictureBox.Name = "frontPictureBox";
             this.frontPictureBox.Size = new System.Drawing.Size(323, 208);
@@ -171,9 +190,11 @@
             // 
             // cloudCamera
             // 
+            this.cloudCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.cloudCamera.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("cloudCamera.BackgroundImage")));
             this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.cloudCamera.Controls.Add(this.cloudPictureBox);
+            this.cloudCamera.ForeColor = System.Drawing.Color.Black;
             this.cloudCamera.Location = new System.Drawing.Point(756, 0);
             this.cloudCamera.Name = "cloudCamera";
             this.cloudCamera.Size = new System.Drawing.Size(360, 254);
@@ -181,6 +202,8 @@
             // 
             // cloudPictureBox
             // 
+            this.cloudPictureBox.BackColor = System.Drawing.Color.White;
+            this.cloudPictureBox.ForeColor = System.Drawing.Color.Black;
             this.cloudPictureBox.Location = new System.Drawing.Point(19, 31);
             this.cloudPictureBox.Name = "cloudPictureBox";
             this.cloudPictureBox.Size = new System.Drawing.Size(323, 208);
@@ -189,8 +212,11 @@
             // 
             // mainCamera
             // 
+            this.mainCamera.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.mainCamera.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mainCamera.BackgroundImage")));
             this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.mainCamera.Controls.Add(this.RealPlayWnd);
+            this.mainCamera.ForeColor = System.Drawing.Color.Black;
             this.mainCamera.Location = new System.Drawing.Point(3, 0);
             this.mainCamera.Name = "mainCamera";
             this.mainCamera.Size = new System.Drawing.Size(739, 518);
@@ -199,6 +225,7 @@
             // topMain
             // 
             this.topMain.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.topMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(211)))), ((int)(((byte)(211)))));
             this.topMain.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("topMain.BackgroundImage")));
             this.topMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.topMain.Controls.Add(this.speed);
@@ -208,6 +235,7 @@
             this.topMain.Controls.Add(this.power2);
             this.topMain.Controls.Add(this.power1);
             this.topMain.Controls.Add(this.signal);
+            this.topMain.ForeColor = System.Drawing.Color.Black;
             this.topMain.Location = new System.Drawing.Point(2, 1);
             this.topMain.Name = "topMain";
             this.topMain.Size = new System.Drawing.Size(1140, 53);
@@ -218,7 +246,7 @@
             this.speed.AutoSize = true;
             this.speed.BackColor = System.Drawing.Color.Transparent;
             this.speed.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.speed.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.speed.ForeColor = System.Drawing.Color.Black;
             this.speed.Location = new System.Drawing.Point(950, 16);
             this.speed.Name = "speed";
             this.speed.Size = new System.Drawing.Size(69, 19);
@@ -230,7 +258,7 @@
             this.time.AutoSize = true;
             this.time.BackColor = System.Drawing.Color.Transparent;
             this.time.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.time.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.time.ForeColor = System.Drawing.Color.Black;
             this.time.Location = new System.Drawing.Point(271, 16);
             this.time.Name = "time";
             this.time.Size = new System.Drawing.Size(59, 19);
@@ -242,6 +270,7 @@
             this.lamp.BackColor = System.Drawing.Color.Transparent;
             this.lamp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("lamp.BackgroundImage")));
             this.lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.lamp.ForeColor = System.Drawing.Color.Black;
             this.lamp.Location = new System.Drawing.Point(1104, 9);
             this.lamp.Name = "lamp";
             this.lamp.Size = new System.Drawing.Size(36, 35);
@@ -253,6 +282,7 @@
             this.robotPower.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("robotPower.BackgroundImage")));
             this.robotPower.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.robotPower.Controls.Add(this.label2);
+            this.robotPower.ForeColor = System.Drawing.Color.Black;
             this.robotPower.Location = new System.Drawing.Point(787, 9);
             this.robotPower.Name = "robotPower";
             this.robotPower.Size = new System.Drawing.Size(63, 35);
@@ -263,7 +293,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.White;
             this.label2.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(25, 11);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 11);
@@ -276,6 +306,7 @@
             this.power2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("power2.BackgroundImage")));
             this.power2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.power2.Controls.Add(this.label1);
+            this.power2.ForeColor = System.Drawing.Color.Black;
             this.power2.Location = new System.Drawing.Point(613, 9);
             this.power2.Name = "power2";
             this.power2.Size = new System.Drawing.Size(63, 35);
@@ -286,7 +317,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(24, 11);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 11);
@@ -299,6 +330,7 @@
             this.power1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("power1.BackgroundImage")));
             this.power1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.power1.Controls.Add(this.power1_number);
+            this.power1.ForeColor = System.Drawing.Color.Black;
             this.power1.Location = new System.Drawing.Point(443, 9);
             this.power1.Name = "power1";
             this.power1.Size = new System.Drawing.Size(63, 35);
@@ -309,7 +341,7 @@
             this.power1_number.AutoSize = true;
             this.power1_number.BackColor = System.Drawing.Color.White;
             this.power1_number.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.power1_number.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.power1_number.ForeColor = System.Drawing.Color.Black;
             this.power1_number.Location = new System.Drawing.Point(24, 11);
             this.power1_number.Name = "power1_number";
             this.power1_number.Size = new System.Drawing.Size(23, 11);
@@ -321,10 +353,19 @@
             this.signal.BackColor = System.Drawing.Color.Transparent;
             this.signal.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("signal.BackgroundImage")));
             this.signal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.signal.ForeColor = System.Drawing.Color.Black;
             this.signal.Location = new System.Drawing.Point(95, 9);
             this.signal.Name = "signal";
             this.signal.Size = new System.Drawing.Size(63, 35);
             this.signal.TabIndex = 0;
+            // 
+            // RealPlayWnd
+            // 
+            this.RealPlayWnd.Location = new System.Drawing.Point(18, 28);
+            this.RealPlayWnd.Name = "RealPlayWnd";
+            this.RealPlayWnd.Size = new System.Drawing.Size(703, 463);
+            this.RealPlayWnd.TabIndex = 1;
+            this.RealPlayWnd.TabStop = false;
             // 
             // VisualTracking
             // 
@@ -352,6 +393,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.frontPictureBox)).EndInit();
             this.cloudCamera.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cloudPictureBox)).EndInit();
+            this.mainCamera.ResumeLayout(false);
             this.topMain.ResumeLayout(false);
             this.topMain.PerformLayout();
             this.robotPower.ResumeLayout(false);
@@ -360,6 +402,7 @@
             this.power2.PerformLayout();
             this.power1.ResumeLayout(false);
             this.power1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -390,6 +433,7 @@
         private System.Windows.Forms.Panel power1;
         private System.Windows.Forms.Label power1_number;
         private System.Windows.Forms.Panel signal;
+        private System.Windows.Forms.PictureBox RealPlayWnd;
     }
 }
 
