@@ -9,10 +9,8 @@ namespace RobotVT
 {
     public partial class VisualTracking : MetroForm
     {
-
         public event SK_FModel.SystemDelegate.del_SystemLoadFinish Event_SystemLoadFinish;
 
-        private bool m_bInitSDK = false;
         private bool m_bRecord = false;
         private uint iLastErr = 0;
         private Int32 m_lUserID = -1;
@@ -36,49 +34,47 @@ namespace RobotVT
         public HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
         public HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
         public HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
+        public HIK_NetSDK.NET_DVR_MATRIX_DECCHAN_CONTROL m_struMatrixDecchan;
         private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
         public delegate void MyDebugInfo(string str);
         public VisualTracking()
         {
             InitializeComponent();
             Init();
-            m_bInitSDK = HIK_NetSDK.NET_DVR_Init();
-            if (m_bInitSDK == false)
-            {
-                MessageBox.Show("NET_DVR_Init error!");
-                return;
-            }
-            else
-            {
-                //保存SDK日志 To save the SDK log
-                HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
-            }
         }
 
 
         private void Init()
         {
             this.Text = RobotVT.Controller.Methods.GetApplicationTitle();
-            //this.Icon = Properties.Resources.R128X128;
+            this.Icon = Properties.Resources.ZX32x32;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.WindowState = FormWindowState.Normal;
+
+        }
+        private void VisualTracking_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenuStrip.Show(this, e.Location);
+            }
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
         {
-            RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
-            RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
-            thread.IsBackground = true;
-            thread.Start();
+            //RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
+            //RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
+            //System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
+            //thread.IsBackground = true;
+            //thread.Start();
             
-            Event_SystemLoadFinish?.Invoke();
+            //Event_SystemLoadFinish?.Invoke();
 
-            Login();
-            Preview();
+            //Login();
+            //Preview();
         }
-
-
+        
         private void AddQueue(SK_FModel.SystemMessageInfo messageInfo)
         {
             RobotVT.Controller.StaticInfo.QueueMessageInfo.Enqueue(messageInfo);
@@ -129,8 +125,7 @@ namespace RobotVT
             return false;
 
         }
-
-
+        
         private void Login()
         {
             if (m_lUserID < 0)
@@ -211,15 +206,14 @@ namespace RobotVT
             if (m_lRealHandle < 0)
             {
                 HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
-                lpPreviewInfo.hPlayWnd = cloudPictureBox.Handle;//预览窗口 live view window
+                //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
                 lpPreviewInfo.lChannel = 1;//预览的设备通道 the device channel number
                 lpPreviewInfo.dwStreamType = 2;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                 lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
                 lpPreviewInfo.bBlocked = false; //0- 非阻塞取流，1- 阻塞取流
                 lpPreviewInfo.byPreviewMode = 0;
                 lpPreviewInfo.byProtoType = 0;
-                lpPreviewInfo.dwDisplayBufNum = 15; //播放库显示缓冲区最大帧数
+                lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
 
                 IntPtr pUser = IntPtr.Zero;//用户数据 user data 
 
@@ -231,8 +225,7 @@ namespace RobotVT
                 //else
                 //{
                 lpPreviewInfo.hPlayWnd = IntPtr.Zero;//预览窗口 live view window
-                m_ptrRealHandle = RealPlayWnd.Handle;
-                m_ptrRealHandle = cloudPictureBox.Handle;
+                //m_ptrRealHandle = RealPlayWnd.Handle;
                 RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);//预览实时流回调函数 real-time stream callback function 
                 m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
                 //}
@@ -288,8 +281,7 @@ namespace RobotVT
                 DebugInfo("NET_DVR_StopRealPlay succ!");
                 m_lRealHandle = -1;
                 //btnPreview.Text = "Live View";
-                RealPlayWnd.Invalidate();//刷新窗口 refresh the window
-                cloudPictureBox.Invalidate();
+                //RealPlayWnd.Invalidate();//刷新窗口 refresh the window
             }
             return;
         }
@@ -437,6 +429,15 @@ namespace RobotVT
             }
         }
 
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+        }
 
+
+        private void toolStripMenuItem_Set_Click(object sender, EventArgs e)
+        {
+            SK_FVision.HIK_CameraSet _CameraSet = new HIK_CameraSet();
+            _CameraSet.ShowDialog();
+        }
     }
 }

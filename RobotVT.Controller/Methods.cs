@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SK_FVision;
 
 namespace RobotVT.Controller
 {
@@ -90,6 +91,18 @@ namespace RobotVT.Controller
         {
             try
             {
+                bool m_bInitSDK = false;
+                m_bInitSDK = HIK_NetSDK.NET_DVR_Init();
+                if (m_bInitSDK == false)
+                {
+                    //MessageBox.Show("NET_DVR_Init error!");
+                    throw new Exception("初始化临时资源失败，错误信息：NET_DVR_Init error!");
+                }
+                else
+                {
+                    //保存SDK日志 To save the SDK log
+                    HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
+                }
                 //if (!Directory.Exists(StaticInfo.ConfigInfo.TempDirPath))
                 //    Directory.CreateDirectory(StaticInfo.ConfigInfo.TempDirPath);
 
