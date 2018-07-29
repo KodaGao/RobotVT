@@ -83,9 +83,29 @@ namespace RobotVT.Resources.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        public static System.Drawing.Bitmap comparebg {
+            get {
+                object obj = ResourceManager.GetObject("comparebg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         public static System.Drawing.Bitmap frontCamer {
             get {
                 object obj = ResourceManager.GetObject("frontCamer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap greenBg {
+            get {
+                object obj = ResourceManager.GetObject("greenBg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -136,6 +156,16 @@ namespace RobotVT.Resources.Properties {
         public static System.Drawing.Bitmap mainCarmer {
             get {
                 object obj = ResourceManager.GetObject("mainCarmer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap mainWindow2 {
+            get {
+                object obj = ResourceManager.GetObject("mainWindow2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

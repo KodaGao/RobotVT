@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DevComponents.DotNetBar.Metro;
+using SK_FVision.Properties;
 
 namespace SK_FVision
 {
-    public partial class HIK_CameraSet : Form
+    public partial class HIK_CameraSet : MetroForm
     {
         public HIK_CameraSet()
         {
@@ -26,12 +28,38 @@ namespace SK_FVision
             this.ControlBox = false;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+
+            this.CameraIP_AddressInput.Value = "192.168.1.64";
+            this.Port_textBoxX.Text = "8000";
+            this.UserName_textBoxX.Text = "admin";
+            this.Password_textBoxX.Text = "zx123456";
+
+            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(HIK_StaticInfo.ProtoType.Private));
+            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(HIK_StaticInfo.ProtoType.RTSP));
+            LoginModel_comboBoxEx.SelectedIndex = 0;
+            
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(HIK_StaticInfo.HTTPS.HTTPS));
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(HIK_StaticInfo.HTTPS.HTTP));
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(HIK_StaticInfo.HTTPS.Auto));
+            HTTP_comboBoxEx.SelectedIndex = 0;
+            
         }
 
         private void HIK_CameraSet_Load(object sender, EventArgs e)
         {
 
         }
+
+        private void btX_Save_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btX_Cancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
 
     }
 }

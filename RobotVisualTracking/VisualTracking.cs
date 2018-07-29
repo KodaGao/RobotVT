@@ -2,6 +2,7 @@
 using SK_FVision;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -40,9 +41,11 @@ namespace RobotVT
         public VisualTracking()
         {
             InitializeComponent();
+            this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VisualTracking_KeyDown);
+            cloudPictureBox.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
             Init();
         }
-
 
         private void Init()
         {
@@ -51,53 +54,69 @@ namespace RobotVT
             this.StartPosition = FormStartPosition.CenterScreen;
             this.WindowState = FormWindowState.Normal;
 
+            this.topMain.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.top_img;
+            this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_5;
+            this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
+            this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
+            this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
+            this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp;
+
+            this.mainCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainCarmer;
+            this.cloudCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudCarmer;
+            this.frontCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.frontCamer;
+            this.backCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.backCarmer;
+            this.leftCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.leftCamer;
+            this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
+
+            this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
+            this.CompareBox1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox3.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel3.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox4.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel4.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox5.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel5.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox6.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel6.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+            this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
+            this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+
         }
-        private void VisualTracking_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void RealPlayWnd_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            base.OnMouseUp(e);
-            if (e.Button == MouseButtons.Right)
-            {
-                contextMenuStrip.Show(this, e.Location);
-            }
+            SK_FVision.HIK_CameraSet _CameraSet = new HIK_CameraSet();
+            _CameraSet.ShowDialog();
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
         {
-            //RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
-            //RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
-            //System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
-            //thread.IsBackground = true;
-            //thread.Start();
+            X = this.Width;//赋值初始窗体宽度
+            Y = this.Height;//赋值初始窗体高度
+            setTag(this);
+
+            RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
+            RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
+            thread.IsBackground = true;
+            thread.Start();
+
+            Event_SystemLoadFinish?.Invoke();
             
-            //Event_SystemLoadFinish?.Invoke();
-
-            //Login();
-            //Preview();
+            Login();
+            Preview();
         }
-        
-        private void AddQueue(SK_FModel.SystemMessageInfo messageInfo)
+        private void VisualTracking_KeyDown(object sender, KeyEventArgs e)
         {
-            RobotVT.Controller.StaticInfo.QueueMessageInfo.Enqueue(messageInfo);
-        }
-
-        private void Thread_SaveLogInfo()
-        {
-            while (RobotVT.Controller.StaticInfo.IsSaveLogInfo)
+            if (e.KeyCode == Keys.Tab)
             {
-                try
-                {
-                    if (RobotVT.Controller.StaticInfo.QueueMessageInfo.Count > 0)
-                    {
-                        //SK_FCommon.LogHelper.SaveLog(RobotVT.Controller.StaticInfo.QueueMessageInfo.Dequeue());
-                    }
-                }
-                catch (Exception ex)
-                {
-                }
-                System.Threading.Thread.Sleep(10);
+                LeftOrRight();
             }
         }
-
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
         {
 
@@ -125,6 +144,145 @@ namespace RobotVT
             return false;
 
         }
+        
+        #region UI优化
+        float X, Y;//X表示窗体的宽度，Y表示窗体的高度
+        bool clickb = false;
+
+        private void VisualTracking_SizeChanged(object sender, EventArgs e)
+        {
+            if (centerMain.Location.X < 0)
+            {
+                clickb = true;
+            }
+            float newX = this.Width / X;//获取当前宽度与初始宽度的比例
+            float newY = this.Height / Y;//获取当前高度与初始高度的比例
+            if ((double)Width / (double)Height > X / Y)
+            {
+                newX = newY;
+            }
+            else
+            {
+                newY = newX;
+            }
+            setControls(newX, newY, this);
+            if ((double)Width / (double)Height > X / Y)
+            {
+                var point = topMain.Location;
+                point.X = (Width - topMain.Width) / 2;
+                topMain.Location = point;
+                point = centerMain.Location;
+                point.X = (Width - topMain.Width) / 2;
+                centerMain.Location = point;
+                //point = cloudCenterContorl.Location;
+                //point.X = (Width - topMain.Width) / 2;
+                //cloudCenterContorl.Location = point;
+            }
+            if (clickb)
+            {
+                clickb = false;
+                LeftOrRight();
+            }
+        }
+        /// <summary>
+        /// 获取控件的width、height、left、top、字体大小的值
+        /// </summary>
+        /// <param name="cons">要获取信息的控件</param>
+        private void setTag(Control cons)
+        {//遍历窗体中的控件
+            foreach (Control con in cons.Controls)
+            {
+                con.Tag = con.Width + ":" + con.Height + ":" + con.Left + ":" + con.Top + ":" + con.Font.Size;
+                if (con.Controls.Count > 0)
+                {
+                    setTag(con);
+                }
+            }
+        }
+        /// <summary>
+        /// 根据窗体大小调整控件大小
+        /// </summary>
+        /// <param name="newX"></param>
+        /// <param name="newY"></param>
+        /// <param name="cons"></param>
+        private void setControls(float newX, float newY, Control cons)
+        {
+            //遍历窗体中的控件，重新设置控件的值
+            foreach (Control con in cons.Controls)
+            {
+                string[] mytag = con.Tag.ToString().Split(new char[] { ':' });//获取控件的Tag属性值，并分割后存储字符串数组
+
+                float a = Convert.ToSingle(mytag[0]) * newX;//根据窗体缩放比例确定控件的值，宽度//89*300
+                con.Width = (int)(a);//宽度
+
+                a = Convert.ToSingle(mytag[1]) * newY;//根据窗体缩放比例确定控件的值，高度//12*300
+                con.Height = (int)(a);//高度
+
+                a = Convert.ToSingle(mytag[2]) * newX;//根据窗体缩放比例确定控件的值，左边距离//
+                con.Left = (int)(a);//左边距离
+
+                a = Convert.ToSingle(mytag[3]) * newY;//根据窗体缩放比例确定控件的值，上边缘距离
+                con.Top = (int)(a);//上边缘距离
+
+                Single currentSize = Convert.ToSingle(mytag[4]) * newY;//根据窗体缩放比例确定控件的值，字体大小
+                con.Font = new Font(con.Font.Name, currentSize, con.Font.Style, con.Font.Unit);//字体大小
+
+                if (con.Controls.Count > 0)
+                {
+                    setControls(newX, newY, con);
+                }
+
+                //Remarks：
+                //控件当前宽度：控件初始宽度=窗体当前宽度：窗体初始宽度
+                //控件当前宽度=控件初始宽度*(窗体当前宽度/窗体初始宽度)
+            }
+        }
+        private void LeftOrRight()
+        {
+            var mw1 = mainWindow.Location;
+            if (mw1.X > 0)
+            {
+                mw1.X = mainWindow.Location.X - centerMain.Width;
+                mainWindow.Location = mw1;
+                mw1 = mainWindow2.Location;
+                mw1.X = mainWindow2.Location.X - centerMain.Width;
+                mainWindow2.Location = mw1;
+            }
+            else
+            {
+                mw1.X = mainWindow.Location.X + centerMain.Width;
+                mainWindow.Location = mw1;
+                mw1 = mainWindow2.Location;
+                mw1.X = mainWindow2.Location.X + centerMain.Width;
+                mainWindow2.Location = mw1;
+            }
+        }
+
+        #endregion
+        
+        private void AddQueue(SK_FModel.SystemMessageInfo messageInfo)
+        {
+            RobotVT.Controller.StaticInfo.QueueMessageInfo.Enqueue(messageInfo);
+        }
+
+        private void Thread_SaveLogInfo()
+        {
+            while (RobotVT.Controller.StaticInfo.IsSaveLogInfo)
+            {
+                try
+                {
+                    if (RobotVT.Controller.StaticInfo.QueueMessageInfo.Count > 0)
+                    {
+                        //SK_FCommon.LogHelper.SaveLog(RobotVT.Controller.StaticInfo.QueueMessageInfo.Dequeue());
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+                System.Threading.Thread.Sleep(10);
+            }
+        }
+
         
         private void Login()
         {
@@ -206,14 +364,15 @@ namespace RobotVT
             if (m_lRealHandle < 0)
             {
                 HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+                lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
                 lpPreviewInfo.lChannel = 1;//预览的设备通道 the device channel number
-                lpPreviewInfo.dwStreamType = 2;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
+                lpPreviewInfo.dwStreamType = 0;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                 lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
-                lpPreviewInfo.bBlocked = false; //0- 非阻塞取流，1- 阻塞取流
+                lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
                 lpPreviewInfo.byPreviewMode = 0;
                 lpPreviewInfo.byProtoType = 0;
                 lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
+
 
                 IntPtr pUser = IntPtr.Zero;//用户数据 user data 
 
@@ -225,7 +384,7 @@ namespace RobotVT
                 //else
                 //{
                 lpPreviewInfo.hPlayWnd = IntPtr.Zero;//预览窗口 live view window
-                //m_ptrRealHandle = RealPlayWnd.Handle;
+                m_ptrRealHandle = RealPlayWnd.Handle;
                 RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);//预览实时流回调函数 real-time stream callback function 
                 m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
                 //}
@@ -281,7 +440,7 @@ namespace RobotVT
                 DebugInfo("NET_DVR_StopRealPlay succ!");
                 m_lRealHandle = -1;
                 //btnPreview.Text = "Live View";
-                //RealPlayWnd.Invalidate();//刷新窗口 refresh the window
+                RealPlayWnd.Invalidate();//刷新窗口 refresh the window
             }
             return;
         }
@@ -427,10 +586,6 @@ namespace RobotVT
                 //        fs.Close();
                 //    }
             }
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
         }
 
 

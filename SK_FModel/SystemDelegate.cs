@@ -5,5 +5,6 @@
         public delegate void del_InitSystem(string Message);
 
         public delegate void del_SystemLoadFinish();
+
     }
 }

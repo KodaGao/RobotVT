@@ -36,6 +36,7 @@ namespace SK_FControl.Form
             this.ShowInTaskbar = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackgroundImage = Properties.Resources.SplashScreen;
+            this.BackgroundImageLayout = ImageLayout.Zoom;
             this.Size = this.BackgroundImage.Size;
             ShowRuningMessage(string.Empty);
         }

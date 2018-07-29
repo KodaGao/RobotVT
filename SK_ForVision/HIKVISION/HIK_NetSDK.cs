@@ -15275,6 +15275,28 @@ namespace SK_FVision
         public static extern bool NET_DVR_Logout_V30(Int32 lUserID);
 
 
+        /*********************************************************
+        Function:	NET_DVR_Login_V40
+        Desc:		
+        Input:	sDVRIP [in] 设备IP地址 
+                wServerPort [in] 设备端口号 
+                sUserName [in] 登录的用户名 
+                sPassword [in] 用户密码 
+        Output:	lpDeviceInfo [out] 设备信息 
+        Return:	-1表示失败，其他值表示返回的用户ID值
+        **********************************************************/
+        [DllImport(@"HCDll\HCNetSDK.dll")]
+        public static extern Int32 NET_DVR_Login_V40(string sDVRIP, Int32 wDVRPort, string sUserName, string sPassword, ref NET_DVR_DEVICEINFO_V30 lpDeviceInfo);
+
+        /*********************************************************
+        Function:	NET_DVR_Logout_V40
+        Desc:		用户注册设备。
+        Input:	lUserID [in] 用户ID号
+        Output:	
+        Return:	TRUE表示成功，FALSE表示失败
+        **********************************************************/
+        [DllImport(@"HCDll\HCNetSDK.dll")]
+        public static extern bool NET_DVR_Logout_V40(Int32 lUserID);
 
 
 

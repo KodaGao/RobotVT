@@ -100,6 +100,10 @@ namespace RobotVT.Controller
                 }
                 else
                 {
+                    //设置连接时间与重连时间
+                    HIK_NetSDK.NET_DVR_SetConnectTime(2000, 1);
+                    HIK_NetSDK.NET_DVR_SetReconnect(10000, 1);
+
                     //保存SDK日志 To save the SDK log
                     HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
                 }

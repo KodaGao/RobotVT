@@ -217,4 +217,13 @@
   <data name="ytCamer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ytCamer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="comparebg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\comparebg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="greenBg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\greenbg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mainWindow2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\mainwindow2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -49,14 +49,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="backCarmer.png" />
     <Content Include="CloudCarmer.png" />
+    <Content Include="CloudControl.png" />
+    <Content Include="comparebg.png" />
     <Content Include="frontCamer.png" />
+    <Content Include="greenBg.png" />
     <Content Include="lamp.gif" />
     <Content Include="lamp_0.png" />
     <Content Include="lamp_1.png" />
     <Content Include="leftCamer.png" />
     <Content Include="mainCarmer.png" />
+    <Content Include="mainWindow2.png" />
     <Content Include="MCarmer.png" />
     <Content Include="power1_0.png" />
     <Content Include="power1_1.png" />
@@ -73,6 +83,7 @@
     <Content Include="power3_2.png" />
     <Content Include="power3_3.png" />
     <Content Include="power3_4.png" />
+    <Content Include="redBg.png" />
     <Content Include="rightCamer.png" />
     <Content Include="signal_0.png" />
     <Content Include="signal_1.png" />
@@ -82,12 +93,6 @@
     <Content Include="signal_5.png" />
     <Content Include="top_img.jpg" />
     <Content Include="ytCamer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
