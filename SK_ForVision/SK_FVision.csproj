@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge.Controls">
+      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="DevComponents.DotNetBar.Layout">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar.Layout.dll</HintPath>
     </Reference>
@@ -57,6 +60,12 @@
     </Compile>
     <Compile Include="HIKVISION\HIK_NetSDK.cs" />
     <Compile Include="HIKVISION\HIK_PlayCtrl.cs" />
+    <Compile Include="PlayView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PlayView.Designer.cs">
+      <DependentUpon>PlayView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -67,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="HIK_CameraSet.resx">
       <DependentUpon>HIK_CameraSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlayView.resx">
+      <DependentUpon>PlayView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

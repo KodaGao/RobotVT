@@ -87,17 +87,17 @@
             this.pictureA1 = new System.Windows.Forms.PictureBox();
             this.mainWindow = new DevComponents.DotNetBar.PanelEx();
             this.backCamera = new DevComponents.DotNetBar.PanelEx();
-            this.backPictureBox = new System.Windows.Forms.PictureBox();
             this.leftCamera = new DevComponents.DotNetBar.PanelEx();
-            this.rightPictureBox = new System.Windows.Forms.PictureBox();
             this.rightCamera = new DevComponents.DotNetBar.PanelEx();
-            this.leftPictureBox = new System.Windows.Forms.PictureBox();
             this.frontCamera = new DevComponents.DotNetBar.PanelEx();
-            this.frontPictureBox = new System.Windows.Forms.PictureBox();
             this.cloudCamera = new DevComponents.DotNetBar.PanelEx();
-            this.cloudPictureBox = new System.Windows.Forms.PictureBox();
             this.mainCamera = new DevComponents.DotNetBar.PanelEx();
-            this.RealPlayWnd = new AForge.Controls.PictureBox();
+            this.cloudyplayView = new SK_FVision.PlayView();
+            this.frontplayView = new SK_FVision.PlayView();
+            this.backplayView = new SK_FVision.PlayView();
+            this.rightplayView = new SK_FVision.PlayView();
+            this.leftplayView = new SK_FVision.PlayView();
+            this.mainplayView = new SK_FVision.PlayView();
             this.topMain.SuspendLayout();
             this.robotPower.SuspendLayout();
             this.power2.SuspendLayout();
@@ -138,17 +138,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureA1)).BeginInit();
             this.mainWindow.SuspendLayout();
             this.backCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.backPictureBox)).BeginInit();
             this.leftCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rightPictureBox)).BeginInit();
             this.rightCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.leftPictureBox)).BeginInit();
             this.frontCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.frontPictureBox)).BeginInit();
             this.cloudCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cloudPictureBox)).BeginInit();
             this.mainCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
             this.SuspendLayout();
             // 
             // styleManager
@@ -178,7 +172,7 @@
             this.speed.AutoSize = true;
             this.speed.BackColor = System.Drawing.Color.Transparent;
             this.speed.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.speed.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.speed.ForeColor = System.Drawing.Color.Black;
             this.speed.Location = new System.Drawing.Point(1326, 23);
             this.speed.Name = "speed";
             this.speed.Size = new System.Drawing.Size(69, 19);
@@ -190,7 +184,7 @@
             this.time.AutoSize = true;
             this.time.BackColor = System.Drawing.Color.Transparent;
             this.time.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.time.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.time.ForeColor = System.Drawing.Color.Black;
             this.time.Location = new System.Drawing.Point(386, 20);
             this.time.Name = "time";
             this.time.Size = new System.Drawing.Size(59, 19);
@@ -221,7 +215,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.White;
             this.label2.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(25, 11);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 11);
@@ -243,7 +237,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(24, 11);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 11);
@@ -265,7 +259,7 @@
             this.power1_number.AutoSize = true;
             this.power1_number.BackColor = System.Drawing.Color.White;
             this.power1_number.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.power1_number.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.power1_number.ForeColor = System.Drawing.Color.Black;
             this.power1_number.Location = new System.Drawing.Point(24, 11);
             this.power1_number.Name = "power1_number";
             this.power1_number.Size = new System.Drawing.Size(23, 11);
@@ -315,7 +309,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 22F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(696, 431);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(208, 30);
@@ -326,7 +320,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 22F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.ForeColor = System.Drawing.Color.Black;
             this.label3.Location = new System.Drawing.Point(696, 332);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(208, 30);
@@ -359,7 +353,7 @@
             // 
             this.compareText4.AutoSize = true;
             this.compareText4.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText4.ForeColor = System.Drawing.Color.White;
+            this.compareText4.ForeColor = System.Drawing.Color.Black;
             this.compareText4.Location = new System.Drawing.Point(26, 10);
             this.compareText4.Name = "compareText4";
             this.compareText4.Size = new System.Drawing.Size(96, 19);
@@ -369,6 +363,7 @@
             // pictureB4
             // 
             this.pictureB4.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB4.ForeColor = System.Drawing.Color.Black;
             this.pictureB4.Location = new System.Drawing.Point(260, 15);
             this.pictureB4.Name = "pictureB4";
             this.pictureB4.Size = new System.Drawing.Size(241, 208);
@@ -378,6 +373,7 @@
             // pictureA4
             // 
             this.pictureA4.BackColor = System.Drawing.Color.White;
+            this.pictureA4.ForeColor = System.Drawing.Color.Black;
             this.pictureA4.Location = new System.Drawing.Point(10, 15);
             this.pictureA4.Name = "pictureA4";
             this.pictureA4.Size = new System.Drawing.Size(241, 208);
@@ -410,7 +406,7 @@
             // 
             this.compareText3.AutoSize = true;
             this.compareText3.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText3.ForeColor = System.Drawing.Color.White;
+            this.compareText3.ForeColor = System.Drawing.Color.Black;
             this.compareText3.Location = new System.Drawing.Point(26, 10);
             this.compareText3.Name = "compareText3";
             this.compareText3.Size = new System.Drawing.Size(96, 19);
@@ -420,6 +416,7 @@
             // pictureB3
             // 
             this.pictureB3.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB3.ForeColor = System.Drawing.Color.Black;
             this.pictureB3.Location = new System.Drawing.Point(260, 15);
             this.pictureB3.Name = "pictureB3";
             this.pictureB3.Size = new System.Drawing.Size(241, 208);
@@ -429,6 +426,7 @@
             // pictureA3
             // 
             this.pictureA3.BackColor = System.Drawing.Color.White;
+            this.pictureA3.ForeColor = System.Drawing.Color.Black;
             this.pictureA3.Location = new System.Drawing.Point(10, 15);
             this.pictureA3.Name = "pictureA3";
             this.pictureA3.Size = new System.Drawing.Size(241, 208);
@@ -461,7 +459,7 @@
             // 
             this.compareText8.AutoSize = true;
             this.compareText8.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText8.ForeColor = System.Drawing.Color.White;
+            this.compareText8.ForeColor = System.Drawing.Color.Black;
             this.compareText8.Location = new System.Drawing.Point(26, 10);
             this.compareText8.Name = "compareText8";
             this.compareText8.Size = new System.Drawing.Size(96, 19);
@@ -471,6 +469,7 @@
             // pictureB8
             // 
             this.pictureB8.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB8.ForeColor = System.Drawing.Color.Black;
             this.pictureB8.Location = new System.Drawing.Point(260, 15);
             this.pictureB8.Name = "pictureB8";
             this.pictureB8.Size = new System.Drawing.Size(241, 208);
@@ -480,6 +479,7 @@
             // pictureA8
             // 
             this.pictureA8.BackColor = System.Drawing.Color.White;
+            this.pictureA8.ForeColor = System.Drawing.Color.Black;
             this.pictureA8.Location = new System.Drawing.Point(10, 15);
             this.pictureA8.Name = "pictureA8";
             this.pictureA8.Size = new System.Drawing.Size(241, 208);
@@ -512,7 +512,7 @@
             // 
             this.compareText7.AutoSize = true;
             this.compareText7.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText7.ForeColor = System.Drawing.Color.White;
+            this.compareText7.ForeColor = System.Drawing.Color.Black;
             this.compareText7.Location = new System.Drawing.Point(26, 10);
             this.compareText7.Name = "compareText7";
             this.compareText7.Size = new System.Drawing.Size(96, 19);
@@ -522,6 +522,7 @@
             // pictureB7
             // 
             this.pictureB7.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB7.ForeColor = System.Drawing.Color.Black;
             this.pictureB7.Location = new System.Drawing.Point(260, 15);
             this.pictureB7.Name = "pictureB7";
             this.pictureB7.Size = new System.Drawing.Size(241, 208);
@@ -531,6 +532,7 @@
             // pictureA7
             // 
             this.pictureA7.BackColor = System.Drawing.Color.White;
+            this.pictureA7.ForeColor = System.Drawing.Color.Black;
             this.pictureA7.Location = new System.Drawing.Point(10, 15);
             this.pictureA7.Name = "pictureA7";
             this.pictureA7.Size = new System.Drawing.Size(241, 208);
@@ -563,7 +565,7 @@
             // 
             this.compareText5.AutoSize = true;
             this.compareText5.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText5.ForeColor = System.Drawing.Color.White;
+            this.compareText5.ForeColor = System.Drawing.Color.Black;
             this.compareText5.Location = new System.Drawing.Point(26, 10);
             this.compareText5.Name = "compareText5";
             this.compareText5.Size = new System.Drawing.Size(96, 19);
@@ -573,6 +575,7 @@
             // pictureB5
             // 
             this.pictureB5.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB5.ForeColor = System.Drawing.Color.Black;
             this.pictureB5.Location = new System.Drawing.Point(260, 15);
             this.pictureB5.Name = "pictureB5";
             this.pictureB5.Size = new System.Drawing.Size(241, 208);
@@ -582,6 +585,7 @@
             // pictureA5
             // 
             this.pictureA5.BackColor = System.Drawing.Color.White;
+            this.pictureA5.ForeColor = System.Drawing.Color.Black;
             this.pictureA5.Location = new System.Drawing.Point(10, 15);
             this.pictureA5.Name = "pictureA5";
             this.pictureA5.Size = new System.Drawing.Size(241, 208);
@@ -614,7 +618,7 @@
             // 
             this.compareText2.AutoSize = true;
             this.compareText2.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText2.ForeColor = System.Drawing.Color.White;
+            this.compareText2.ForeColor = System.Drawing.Color.Black;
             this.compareText2.Location = new System.Drawing.Point(26, 10);
             this.compareText2.Name = "compareText2";
             this.compareText2.Size = new System.Drawing.Size(96, 19);
@@ -624,6 +628,7 @@
             // pictureB2
             // 
             this.pictureB2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB2.ForeColor = System.Drawing.Color.Black;
             this.pictureB2.Location = new System.Drawing.Point(260, 15);
             this.pictureB2.Name = "pictureB2";
             this.pictureB2.Size = new System.Drawing.Size(241, 208);
@@ -633,6 +638,7 @@
             // pictureA2
             // 
             this.pictureA2.BackColor = System.Drawing.Color.White;
+            this.pictureA2.ForeColor = System.Drawing.Color.Black;
             this.pictureA2.Location = new System.Drawing.Point(10, 15);
             this.pictureA2.Name = "pictureA2";
             this.pictureA2.Size = new System.Drawing.Size(241, 208);
@@ -665,7 +671,7 @@
             // 
             this.compareText6.AutoSize = true;
             this.compareText6.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText6.ForeColor = System.Drawing.Color.White;
+            this.compareText6.ForeColor = System.Drawing.Color.Black;
             this.compareText6.Location = new System.Drawing.Point(26, 10);
             this.compareText6.Name = "compareText6";
             this.compareText6.Size = new System.Drawing.Size(96, 19);
@@ -675,6 +681,7 @@
             // pictureB6
             // 
             this.pictureB6.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB6.ForeColor = System.Drawing.Color.Black;
             this.pictureB6.Location = new System.Drawing.Point(260, 15);
             this.pictureB6.Name = "pictureB6";
             this.pictureB6.Size = new System.Drawing.Size(241, 208);
@@ -684,6 +691,7 @@
             // pictureA6
             // 
             this.pictureA6.BackColor = System.Drawing.Color.White;
+            this.pictureA6.ForeColor = System.Drawing.Color.Black;
             this.pictureA6.Location = new System.Drawing.Point(10, 15);
             this.pictureA6.Name = "pictureA6";
             this.pictureA6.Size = new System.Drawing.Size(241, 208);
@@ -716,7 +724,7 @@
             // 
             this.compareText1.AutoSize = true;
             this.compareText1.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.compareText1.ForeColor = System.Drawing.Color.White;
+            this.compareText1.ForeColor = System.Drawing.Color.Black;
             this.compareText1.Location = new System.Drawing.Point(26, 10);
             this.compareText1.Name = "compareText1";
             this.compareText1.Size = new System.Drawing.Size(96, 19);
@@ -726,6 +734,7 @@
             // pictureB1
             // 
             this.pictureB1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureB1.ForeColor = System.Drawing.Color.Black;
             this.pictureB1.Location = new System.Drawing.Point(260, 15);
             this.pictureB1.Name = "pictureB1";
             this.pictureB1.Size = new System.Drawing.Size(241, 208);
@@ -735,6 +744,7 @@
             // pictureA1
             // 
             this.pictureA1.BackColor = System.Drawing.Color.White;
+            this.pictureA1.ForeColor = System.Drawing.Color.Black;
             this.pictureA1.Location = new System.Drawing.Point(10, 15);
             this.pictureA1.Name = "pictureA1";
             this.pictureA1.Size = new System.Drawing.Size(241, 208);
@@ -758,111 +768,110 @@
             // backCamera
             // 
             this.backCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.backCamera.Controls.Add(this.backPictureBox);
+            this.backCamera.Controls.Add(this.backplayView);
             this.backCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.backCamera.Location = new System.Drawing.Point(1039, 532);
             this.backCamera.Name = "backCamera";
             this.backCamera.Size = new System.Drawing.Size(451, 254);
             this.backCamera.TabIndex = 3;
             // 
-            // backPictureBox
-            // 
-            this.backPictureBox.Location = new System.Drawing.Point(20, 30);
-            this.backPictureBox.Name = "backPictureBox";
-            this.backPictureBox.Size = new System.Drawing.Size(410, 208);
-            this.backPictureBox.TabIndex = 2;
-            this.backPictureBox.TabStop = false;
-            // 
             // leftCamera
             // 
             this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.leftCamera.Controls.Add(this.rightPictureBox);
+            this.leftCamera.Controls.Add(this.rightplayView);
             this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.leftCamera.Location = new System.Drawing.Point(566, 532);
             this.leftCamera.Name = "leftCamera";
             this.leftCamera.Size = new System.Drawing.Size(451, 254);
             this.leftCamera.TabIndex = 4;
             // 
-            // rightPictureBox
-            // 
-            this.rightPictureBox.Location = new System.Drawing.Point(20, 30);
-            this.rightPictureBox.Name = "rightPictureBox";
-            this.rightPictureBox.Size = new System.Drawing.Size(410, 208);
-            this.rightPictureBox.TabIndex = 3;
-            this.rightPictureBox.TabStop = false;
-            // 
             // rightCamera
             // 
             this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.rightCamera.Controls.Add(this.leftPictureBox);
+            this.rightCamera.Controls.Add(this.leftplayView);
             this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.rightCamera.Location = new System.Drawing.Point(97, 532);
             this.rightCamera.Name = "rightCamera";
             this.rightCamera.Size = new System.Drawing.Size(451, 254);
             this.rightCamera.TabIndex = 3;
             // 
-            // leftPictureBox
-            // 
-            this.leftPictureBox.Location = new System.Drawing.Point(20, 30);
-            this.leftPictureBox.Name = "leftPictureBox";
-            this.leftPictureBox.Size = new System.Drawing.Size(410, 208);
-            this.leftPictureBox.TabIndex = 4;
-            this.leftPictureBox.TabStop = false;
-            // 
             // frontCamera
             // 
             this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.frontCamera.Controls.Add(this.frontPictureBox);
+            this.frontCamera.Controls.Add(this.frontplayView);
             this.frontCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.frontCamera.Location = new System.Drawing.Point(1039, 264);
             this.frontCamera.Name = "frontCamera";
             this.frontCamera.Size = new System.Drawing.Size(451, 254);
             this.frontCamera.TabIndex = 2;
             // 
-            // frontPictureBox
-            // 
-            this.frontPictureBox.Location = new System.Drawing.Point(20, 30);
-            this.frontPictureBox.Name = "frontPictureBox";
-            this.frontPictureBox.Size = new System.Drawing.Size(410, 208);
-            this.frontPictureBox.TabIndex = 1;
-            this.frontPictureBox.TabStop = false;
-            // 
             // cloudCamera
             // 
             this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.cloudCamera.Controls.Add(this.cloudPictureBox);
+            this.cloudCamera.Controls.Add(this.cloudyplayView);
             this.cloudCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.cloudCamera.Location = new System.Drawing.Point(1039, 0);
             this.cloudCamera.Name = "cloudCamera";
             this.cloudCamera.Size = new System.Drawing.Size(451, 254);
             this.cloudCamera.TabIndex = 1;
             // 
-            // cloudPictureBox
-            // 
-            this.cloudPictureBox.Location = new System.Drawing.Point(20, 30);
-            this.cloudPictureBox.Name = "cloudPictureBox";
-            this.cloudPictureBox.Size = new System.Drawing.Size(410, 208);
-            this.cloudPictureBox.TabIndex = 0;
-            this.cloudPictureBox.TabStop = false;
-            // 
             // mainCamera
             // 
             this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.mainCamera.Controls.Add(this.RealPlayWnd);
+            this.mainCamera.Controls.Add(this.mainplayView);
             this.mainCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.mainCamera.Location = new System.Drawing.Point(97, 0);
             this.mainCamera.Name = "mainCamera";
             this.mainCamera.Size = new System.Drawing.Size(920, 518);
             this.mainCamera.TabIndex = 0;
             // 
-            // RealPlayWnd
+            // cloudyplayView
             // 
-            this.RealPlayWnd.Image = null;
-            this.RealPlayWnd.Location = new System.Drawing.Point(19, 30);
-            this.RealPlayWnd.Name = "RealPlayWnd";
-            this.RealPlayWnd.Size = new System.Drawing.Size(880, 472);
-            this.RealPlayWnd.TabIndex = 0;
-            this.RealPlayWnd.TabStop = false;
+            this.cloudyplayView.Location = new System.Drawing.Point(20, 23);
+            this.cloudyplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cloudyplayView.Name = "cloudyplayView";
+            this.cloudyplayView.Size = new System.Drawing.Size(410, 208);
+            this.cloudyplayView.TabIndex = 0;
+            // 
+            // frontplayView
+            // 
+            this.frontplayView.Location = new System.Drawing.Point(20, 33);
+            this.frontplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.frontplayView.Name = "frontplayView";
+            this.frontplayView.Size = new System.Drawing.Size(410, 208);
+            this.frontplayView.TabIndex = 0;
+            // 
+            // backplayView
+            // 
+            this.backplayView.Location = new System.Drawing.Point(20, 29);
+            this.backplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.backplayView.Name = "backplayView";
+            this.backplayView.Size = new System.Drawing.Size(410, 208);
+            this.backplayView.TabIndex = 0;
+            // 
+            // rightplayView
+            // 
+            this.rightplayView.Location = new System.Drawing.Point(20, 17);
+            this.rightplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.rightplayView.Name = "rightplayView";
+            this.rightplayView.Size = new System.Drawing.Size(410, 208);
+            this.rightplayView.TabIndex = 0;
+            // 
+            // leftplayView
+            // 
+            this.leftplayView.Location = new System.Drawing.Point(19, 17);
+            this.leftplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.leftplayView.Name = "leftplayView";
+            this.leftplayView.Size = new System.Drawing.Size(410, 208);
+            this.leftplayView.TabIndex = 0;
+            // 
+            // mainplayView
+            // 
+            this.mainplayView.Location = new System.Drawing.Point(19, 21);
+            this.mainplayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.mainplayView.Name = "mainplayView";
+            this.mainplayView.Size = new System.Drawing.Size(880, 472);
+            this.mainplayView.TabIndex = 0;
             // 
             // VisualTracking
             // 
@@ -875,7 +884,6 @@
             this.Controls.Add(this.topMain);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "VisualTracking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -933,17 +941,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureA1)).EndInit();
             this.mainWindow.ResumeLayout(false);
             this.backCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.backPictureBox)).EndInit();
             this.leftCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.rightPictureBox)).EndInit();
             this.rightCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.leftPictureBox)).EndInit();
             this.frontCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.frontPictureBox)).EndInit();
             this.cloudCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cloudPictureBox)).EndInit();
             this.mainCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1007,17 +1009,17 @@
         private System.Windows.Forms.PictureBox pictureA1;
         private DevComponents.DotNetBar.PanelEx mainWindow;
         private DevComponents.DotNetBar.PanelEx backCamera;
-        private System.Windows.Forms.PictureBox backPictureBox;
         private DevComponents.DotNetBar.PanelEx leftCamera;
-        private System.Windows.Forms.PictureBox rightPictureBox;
         private DevComponents.DotNetBar.PanelEx rightCamera;
-        private System.Windows.Forms.PictureBox leftPictureBox;
         private DevComponents.DotNetBar.PanelEx frontCamera;
-        private System.Windows.Forms.PictureBox frontPictureBox;
         private DevComponents.DotNetBar.PanelEx cloudCamera;
-        private System.Windows.Forms.PictureBox cloudPictureBox;
         private DevComponents.DotNetBar.PanelEx mainCamera;
-        private AForge.Controls.PictureBox RealPlayWnd;
+        private SK_FVision.PlayView cloudyplayView;
+        private SK_FVision.PlayView frontplayView;
+        private SK_FVision.PlayView backplayView;
+        private SK_FVision.PlayView rightplayView;
+        private SK_FVision.PlayView leftplayView;
+        private SK_FVision.PlayView mainplayView;
     }
 }
 
