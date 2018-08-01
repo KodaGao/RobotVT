@@ -12,38 +12,11 @@ namespace RobotVT
     {
         public event SK_FModel.SystemDelegate.del_SystemLoadFinish Event_SystemLoadFinish;
 
-        private bool m_bRecord = false;
-        private uint iLastErr = 0;
-        private Int32 m_lUserID = -1;
-        private Int32 m_lRealHandle = -1;
-        private string str1;
-        private string str2;
-        private Int32 i = 0;
-        private Int32 m_lTree = 0;
-        private string str;
-        private long iSelIndex = 0;
-        private uint dwAChanTotalNum = 0;
-        private uint dwDChanTotalNum = 0;
-        private Int32 m_lPort = -1;
-        private IntPtr m_ptrRealHandle;
-        private int[] iIPDevID = new int[96];
-        private int[] iChannelNum = new int[96];
-
-        private HIK_NetSDK.REALDATACALLBACK RealData = null;
-        public HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
-        public HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
-        public HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
-        public HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
-        public HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
-        public HIK_NetSDK.NET_DVR_MATRIX_DECCHAN_CONTROL m_struMatrixDecchan;
-        private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
-        public delegate void MyDebugInfo(string str);
         public VisualTracking()
         {
             InitializeComponent();
             this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VisualTracking_KeyDown);
-            cloudyplayView.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
             Init();
         }
 
@@ -86,11 +59,14 @@ namespace RobotVT
             this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
 
-        }
-        private void RealPlayWnd_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            SK_FVision.HIK_CameraSet _CameraSet = new HIK_CameraSet();
-            _CameraSet.ShowDialog();
+
+            mainplayView.PlayModel = "mainplay";
+            cloudyplayView.PlayModel = "cloud";
+            frontplayView.PlayModel = "front";
+            backplayView.PlayModel = "back";
+            rightplayView.PlayModel = "right";
+            leftplayView.PlayModel = "left";
+
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
@@ -107,7 +83,7 @@ namespace RobotVT
 
             Event_SystemLoadFinish?.Invoke();
 
-            LoginAllDev();
+            //LoginAllDev();
         }
         private void VisualTracking_KeyDown(object sender, KeyEventArgs e)
         {
@@ -118,30 +94,18 @@ namespace RobotVT
         }
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
         {
-
             int WM_KEYDOWN = 256;
-
             int WM_SYSKEYDOWN = 260;
-
             if (msg.Msg == WM_KEYDOWN | msg.Msg == WM_SYSKEYDOWN)
-
             {
-
                 switch (keyData)
-
                 {
-
                     case Keys.Escape:
-
-                        this.Close();//esc关闭窗体
-
+                        Application.Exit();
                         break;
-
                 }
             }
-
             return false;
-
         }
         
         #region UI优化
@@ -299,12 +263,6 @@ namespace RobotVT
 
         private void LoginOutAll()
         {
-        }
-
-        private void toolStripMenuItem_Set_Click(object sender, EventArgs e)
-        {
-            SK_FVision.HIK_CameraSet _CameraSet = new HIK_CameraSet();
-            _CameraSet.ShowDialog();
         }
     }
 }

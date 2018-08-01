@@ -12,6 +12,7 @@ namespace SK_FVision
 {
     public partial class PlayView : UserControl
     {
+        #region 预览参数
         private bool m_bRecord = false;
         private uint iLastErr = 0;
         private Int32 m_lUserID = -1;
@@ -21,36 +22,39 @@ namespace SK_FVision
         private IntPtr m_ptrRealHandle;
 
         private HIK_NetSDK.REALDATACALLBACK RealData = null;
-        public HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
-        public HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
-        public HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
-        public HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
-        public HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
-        public HIK_NetSDK.NET_DVR_MATRIX_DECCHAN_CONTROL m_struMatrixDecchan;
-        private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
+        private HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
+        //private HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
+        //private HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
+        //private HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
+        //private HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
+        //private HIK_NetSDK.NET_DVR_MATRIX_DECCHAN_CONTROL m_struMatrixDecchan;
+        //private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
+        #endregion
+
+        public string PlayModel
+        {
+            get;
+            set;
+        }
+
+
         public PlayView()
         {
             InitializeComponent();
+            RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
+        }
+
+        private void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (PlayModel.ToUpper() != "MAINPLAY")
+            {
+                HIK_CameraSet _CameraSet = new HIK_CameraSet();
+                _CameraSet.ShowDialog();
+            }
         }
 
         private void PlayView_Load(object sender, EventArgs e)
         {
-
-            //m_bInitSDK = HIK_NetSDK.NET_DVR_Init();
-            //if (m_bInitSDK == false)
-            //{
-            //    //MessageBox.Show("NET_DVR_Init error!");
-            //    throw new Exception("初始化临时资源失败，错误信息：NET_DVR_Init error!");
-            //}
-            //else
-            //{
-            //    //设置连接时间与重连时间
-            //    HIK_NetSDK.NET_DVR_SetConnectTime(2000, 1);
-            //    HIK_NetSDK.NET_DVR_SetReconnect(10000, 1);
-
-            //    //保存SDK日志 To save the SDK log
-            //    HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
-            //}
         }
 
         public void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
@@ -176,7 +180,7 @@ namespace SK_FVision
         {
             if (str.Length > 0)
             {
-                Exception_LabeX.Text = str;
+                //Exception_LabeX.Text = str;
             }
         }
 

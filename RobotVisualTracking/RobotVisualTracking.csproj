@@ -33,19 +33,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AForge">
-      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.dll</HintPath>
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Controls">
-      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.Controls.dll</HintPath>
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Controls.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Imaging">
-      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.Imaging.dll</HintPath>
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Imaging.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Video">
-      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.Video.dll</HintPath>
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Video.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Video.DirectShow">
-      <HintPath>..\..\Share_Dll\AForge.NET Framework-2.2.5\AForge.Video.DirectShow.dll</HintPath>
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Vision">
+      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Vision.dll</HintPath>
     </Reference>
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
