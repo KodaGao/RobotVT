@@ -48,6 +48,10 @@
     <Compile Include="StaticInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RobotVT.Model\RobotVT.Model.csproj">
+      <Project>{826B742D-0210-47DC-B339-4A13350DA884}</Project>
+      <Name>RobotVT.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
       <Project>{499970f7-0091-4be7-b452-365067b41108}</Project>
       <Name>SK_FCommon</Name>

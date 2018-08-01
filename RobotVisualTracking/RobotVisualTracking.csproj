@@ -47,9 +47,6 @@
     <Reference Include="AForge.Video.DirectShow">
       <HintPath>E:\Code Source\公共DLL\trunk\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Vision">
-      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Vision.dll</HintPath>
-    </Reference>
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
@@ -104,6 +101,10 @@
     <ProjectReference Include="..\RobotVT.Controller\RobotVT.Controller.csproj">
       <Project>{a89de416-5cf1-49b6-bd91-52c46838f224}</Project>
       <Name>RobotVT.Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RobotVT.Model\RobotVT.Model.csproj">
+      <Project>{826b742d-0210-47dc-b339-4a13350da884}</Project>
+      <Name>RobotVT.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>

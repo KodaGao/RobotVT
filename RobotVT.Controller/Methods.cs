@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using RobotVT.Model;
 using SK_FVision;
 
 namespace RobotVT.Controller
@@ -188,6 +189,39 @@ namespace RobotVT.Controller
                 throw new Exception("关闭数据库失败，错误信息：" + _Ex.Message);
             }
         }
+
+
+        public static List<S_D_CameraSet> GetS_D_CameraSetList(int PRODUCTIDLen)
+        {
+            try
+            {
+                List<S_D_CameraSet> _Result = new List<S_D_CameraSet>();
+                if (StaticInfo.FirebirdDBOperator == null) return _Result;
+
+                S_D_CameraSet _S_D_CameraSet;
+                string _SqlScript = string.Format("Select VT_ID, VT_NAME, VT_PASSWORD, VT_IP, VT_PORT From S_D_CameraSet;", PRODUCTIDLen);
+                System.Data.DataTable _DTTemp;
+                _DTTemp = StaticInfo.FirebirdDBOperator.ReturnDataTable(_SqlScript);
+                foreach (System.Data.DataRow _DR in _DTTemp.Rows)
+                {
+                    _S_D_CameraSet = new S_D_CameraSet();
+                    _S_D_CameraSet.VT_ID = _DR["VT_ID"].ToString();
+                    _S_D_CameraSet.VT_NAME = _DR["VT_NAME"].ToString();
+                    _S_D_CameraSet.VT_PASSWORD = _DR["VT_PASSWORD"].ToString();
+                    _S_D_CameraSet.VT_IP = _DR["VT_IP"].ToString();
+                    _S_D_CameraSet.VT_PORT = _DR["VT_PORT"].ToString();
+                    _Result.Add(_S_D_CameraSet);
+                }
+                return _Result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取摄像头参数信息失败，错误信息：" + ex.Message);
+            }
+        }
+
+
+
 
 
         /// <summary>

@@ -83,7 +83,7 @@ namespace RobotVT
 
             Event_SystemLoadFinish?.Invoke();
 
-            //LoginAllDev();
+            LoginAllDev();
         }
         private void VisualTracking_KeyDown(object sender, KeyEventArgs e)
         {
@@ -247,17 +247,49 @@ namespace RobotVT
         
         private void LoginAllDev()//从数据库中取出所有信息,登陆设备
         {
-            string DVRIPAddress = "192.168.6.65"; //设备IP地址或者域名 Device IP
-            Int16 DVRPortNumber = Int16.Parse("8000");//设备服务端口号 Device Port
-            string DVRUserName = "admin";//设备登录用户名 User name to login
-            string DVRPassword = "zx123456";//设备登录密码 Password to login
 
-            mainplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            cloudyplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            frontplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            backplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            rightplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            leftplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            List<RobotVT.Model.S_D_CameraSet> _CameraSets = RobotVT.Controller.Methods.GetS_D_CameraSetList(0);
+
+
+            if(_CameraSets.Count<=0)
+            {
+
+            }
+            else
+            {
+                foreach(Model.S_D_CameraSet o in _CameraSets)
+                {
+
+                    string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
+                    Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
+                    string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
+                    string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
+
+                    if (o.VT_ID.ToLower() == "cloudy")
+                    {
+                        mainplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        cloudyplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "front")
+                    {
+                        frontplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "back")
+                    {
+                        backplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "left")
+                    {
+                        leftplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "right")
+                    {
+                        rightplayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                }
+            }
+
+
 
         }
 
@@ -266,3 +298,4 @@ namespace RobotVT
         }
     }
 }
+ 
