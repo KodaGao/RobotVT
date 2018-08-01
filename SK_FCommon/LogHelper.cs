@@ -34,7 +34,7 @@ namespace SK_FCommon
             }
             catch (Exception ex)
             {
-                //throw new Exception("保存日志失败，错误信息：" + ex.Message);
+                throw new Exception("保存日志失败，错误信息：" + ex.Message);
             }
         }
     }

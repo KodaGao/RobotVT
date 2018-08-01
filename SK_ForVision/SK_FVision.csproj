@@ -52,11 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
-    <Compile Include="HIK_CameraSet.cs">
+    <Compile Include="CameraSet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HIK_CameraSet.Designer.cs">
-      <DependentUpon>HIK_CameraSet.cs</DependentUpon>
+    <Compile Include="CameraSet.Designer.cs">
+      <DependentUpon>CameraSet.cs</DependentUpon>
     </Compile>
     <Compile Include="HIKVISION\HIK_NetSDK.cs" />
     <Compile Include="HIKVISION\HIK_PlayCtrl.cs" />
@@ -74,14 +74,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HIK_CameraSet.resx">
-      <DependentUpon>HIK_CameraSet.cs</DependentUpon>
+    <EmbeddedResource Include="CameraSet.resx">
+      <DependentUpon>CameraSet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PlayView.resx">
       <DependentUpon>PlayView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

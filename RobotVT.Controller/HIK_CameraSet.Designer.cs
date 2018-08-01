@@ -1,4 +1,4 @@
-﻿namespace SK_FVision
+﻿namespace RobotVT.Controller
 {
     partial class HIK_CameraSet
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HIK_CameraSet));
             this.btX_Save = new DevComponents.DotNetBar.ButtonX();
             this.btX_Cancel = new DevComponents.DotNetBar.ButtonX();
             this.reflectionImage = new DevComponents.DotNetBar.Controls.ReflectionImage();
@@ -81,7 +82,7 @@
             // 
             this.reflectionImage.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.reflectionImage.BackgroundStyle.TextAlignment = DevComponents.DotNetBar.eStyleTextAlignment.Center;
-            this.reflectionImage.Image = global::SK_FVision.Properties.Resources.webcam_128px;
+            this.reflectionImage.Image = ((System.Drawing.Image)(resources.GetObject("reflectionImage.Image")));
             this.reflectionImage.Location = new System.Drawing.Point(1, 29);
             this.reflectionImage.Name = "reflectionImage";
             this.reflectionImage.Size = new System.Drawing.Size(128, 202);

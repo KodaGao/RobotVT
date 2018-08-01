@@ -189,8 +189,7 @@ namespace RobotVT.Controller
                 throw new Exception("关闭数据库失败，错误信息：" + _Ex.Message);
             }
         }
-
-
+        
         public static List<S_D_CameraSet> GetS_D_CameraSetList(int PRODUCTIDLen)
         {
             try
@@ -219,11 +218,7 @@ namespace RobotVT.Controller
                 throw new Exception("获取摄像头参数信息失败，错误信息：" + ex.Message);
             }
         }
-
-
-
-
-
+        
         /// <summary>
         /// 获取程序Title
         /// </summary>

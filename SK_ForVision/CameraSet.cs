@@ -12,9 +12,9 @@ using SK_FVision.Properties;
 
 namespace SK_FVision
 {
-    public partial class HIK_CameraSet : MetroForm
+    public partial class CameraSet : MetroForm
     {
-        public HIK_CameraSet()
+        public CameraSet()
         {
             InitializeComponent();
             Init();

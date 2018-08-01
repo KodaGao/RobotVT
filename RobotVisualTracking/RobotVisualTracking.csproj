@@ -123,7 +123,7 @@
       <Name>SK_FModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\SK_ForVision\SK_FVision.csproj">
-      <Project>{365184b2-8499-41cd-a4a3-9c2cc9dba750}</Project>
+      <Project>{365184B2-8499-41CD-A4A3-9C2CC9DBA750}</Project>
       <Name>SK_FVision</Name>
     </ProjectReference>
   </ItemGroup>

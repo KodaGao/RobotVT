@@ -80,8 +80,9 @@ namespace SK_FCommon
 
                     objectReturn = formatter.Deserialize(stream);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
+                    throw new Exception("复制对象失败，错误信息：" + ex.Message);
                 }
             }
             return objectReturn;
@@ -202,6 +203,7 @@ namespace SK_FCommon
             }
             catch (Exception ex)
             {
+                throw new Exception("写测试文档失败，错误信息：" + ex.Message);
             }
         }
 

@@ -31,12 +31,6 @@ namespace SK_FVision
         //private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
         #endregion
 
-        public string PlayModel
-        {
-            get;
-            set;
-        }
-
 
         public PlayView()
         {
@@ -44,20 +38,14 @@ namespace SK_FVision
             RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
         }
 
-        private void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (PlayModel.ToUpper() != "MAINPLAY")
-            {
-                HIK_CameraSet _CameraSet = new HIK_CameraSet();
-                _CameraSet.ShowDialog();
-            }
-        }
+        public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
+        { }
 
         private void PlayView_Load(object sender, EventArgs e)
         {
         }
 
-        public void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
+        public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
         {
             ////设置异常回调
             //HIK_NetSDK.NET_DVR_SetExceptionCallBack_V30(0, IntPtr.Zero, g_ExceptionCallBack, IntPtr.Zero);
