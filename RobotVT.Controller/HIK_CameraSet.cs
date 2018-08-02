@@ -12,6 +12,9 @@ namespace RobotVT.Controller
 {
     public partial class HIK_CameraSet : SK_FVision.CameraSet
     {
+        public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
+
+
         public HIK_CameraSet()
         {
             InitializeComponent();
@@ -19,18 +22,22 @@ namespace RobotVT.Controller
 
         public override void Init()
         {
-            base.Init();
             this.Text = StaticInfo.CameraSetFormTitle;
-            //this.StartPosition = FormStartPosition.CenterParent;
-            //this.WindowState = FormWindowState.Normal;
-            //this.ControlBox = false;
-            //this.ShowIcon = false;
-            //this.ShowInTaskbar = false;
 
-            this.CameraIP_AddressInput.Value = "192.168.1.64";
-            this.Port_textBoxX.Text = "8000";
-            this.UserName_textBoxX.Text = "admin";
-            this.Password_textBoxX.Text = "zx123456";
+            if (_CameraSet == null)
+            {
+                this.CameraIP_AddressInput.Value = "192.168.1.64";
+                this.Port_textBoxX.Text = "8000";
+                this.UserName_textBoxX.Text = "admin";
+                this.Password_textBoxX.Text = "zx123456";
+            }
+            else
+            {
+                this.CameraIP_AddressInput.Value = _CameraSet.VT_IP;
+                this.Port_textBoxX.Text = _CameraSet.VT_PORT;
+                this.UserName_textBoxX.Text = _CameraSet.VT_NAME;
+                this.Password_textBoxX.Text = _CameraSet.VT_PASSWORD;
+            }
 
             LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.Private));
             LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.RTSP));
@@ -40,7 +47,23 @@ namespace RobotVT.Controller
             HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.HTTP));
             HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.Auto));
             HTTP_comboBoxEx.SelectedIndex = 0;
+
+            base.Init();
         }
 
+        public override void HIK_CameraSet_Load(object sender, EventArgs e)
+        {
+            base.HIK_CameraSet_Load(sender, e);
+        }
+
+        public override void btX_Save_Click(object sender, EventArgs e)
+        {
+            base.btX_Save_Click(sender, e);
+        }
+
+        public override void btX_Cancel_Click(object sender, EventArgs e)
+        {
+            base.btX_Cancel_Click(sender, e);
+        }
     }
 }

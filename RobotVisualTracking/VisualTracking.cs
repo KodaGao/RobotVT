@@ -57,15 +57,6 @@ namespace RobotVT
             this.CompareTextPanel7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
             this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-
-
-            mainPlayView.PlayModel = "mainplay";
-            cloudPlayView.PlayModel = "cloud";
-            frontPlayView.PlayModel = "front";
-            backPlayView.PlayModel = "back";
-            rightPlayView.PlayModel = "right";
-            leftPlayView.PlayModel = "left";
-
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
@@ -249,6 +240,13 @@ namespace RobotVT
         {
             List<RobotVT.Model.S_D_CameraSet> _CameraSets = RobotVT.Controller.Methods.GetS_D_CameraSetList(0);
 
+            mainPlayView.PlayModel = "mainplay";
+            cloudPlayView.PlayModel = "cloud";
+            frontPlayView.PlayModel = "front";
+            backPlayView.PlayModel = "back";
+            rightPlayView.PlayModel = "right";
+            leftPlayView.PlayModel = "left";
+
             if (_CameraSets.Count<=0)
             {
 
@@ -257,16 +255,15 @@ namespace RobotVT
             {
                 foreach(Model.S_D_CameraSet o in _CameraSets)
                 {
-
                     string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
                     Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
                     string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
                     string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
 
-                    if (o.VT_ID.ToLower() == "cloudy")
+                    if (o.VT_ID.ToLower() == "cloud")
                     {
-                        mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
-                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
+                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                         cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                     if (o.VT_ID.ToLower() == "front")
