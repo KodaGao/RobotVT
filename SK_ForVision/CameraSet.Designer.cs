@@ -58,7 +58,7 @@
             this.btX_Save.Size = new System.Drawing.Size(85, 37);
             this.btX_Save.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.btX_Save.TabIndex = 4;
-            this.btX_Save.Text = "添加";
+            this.btX_Save.Text = "保存";
             this.btX_Save.Click += new System.EventHandler(this.btX_Save_Click);
             // 
             // btX_Cancel
@@ -297,7 +297,7 @@
             this.LoginModel_comboBoxEx.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.LoginModel_comboBoxEx.TabIndex = 17;
             // 
-            // HIK_CameraSet
+            // CameraSet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -308,7 +308,7 @@
             this.Controls.Add(this.btX_Save);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Name = "HIK_CameraSet";
+            this.Name = "CameraSet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Load += new System.EventHandler(this.HIK_CameraSet_Load);
             this.tableLayoutPanel.ResumeLayout(false);

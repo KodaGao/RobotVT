@@ -50,6 +50,18 @@
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
+    <Reference Include="SK_FCommon">
+      <HintPath>..\DLL\SK_FCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="SK_FControl">
+      <HintPath>..\DLL\SK_FControl.dll</HintPath>
+    </Reference>
+    <Reference Include="SK_FModel">
+      <HintPath>..\DLL\SK_FModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SK_FVision">
+      <HintPath>..\DLL\SK_FVision.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -109,22 +121,6 @@
     <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
-      <Project>{499970f7-0091-4be7-b452-365067b41108}</Project>
-      <Name>SK_FCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK_FControl\SK_FControl.csproj">
-      <Project>{b75a9186-4f28-49cb-833f-2375d5ea42c0}</Project>
-      <Name>SK_FControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK_FModel\SK_FModel.csproj">
-      <Project>{ab2cca12-3749-413f-a7ff-d7af7f9688af}</Project>
-      <Name>SK_FModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK_ForVision\SK_FVision.csproj">
-      <Project>{365184B2-8499-41CD-A4A3-9C2CC9DBA750}</Project>
-      <Name>SK_FVision</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

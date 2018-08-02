@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigInfo.cs" />
+    <Compile Include="DataAccess.cs" />
     <Compile Include="HIK_CameraSet.cs">
       <SubType>Form</SubType>
     </Compile>

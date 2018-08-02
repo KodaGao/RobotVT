@@ -57,6 +57,13 @@ namespace RobotVT
             this.CompareTextPanel7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
             this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
+
+            mainPlayView.MouseUp = false;
+            cloudPlayView.PlayModel = "cloud";
+            frontPlayView.PlayModel = "front";
+            backPlayView.PlayModel = "back";
+            leftPlayView.PlayModel = "left";
+            rightPlayView.PlayModel = "right";
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
@@ -238,14 +245,7 @@ namespace RobotVT
         
         private void LoginAllDev()//从数据库中取出所有信息,登陆设备
         {
-            List<RobotVT.Model.S_D_CameraSet> _CameraSets = RobotVT.Controller.Methods.GetS_D_CameraSetList(0);
-
-            mainPlayView.PlayModel = "mainplay";
-            cloudPlayView.PlayModel = "cloud";
-            frontPlayView.PlayModel = "front";
-            backPlayView.PlayModel = "back";
-            rightPlayView.PlayModel = "right";
-            leftPlayView.PlayModel = "left";
+            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
 
             if (_CameraSets.Count<=0)
             {
@@ -262,24 +262,29 @@ namespace RobotVT
 
                     if (o.VT_ID.ToLower() == "cloud")
                     {
+                        cloudPlayView._CameraSet = o;
                         //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
                         mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                         cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                     if (o.VT_ID.ToLower() == "front")
                     {
+                        frontPlayView._CameraSet = o;
                         frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                     if (o.VT_ID.ToLower() == "back")
                     {
+                        backPlayView._CameraSet = o;
                         backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                     if (o.VT_ID.ToLower() == "left")
                     {
+                        leftPlayView._CameraSet = o;
                         leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                     if (o.VT_ID.ToLower() == "right")
                     {
+                        rightPlayView._CameraSet = o;
                         rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                     }
                 }

@@ -830,7 +830,6 @@
             this.mainPlayView.Location = new System.Drawing.Point(18, 18);
             this.mainPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.mainPlayView.Name = "mainPlayView";
-            this.mainPlayView.PlayModel = null;
             this.mainPlayView.Size = new System.Drawing.Size(883, 487);
             this.mainPlayView.TabIndex = 0;
             // 
@@ -839,7 +838,6 @@
             this.cloudPlayView.Location = new System.Drawing.Point(19, 23);
             this.cloudPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cloudPlayView.Name = "cloudPlayView";
-            this.cloudPlayView.PlayModel = null;
             this.cloudPlayView.Size = new System.Drawing.Size(410, 208);
             this.cloudPlayView.TabIndex = 0;
             // 
@@ -848,7 +846,6 @@
             this.frontPlayView.Location = new System.Drawing.Point(19, 25);
             this.frontPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.frontPlayView.Name = "frontPlayView";
-            this.frontPlayView.PlayModel = null;
             this.frontPlayView.Size = new System.Drawing.Size(410, 208);
             this.frontPlayView.TabIndex = 0;
             // 
@@ -857,7 +854,6 @@
             this.backPlayView.Location = new System.Drawing.Point(19, 29);
             this.backPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.backPlayView.Name = "backPlayView";
-            this.backPlayView.PlayModel = null;
             this.backPlayView.Size = new System.Drawing.Size(410, 208);
             this.backPlayView.TabIndex = 0;
             // 
@@ -866,7 +862,6 @@
             this.rightPlayView.Location = new System.Drawing.Point(22, 29);
             this.rightPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rightPlayView.Name = "rightPlayView";
-            this.rightPlayView.PlayModel = null;
             this.rightPlayView.Size = new System.Drawing.Size(410, 208);
             this.rightPlayView.TabIndex = 0;
             // 
@@ -875,7 +870,6 @@
             this.leftPlayView.Location = new System.Drawing.Point(18, 29);
             this.leftPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.leftPlayView.Name = "leftPlayView";
-            this.leftPlayView.PlayModel = null;
             this.leftPlayView.Size = new System.Drawing.Size(410, 208);
             this.leftPlayView.TabIndex = 0;
             // 

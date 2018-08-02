@@ -13,6 +13,7 @@ namespace RobotVT.Controller
     public partial class HIK_CameraSet : SK_FVision.CameraSet
     {
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
+        public string PlayModel { get; set; }
 
 
         public HIK_CameraSet()
@@ -24,6 +25,20 @@ namespace RobotVT.Controller
         {
             this.Text = StaticInfo.CameraSetFormTitle;
 
+            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.Private));
+            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.RTSP));
+            LoginModel_comboBoxEx.SelectedIndex = 0;
+
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.HTTPS));
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.HTTP));
+            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.Auto));
+            HTTP_comboBoxEx.SelectedIndex = 0;
+                        
+            base.Init();
+        }
+
+        public override void HIK_CameraSet_Load(object sender, EventArgs e)
+        {
             if (_CameraSet == null)
             {
                 this.CameraIP_AddressInput.Value = "192.168.1.64";
@@ -38,26 +53,23 @@ namespace RobotVT.Controller
                 this.UserName_textBoxX.Text = _CameraSet.VT_NAME;
                 this.Password_textBoxX.Text = _CameraSet.VT_PASSWORD;
             }
-
-            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.Private));
-            LoginModel_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.ProtoType.RTSP));
-            LoginModel_comboBoxEx.SelectedIndex = 0;
-
-            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.HTTPS));
-            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.HTTP));
-            HTTP_comboBoxEx.Items.Add(SK_FCommon.Methods.GetEnumDescription(SK_FVision.HIK_StaticInfo.HTTPS.Auto));
-            HTTP_comboBoxEx.SelectedIndex = 0;
-
-            base.Init();
-        }
-
-        public override void HIK_CameraSet_Load(object sender, EventArgs e)
-        {
             base.HIK_CameraSet_Load(sender, e);
         }
 
         public override void btX_Save_Click(object sender, EventArgs e)
         {
+            if (_CameraSet == null)
+            {
+                _CameraSet = new Model.S_D_CameraSet();
+                _CameraSet.VT_ID = PlayModel;
+            }
+            _CameraSet.VT_IP = CameraIP_AddressInput.Value;
+            _CameraSet.VT_PORT = Port_textBoxX.Text;
+            _CameraSet.VT_NAME = UserName_textBoxX.Text;
+            _CameraSet.VT_PASSWORD = Password_textBoxX.Text;
+
+            new Controller.DataAccess().UpdateCameraSet(_CameraSet);
+
             base.btX_Save_Click(sender, e);
         }
 

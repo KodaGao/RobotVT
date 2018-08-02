@@ -12,10 +12,9 @@ namespace RobotVT.Controller
 {
     public partial class HIK_PlayView : SK_FVision.PlayView
     {
-
+        new public bool MouseUp = true;
 
         public string PlayModel { get; set; }
-
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
 
         public HIK_PlayView()
@@ -30,18 +29,15 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         {
-            HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
-            if (_CameraSet == null)
-            {
-                hIK_CameraSet._CameraSet = _CameraSet;
-                //弹出提示输入摄像头登陆信息并保存
-            };
+            if (!MouseUp && this.PlayModel == null) return;
 
-            if (_CameraSet.VT_ID.ToUpper() != "MAINPLAY")
+            HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
+            if (_CameraSet != null)
             {
                 hIK_CameraSet._CameraSet = _CameraSet;
-                hIK_CameraSet.ShowDialog();
             }
+            hIK_CameraSet.PlayModel = this.PlayModel;
+            hIK_CameraSet.ShowDialog();
 
             base.RealPlayWnd_MouseUp(sender, e);
         }
