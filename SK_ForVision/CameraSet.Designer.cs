@@ -328,11 +328,11 @@
         private DevComponents.DotNetBar.LabelX UserName_labelX;
         private DevComponents.DotNetBar.LabelX Port_labelX;
         private DevComponents.DotNetBar.LabelX CameraIP_labelX;
-        private DevComponents.Editors.IpAddressInput CameraIP_AddressInput;
-        private DevComponents.DotNetBar.Controls.TextBoxX Port_textBoxX;
-        private DevComponents.DotNetBar.Controls.TextBoxX UserName_textBoxX;
-        private DevComponents.DotNetBar.Controls.TextBoxX Password_textBoxX;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx LoginModel_comboBoxEx;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx HTTP_comboBoxEx;
+        public DevComponents.Editors.IpAddressInput CameraIP_AddressInput;
+        public DevComponents.DotNetBar.Controls.TextBoxX Port_textBoxX;
+        public DevComponents.DotNetBar.Controls.TextBoxX UserName_textBoxX;
+        public DevComponents.DotNetBar.Controls.TextBoxX Password_textBoxX;
+        public DevComponents.DotNetBar.Controls.ComboBoxEx LoginModel_comboBoxEx;
+        public DevComponents.DotNetBar.Controls.ComboBoxEx HTTP_comboBoxEx;
     }
 }

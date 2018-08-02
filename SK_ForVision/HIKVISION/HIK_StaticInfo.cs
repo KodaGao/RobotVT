@@ -9,9 +9,6 @@ namespace SK_FVision
 {
     public class HIK_StaticInfo
     {
-        public static string SetFormTitle = "设备信息";
-
-
         /// <summary>
         /// 应用层取流协议
         /// </summary>

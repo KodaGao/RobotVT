@@ -92,8 +92,12 @@
             this.frontCamera = new DevComponents.DotNetBar.PanelEx();
             this.cloudCamera = new DevComponents.DotNetBar.PanelEx();
             this.mainCamera = new DevComponents.DotNetBar.PanelEx();
-            this.hiK_PlayView1 = new RobotVT.Controller.HIK_PlayView();
-            this.hiK_PlayView2 = new RobotVT.Controller.HIK_PlayView();
+            this.mainPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.cloudPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.frontPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.backPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.rightPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.leftPlayView = new RobotVT.Controller.HIK_PlayView();
             this.topMain.SuspendLayout();
             this.robotPower.SuspendLayout();
             this.power2.SuspendLayout();
@@ -133,6 +137,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureB1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureA1)).BeginInit();
             this.mainWindow.SuspendLayout();
+            this.backCamera.SuspendLayout();
+            this.leftCamera.SuspendLayout();
+            this.rightCamera.SuspendLayout();
+            this.frontCamera.SuspendLayout();
             this.cloudCamera.SuspendLayout();
             this.mainCamera.SuspendLayout();
             this.SuspendLayout();
@@ -760,6 +768,7 @@
             // backCamera
             // 
             this.backCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.backCamera.Controls.Add(this.backPlayView);
             this.backCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.backCamera.Location = new System.Drawing.Point(1039, 532);
             this.backCamera.Name = "backCamera";
@@ -769,6 +778,7 @@
             // leftCamera
             // 
             this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.leftCamera.Controls.Add(this.rightPlayView);
             this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.leftCamera.Location = new System.Drawing.Point(566, 532);
             this.leftCamera.Name = "leftCamera";
@@ -778,6 +788,7 @@
             // rightCamera
             // 
             this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.rightCamera.Controls.Add(this.leftPlayView);
             this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.rightCamera.Location = new System.Drawing.Point(97, 532);
             this.rightCamera.Name = "rightCamera";
@@ -787,6 +798,7 @@
             // frontCamera
             // 
             this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.frontCamera.Controls.Add(this.frontPlayView);
             this.frontCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.frontCamera.Location = new System.Drawing.Point(1039, 264);
             this.frontCamera.Name = "frontCamera";
@@ -796,7 +808,7 @@
             // cloudCamera
             // 
             this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.cloudCamera.Controls.Add(this.hiK_PlayView1);
+            this.cloudCamera.Controls.Add(this.cloudPlayView);
             this.cloudCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.cloudCamera.Location = new System.Drawing.Point(1039, 0);
             this.cloudCamera.Name = "cloudCamera";
@@ -806,30 +818,66 @@
             // mainCamera
             // 
             this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.mainCamera.Controls.Add(this.hiK_PlayView2);
+            this.mainCamera.Controls.Add(this.mainPlayView);
             this.mainCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.mainCamera.Location = new System.Drawing.Point(97, 0);
             this.mainCamera.Name = "mainCamera";
             this.mainCamera.Size = new System.Drawing.Size(920, 518);
             this.mainCamera.TabIndex = 0;
             // 
-            // hiK_PlayView1
+            // mainPlayView
             // 
-            this.hiK_PlayView1.Location = new System.Drawing.Point(20, 31);
-            this.hiK_PlayView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.hiK_PlayView1.Name = "hiK_PlayView1";
-            this.hiK_PlayView1.PlayModel = null;
-            this.hiK_PlayView1.Size = new System.Drawing.Size(410, 208);
-            this.hiK_PlayView1.TabIndex = 0;
+            this.mainPlayView.Location = new System.Drawing.Point(18, 18);
+            this.mainPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.mainPlayView.Name = "mainPlayView";
+            this.mainPlayView.PlayModel = null;
+            this.mainPlayView.Size = new System.Drawing.Size(883, 487);
+            this.mainPlayView.TabIndex = 0;
             // 
-            // hiK_PlayView2
+            // cloudPlayView
             // 
-            this.hiK_PlayView2.Location = new System.Drawing.Point(41, 31);
-            this.hiK_PlayView2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.hiK_PlayView2.Name = "hiK_PlayView2";
-            this.hiK_PlayView2.PlayModel = null;
-            this.hiK_PlayView2.Size = new System.Drawing.Size(854, 451);
-            this.hiK_PlayView2.TabIndex = 0;
+            this.cloudPlayView.Location = new System.Drawing.Point(19, 23);
+            this.cloudPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cloudPlayView.Name = "cloudPlayView";
+            this.cloudPlayView.PlayModel = null;
+            this.cloudPlayView.Size = new System.Drawing.Size(410, 208);
+            this.cloudPlayView.TabIndex = 0;
+            // 
+            // frontPlayView
+            // 
+            this.frontPlayView.Location = new System.Drawing.Point(19, 25);
+            this.frontPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.frontPlayView.Name = "frontPlayView";
+            this.frontPlayView.PlayModel = null;
+            this.frontPlayView.Size = new System.Drawing.Size(410, 208);
+            this.frontPlayView.TabIndex = 0;
+            // 
+            // backPlayView
+            // 
+            this.backPlayView.Location = new System.Drawing.Point(19, 29);
+            this.backPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.backPlayView.Name = "backPlayView";
+            this.backPlayView.PlayModel = null;
+            this.backPlayView.Size = new System.Drawing.Size(410, 208);
+            this.backPlayView.TabIndex = 0;
+            // 
+            // rightPlayView
+            // 
+            this.rightPlayView.Location = new System.Drawing.Point(22, 29);
+            this.rightPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.rightPlayView.Name = "rightPlayView";
+            this.rightPlayView.PlayModel = null;
+            this.rightPlayView.Size = new System.Drawing.Size(410, 208);
+            this.rightPlayView.TabIndex = 0;
+            // 
+            // leftPlayView
+            // 
+            this.leftPlayView.Location = new System.Drawing.Point(18, 29);
+            this.leftPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.leftPlayView.Name = "leftPlayView";
+            this.leftPlayView.PlayModel = null;
+            this.leftPlayView.Size = new System.Drawing.Size(410, 208);
+            this.leftPlayView.TabIndex = 0;
             // 
             // VisualTracking
             // 
@@ -898,6 +946,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureB1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureA1)).EndInit();
             this.mainWindow.ResumeLayout(false);
+            this.backCamera.ResumeLayout(false);
+            this.leftCamera.ResumeLayout(false);
+            this.rightCamera.ResumeLayout(false);
+            this.frontCamera.ResumeLayout(false);
             this.cloudCamera.ResumeLayout(false);
             this.mainCamera.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -968,8 +1020,12 @@
         private DevComponents.DotNetBar.PanelEx frontCamera;
         private DevComponents.DotNetBar.PanelEx cloudCamera;
         private DevComponents.DotNetBar.PanelEx mainCamera;
-        private Controller.HIK_PlayView hiK_PlayView1;
-        private Controller.HIK_PlayView hiK_PlayView2;
+        private Controller.HIK_PlayView mainPlayView;
+        private Controller.HIK_PlayView cloudPlayView;
+        private Controller.HIK_PlayView frontPlayView;
+        private Controller.HIK_PlayView backPlayView;
+        private Controller.HIK_PlayView rightPlayView;
+        private Controller.HIK_PlayView leftPlayView;
     }
 }
 

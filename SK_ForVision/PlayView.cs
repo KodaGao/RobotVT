@@ -35,13 +35,19 @@ namespace SK_FVision
         public PlayView()
         {
             InitializeComponent();
+            this.Load += new System.EventHandler(this.PlayView_Load);
             RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
+            RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
+        }
+
+        public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
         }
 
         public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         { }
 
-        private void PlayView_Load(object sender, EventArgs e)
+        public virtual void PlayView_Load(object sender, EventArgs e)
         {
         }
 

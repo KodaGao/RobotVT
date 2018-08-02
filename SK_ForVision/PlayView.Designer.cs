@@ -50,7 +50,6 @@
             this.Controls.Add(this.RealPlayWnd);
             this.Name = "PlayView";
             this.Size = new System.Drawing.Size(410, 208);
-            this.Load += new System.EventHandler(this.PlayView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
