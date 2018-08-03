@@ -15,7 +15,8 @@ namespace RobotVT
         {
             InitializeComponent();
             this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VisualTracking_KeyDown);
+            this.FormClosing += new FormClosingEventHandler(this.VisualTracking_FormClosing);
+            this.FormClosed += new FormClosedEventHandler(VisualTracking_FormClosed);
             Init();
         }
 
@@ -59,11 +60,22 @@ namespace RobotVT
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
 
             mainPlayView.MouseUp = false;
+            mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
             cloudPlayView.PlayModel = "cloud";
+            cloudPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
             frontPlayView.PlayModel = "front";
+            frontPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
             backPlayView.PlayModel = "back";
+            backPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
             leftPlayView.PlayModel = "left";
+            leftPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
             rightPlayView.PlayModel = "right";
+            rightPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
@@ -82,13 +94,7 @@ namespace RobotVT
 
             LoginAllDev();
         }
-        private void VisualTracking_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Tab)
-            {
-                LeftOrRight();
-            }
-        }
+
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
         {
             int WM_KEYDOWN = 256;
@@ -98,13 +104,37 @@ namespace RobotVT
                 switch (keyData)
                 {
                     case Keys.Escape:
-                        Application.Exit();
+                        this.Close();
+                        break;
+                    case Keys.Tab:
+                        LeftOrRight();
                         break;
                 }
             }
             return false;
         }
-        
+
+
+        private void VisualTracking_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            LoginOutAll();
+            Dispose();
+            System.Environment.Exit(0);
+        }
+
+        private void VisualTracking_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("是否退出系统", "提示信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (result == DialogResult.OK)
+            {
+                e.Cancel = false;  //点击OK   
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
         #region UI优化
         float X, Y;//X表示窗体的宽度，Y表示窗体的高度
         bool clickb = false;
@@ -205,7 +235,7 @@ namespace RobotVT
                 mw1.X = mainWindow.Location.X - centerMain.Width;
                 mainWindow.Location = mw1;
                 mw1 = mainWindow2.Location;
-                mw1.X = mainWindow2.Location.X - centerMain.Width;
+                mw1.X = mainWindow2.Location.X + mainWindow2.Width;
                 mainWindow2.Location = mw1;
             }
             else
@@ -213,7 +243,7 @@ namespace RobotVT
                 mw1.X = mainWindow.Location.X + centerMain.Width;
                 mainWindow.Location = mw1;
                 mw1 = mainWindow2.Location;
-                mw1.X = mainWindow2.Location.X + centerMain.Width;
+                mw1.X = mainWindow2.Location.X - mainWindow2.Width;
                 mainWindow2.Location = mw1;
             }
         }
@@ -296,7 +326,31 @@ namespace RobotVT
 
         private void LoginOutAll()
         {
+            mainPlayView.LoginOut();
+            cloudPlayView.LoginOut();
+            frontPlayView.LoginOut();
+            backPlayView.LoginOut();
+            leftPlayView.LoginOut();
+            rightPlayView.LoginOut();
         }
+
+
+        private void Event_PlayViewMouseDoubleClick(string vtid)
+        {
+
+            mainPlayView.LoginOut();
+
+            Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
+
+            string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
+            Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
+            string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
+            string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
+            
+            mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+        }
+
+
     }
 }
  

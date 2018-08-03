@@ -12,6 +12,8 @@ namespace RobotVT.Controller
 {
     public partial class HIK_CameraSet : SK_FVision.CameraSet
     {
+        public event SK_FModel.SystemDelegate.del_SystemSetFinish Event_SetFinish;
+
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
         public string PlayModel { get; set; }
 
@@ -63,12 +65,34 @@ namespace RobotVT.Controller
                 _CameraSet = new Model.S_D_CameraSet();
                 _CameraSet.VT_ID = PlayModel;
             }
-            _CameraSet.VT_IP = CameraIP_AddressInput.Value;
-            _CameraSet.VT_PORT = Port_textBoxX.Text;
-            _CameraSet.VT_NAME = UserName_textBoxX.Text;
-            _CameraSet.VT_PASSWORD = Password_textBoxX.Text;
 
-            new Controller.DataAccess().UpdateCameraSet(_CameraSet);
+            bool bmodify = false;
+
+            if (_CameraSet.VT_IP != CameraIP_AddressInput.Value)
+            {
+                bmodify = true;
+                _CameraSet.VT_IP = CameraIP_AddressInput.Value;
+            }
+            if (_CameraSet.VT_PORT != Port_textBoxX.Text)
+            {
+                bmodify = true;
+                _CameraSet.VT_PORT = Port_textBoxX.Text;
+            }
+            if (_CameraSet.VT_NAME != UserName_textBoxX.Text)
+            {
+                bmodify = true;
+                _CameraSet.VT_NAME = UserName_textBoxX.Text;
+            }
+            if (_CameraSet.VT_PASSWORD != Password_textBoxX.Text)
+            {
+                bmodify = true;
+                _CameraSet.VT_PASSWORD = Password_textBoxX.Text;
+            }
+            if (bmodify)
+            {
+                new Controller.DataAccess().UpdateCameraSet(_CameraSet);
+                Event_SetFinish?.Invoke();
+            }
 
             base.btX_Save_Click(sender, e);
         }
