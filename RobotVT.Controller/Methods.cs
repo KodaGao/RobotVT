@@ -1,10 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using RobotVT.Model;
 using SK_FVision;
 
 namespace RobotVT.Controller
@@ -27,9 +23,29 @@ namespace RobotVT.Controller
             }
         }
 
+
+        /// <summary>
+        /// 保存异常日志
+        /// </summary>
+        /// <param name="Info"></param>
+        public static void SaveExceptionLog(SK_FModel.SystemEnum.LogType LogType, SK_FModel.SystemMessageInfo _MessageInfo)
+        {
+            try
+            {
+                string Info = _MessageInfo.Content;
+
+                SK_FCommon.LogHelper.SaveLog(LogType, Info, StaticInfo.LogFileHomePath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("保存异常日志失败，错误信息：" + ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// 初始化配置信息
-        /// </summary>
+        /// </summary>=
         public static void InitConfig()
         {
             try
@@ -108,14 +124,7 @@ namespace RobotVT.Controller
                     //保存SDK日志 To save the SDK log
                     HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
                 }
-                //if (!Directory.Exists(StaticInfo.ConfigInfo.TempDirPath))
-                //    Directory.CreateDirectory(StaticInfo.ConfigInfo.TempDirPath);
 
-                //if (!Directory.Exists(StaticInfo.ConfigInfo.ReportHomePath))
-                //    Directory.CreateDirectory(StaticInfo.ConfigInfo.ReportHomePath);
-
-                //if (!Directory.Exists(StaticInfo.ConfigInfo.ReportTemplateHomePath))
-                //    Directory.CreateDirectory(StaticInfo.ConfigInfo.ReportTemplateHomePath);
             }
             catch (Exception _Ex)
             {

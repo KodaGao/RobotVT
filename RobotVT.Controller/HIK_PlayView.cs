@@ -24,6 +24,30 @@ namespace RobotVT.Controller
             InitializeComponent();
         }
 
+        public override void sdkCaptureJpeg(string file)
+        {
+            base.sdkCaptureJpeg(file);
+            byte[] byJpegBuffer = new byte[0];
+            uint dwSizeReturned = 0;
+
+            if (NET_DVR_CaptureJPEGPicture_NEW(ref byJpegBuffer,ref dwSizeReturned))
+            {
+                SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
+                //将缓冲区里的JPEG图片数据写入文件 save the data into a file
+                string str = DateTime.Now.ToString("hhMMss") + ".jpg";
+                string strname = StaticInfo.CapturePath + str;
+                SK_FCommon.DirFile.CreateFile(strname, byJpegBuffer);
+
+
+                //System.IO.FileStream fs = new System.IO.FileStream(strname, System.IO.FileMode.Create);
+                //int iLen = (int)dwSizeReturned;
+                //fs.Write(byJpegBuffer, 0, iLen);
+                //fs.Close();
+
+            }
+        }
+
+
         public override void PlayView_Load(object sender, EventArgs e)
         {
             base.PlayView_Load(sender, e);
@@ -51,8 +75,8 @@ namespace RobotVT.Controller
 
         private void HIK_CameraSet_Event_SetFinish()
         {
-            LoginOut();
-
+            sdkLoginOut();
+            
             Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(_CameraSet.VT_ID);
 
             string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP

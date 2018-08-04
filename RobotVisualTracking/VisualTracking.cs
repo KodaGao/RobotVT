@@ -1,7 +1,9 @@
 ﻿using DevComponents.DotNetBar.Metro;
+using RobotVT.Controller;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -10,6 +12,7 @@ namespace RobotVT
     public partial class VisualTracking : MetroForm
     {
         public event SK_FModel.SystemDelegate.del_SystemLoadFinish Event_SystemLoadFinish;
+        private SK_FVision.HIK_NetSDK.MSGCallBack m_falarmData = null;
 
         public VisualTracking()
         {
@@ -17,7 +20,11 @@ namespace RobotVT
             this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
             this.FormClosing += new FormClosingEventHandler(this.VisualTracking_FormClosing);
             this.FormClosed += new FormClosedEventHandler(VisualTracking_FormClosed);
+            
             Init();
+            X = this.Width;//赋值初始窗体宽度
+            Y = this.Height;//赋值初始窗体高度
+            setTag(this);
         }
 
         private void Init()
@@ -32,7 +39,7 @@ namespace RobotVT
             this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
             this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
             this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
-            this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp;
+            this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp_0;
 
             this.mainCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainCarmer;
             this.cloudCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudCarmer;
@@ -80,18 +87,17 @@ namespace RobotVT
 
         private void VisualTracking_Load(object sender, EventArgs e)
         {
-            X = this.Width;//赋值初始窗体宽度
-            Y = this.Height;//赋值初始窗体高度
-            setTag(this);
+            //RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
+            //RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
+            //System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
+            //thread.IsBackground = true;
+            //thread.Start();
 
-            RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
-            RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
-            thread.IsBackground = true;
-            thread.Start();
-
+            //设置报警回调函数
+            m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
+            SK_FVision.HIK_NetSDK.NET_DVR_SetDVRMessageCallBack_V30(m_falarmData, IntPtr.Zero);
+            
             Event_SystemLoadFinish?.Invoke();
-
             LoginAllDev();
         }
 
@@ -114,7 +120,188 @@ namespace RobotVT
             return false;
         }
 
+        #region 报警回调
 
+        private void LoginAllDev()//从数据库中取出所有信息,登陆设备
+        {
+            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
+
+            if (_CameraSets.Count <= 0)
+            {
+
+            }
+            else
+            {
+                foreach (Model.S_D_CameraSet o in _CameraSets)
+                {
+                    string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
+                    Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
+                    string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
+                    string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
+
+                    if (o.VT_ID.ToLower() == "cloud")
+                    {
+                        cloudPlayView._CameraSet = o;
+                        //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
+                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        mainPlayView.sdkSetAlarm();
+
+                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        cloudPlayView.sdkSetAlarm();
+
+                    }
+                    if (o.VT_ID.ToLower() == "front")
+                    {
+                        frontPlayView._CameraSet = o;
+                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "back")
+                    {
+                        backPlayView._CameraSet = o;
+                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "left")
+                    {
+                        leftPlayView._CameraSet = o;
+                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                    if (o.VT_ID.ToLower() == "right")
+                    {
+                        rightPlayView._CameraSet = o;
+                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    }
+                }
+            }
+
+
+
+        }
+
+        private void LoginOutAll()
+        {
+            mainPlayView.sdkCloseAlarm();
+            cloudPlayView.sdkCloseAlarm();
+            mainPlayView.sdkLoginOut();
+            cloudPlayView.sdkLoginOut();
+            frontPlayView.sdkLoginOut();
+            backPlayView.sdkLoginOut();
+            leftPlayView.sdkLoginOut();
+            rightPlayView.sdkLoginOut();
+        }
+        
+        private void LoginCloseAlarm(int m_lUserID)
+        {
+
+        }
+
+
+        /// <summary>
+        /// 数据处理委托
+        /// </summary>
+        private delegate void DealVideoDelegate(int lCommand, ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser);
+        private void MsgCallback(int lCommand, ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
+        {
+
+            //视频数据使用委托方式处理，否则会出现内存回收异常
+            DealVideoDelegate videoDlegate = new DealVideoDelegate(dealAlarm);
+            videoDlegate(lCommand, ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+        }
+
+
+        /// <summary>
+        /// 视频数据处理
+        /// </summary>
+        private void dealAlarm(int lCommand, ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
+        {
+            string ste = "";
+            //通过lCommand来判断接收到的报警信息类型，不同的lCommand对应不同的pAlarmInfo内容
+            switch (lCommand)
+            {
+                case SK_FVision.HIK_NetSDK.COMM_ALARM_FACE://人脸检测识别报警信息，对应NET_DVR_FACEDETECT_ALARM
+
+                    ste = "人脸检测识别报警信息 " + lCommand.ToString();
+
+                    ProcessCommAlarm_FaceDetect(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+
+                    break;
+                case SK_FVision.HIK_NetSDK.COMM_UPLOAD_FACESNAP_RESULT://人脸识别结果上传
+                    ste = "人脸识别结果上传 " + lCommand.ToString();
+                    ProcessCommAlarm_FaceSNAP(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+                    break;
+
+
+                case SK_FVision.HIK_NetSDK.COMM_SNAP_MATCH_ALARM://黑名单比对结果上传
+                    ste = "黑名单比对结果上传 " + lCommand.ToString();
+                    ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+                    break;
+                default:
+                    break;
+            }
+
+            //SK_FModel.SystemMessageInfo _MessageInfo = new SK_FModel.SystemMessageInfo();
+            //_MessageInfo.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            //_MessageInfo.Content = ste;
+            //_MessageInfo.Source = "布防报警";
+            //_MessageInfo.Type = SK_FModel.SystemEnum.MessageType.Normal;
+            //StaticInfo.QueueMessageInfo.Enqueue(_MessageInfo);
+        }
+
+        private void ProcessCommAlarm_FaceDetect(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
+        {
+
+            SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarmFACEDETECT = new SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM();
+
+            struAlarmFACEDETECT = (SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM));
+
+            string strIP = pAlarmer.sDeviceIP;
+            string stringAlarm = "";
+
+            //保存抓拍场景图片
+            mainPlayView.sdkCaptureJpeg("");
+            //switch (struAlarmFACEDETECT.byAlarmPicType)// 0 - 异常人脸报警图片 1 - 人脸图片,2 - 多张人脸
+            //{
+            //    case 0:
+            //        break;
+            //    case 1:
+            //        break;
+            //    case 2:
+            //        break;
+            //    default:
+            //        stringAlarm = "其他未知报警信息";
+            //        break;
+            //}
+        }
+
+        private void ProcessCommAlarm_FaceSNAP(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
+        {
+            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT();
+
+            struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT));
+
+            string strIP = pAlarmer.sDeviceIP;
+            string stringAlarm = "";
+
+            //保存抓拍场景图片
+            mainPlayView.sdkCaptureJpeg("");
+        }
+
+        private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
+        {
+
+            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM();
+
+            struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
+
+            string strIP = pAlarmer.sDeviceIP;
+            string stringAlarm = "";
+            //保存抓拍场景图片
+            mainPlayView.sdkCaptureJpeg("");
+        }
+
+
+        #endregion
+
+        #region 
         private void VisualTracking_FormClosed(object sender, FormClosedEventArgs e)
         {
             LoginOutAll();
@@ -134,6 +321,7 @@ namespace RobotVT
                 e.Cancel = true;
             }
         }
+        #endregion
 
         #region UI优化
         float X, Y;//X表示窗体的宽度，Y表示窗体的高度
@@ -249,10 +437,6 @@ namespace RobotVT
         }
         #endregion
         
-        private void AddQueue(SK_FModel.SystemMessageInfo messageInfo)
-        {
-            RobotVT.Controller.StaticInfo.QueueMessageInfo.Enqueue(messageInfo);
-        }
 
         private void Thread_SaveLogInfo()
         {
@@ -262,7 +446,7 @@ namespace RobotVT
                 {
                     if (RobotVT.Controller.StaticInfo.QueueMessageInfo.Count > 0)
                     {
-                        //SK_FCommon.LogHelper.SaveLog(RobotVT.Controller.StaticInfo.QueueMessageInfo.Dequeue());
+                        Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Runing, RobotVT.Controller.StaticInfo.QueueMessageInfo.Dequeue());
                     }
                 }
                 catch (Exception ex)
@@ -273,73 +457,16 @@ namespace RobotVT
             }
         }
         
-        private void LoginAllDev()//从数据库中取出所有信息,登陆设备
-        {
-            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
-
-            if (_CameraSets.Count<=0)
-            {
-
-            }
-            else
-            {
-                foreach(Model.S_D_CameraSet o in _CameraSets)
-                {
-                    string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
-                    Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
-                    string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
-                    string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
-
-                    if (o.VT_ID.ToLower() == "cloud")
-                    {
-                        cloudPlayView._CameraSet = o;
-                        //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "front")
-                    {
-                        frontPlayView._CameraSet = o;
-                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "back")
-                    {
-                        backPlayView._CameraSet = o;
-                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "left")
-                    {
-                        leftPlayView._CameraSet = o;
-                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "right")
-                    {
-                        rightPlayView._CameraSet = o;
-                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                }
-            }
-
-
-
-        }
-
-        private void LoginOutAll()
-        {
-            mainPlayView.LoginOut();
-            cloudPlayView.LoginOut();
-            frontPlayView.LoginOut();
-            backPlayView.LoginOut();
-            leftPlayView.LoginOut();
-            rightPlayView.LoginOut();
-        }
-
-
         private void Event_PlayViewMouseDoubleClick(string vtid)
         {
+            if (vtid == "cloud")
+            {
+                mainPlayView.sdkCloseAlarm();
+                cloudPlayView.sdkCloseAlarm();
+            }
 
-            mainPlayView.LoginOut();
-
+            mainPlayView.sdkLoginOut();
+            Thread.Sleep(10);
             Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
 
             string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP

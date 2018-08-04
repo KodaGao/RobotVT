@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\DLL\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -87,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\webcam_128px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
+      <Project>{499970F7-0091-4BE7-B452-365067B41108}</Project>
+      <Name>SK_FCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

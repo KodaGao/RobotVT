@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using SK_FCommon;
 
 namespace SK_FVision
 {
@@ -20,6 +22,7 @@ namespace SK_FVision
         private string str;
         private Int32 m_lPort = -1;
         private IntPtr m_ptrRealHandle;
+        private Int32 m_lAlarmHandle = -1;
 
         private HIK_NetSDK.REALDATACALLBACK RealData = null;
         private HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
@@ -53,9 +56,6 @@ namespace SK_FVision
 
         public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
         {
-            ////设置异常回调
-            //HIK_NetSDK.NET_DVR_SetExceptionCallBack_V30(0, IntPtr.Zero, g_ExceptionCallBack, IntPtr.Zero);
-
             //登录设备 Login the device
             int userID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
 
@@ -146,8 +146,10 @@ namespace SK_FVision
             }
         }
 
-        public void LoginOut()
+        public void sdkLoginOut()
         {
+            stopScreen();
+
             if (m_lUserID >= 0)
             {
                 //注销登录 Logout the device
@@ -169,6 +171,129 @@ namespace SK_FVision
             }
             return;
         }
+        private void stopScreen()
+        {
+            //停止预览 Stop live view 
+            if (!HIK_NetSDK.NET_DVR_StopRealPlay(m_lRealHandle))
+            {
+                iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
+                str = "NET_DVR_StopRealPlay failed, error code= " + iLastErr;
+                DebugInfo(str);
+                return;
+            }
+            if (!HIK_PlayCtrl.PlayM4_Stop(m_lPort))
+            {
+                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+                str = "PlayM4_Stop failed, error code= " + iLastErr;
+                DebugInfo(str);
+            }
+            if (!HIK_PlayCtrl.PlayM4_CloseStream(m_lPort))
+            {
+                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+                str = "PlayM4_CloseStream failed, error code= " + iLastErr;
+                DebugInfo(str);
+            }
+            if (!HIK_PlayCtrl.PlayM4_FreePort(m_lPort))
+            {
+                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+                str = "PlayM4_FreePort failed, error code= " + iLastErr;
+                DebugInfo(str);
+            }
+            m_lPort = -1;
+
+            DebugInfo("NET_DVR_StopRealPlay succ!");
+            m_lRealHandle = -1;
+            RealPlayWnd.Invalidate();//刷新窗口 refresh the window
+        }
+
+
+        public virtual void sdkSetAlarm()
+        {
+            HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
+            struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
+            struAlarmParam.byLevel = 1; //0- 一级布防,1- 二级布防
+            struAlarmParam.byAlarmInfoType = 1;//智能交通设备有效，新报警信息类型
+            
+            m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
+            if (m_lAlarmHandle < 0)
+            {
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                str = "布防失败，错误号：" + iLastErr; //布防失败，输出错误号
+            }
+            else
+            {
+                str = "布防成功，设备SN：" + DeviceInfo.sSerialNumber.ToString(); //布防成功，输出设备序列号
+            }
+            DebugInfo(str);
+        }
+
+        public virtual void sdkCloseAlarm()
+        {
+            if (m_lAlarmHandle >= 0)
+            {
+                if (!HIK_NetSDK.NET_DVR_CloseAlarmChan_V30(m_lAlarmHandle))
+                {
+                    iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
+                    str = "撤防失败，错误号：" + iLastErr; //撤防失败，输出错误号
+                }
+                else
+                {
+                    str = "撤防成功，设备SN：" + DeviceInfo.sSerialNumber.ToString(); //布防成功，输出设备序列号
+                    m_lAlarmHandle = -1;
+                }
+            }
+            else
+            {
+                str = "未布防，设备SN：" + DeviceInfo.sSerialNumber.ToString(); //布防成功，输出设备序列号
+            }
+            DebugInfo(str);
+        }
+
+        public virtual void sdkCaptureJpeg(string file)
+        {
+        }
+
+        public  bool NET_DVR_CaptureJPEGPicture_NEW(ref byte[] byJpegPicBuffer,ref uint dwSizeReturned)
+        {
+            SK_FVision.HIK_NetSDK.NET_DVR_JPEGPARA lpJpegPara = new SK_FVision.HIK_NetSDK.NET_DVR_JPEGPARA();
+            lpJpegPara.wPicQuality = 0; //图像质量 Image quality
+            lpJpegPara.wPicSize = 0xff; //抓图分辨率 Picture size: 0xff-Auto(使用当前码流分辨率) 
+
+            ////JEPG抓图，数据保存在缓冲区中 Capture a JPEG picture and save in the buffer
+            uint iBuffSize = 400000; //缓冲区大小需要不小于一张图片数据的大小 The buffer size should not be less than the picture size
+            //byte[] byJpegPicBuffer = new byte[iBuffSize];
+            //uint dwSizeReturned = 0;
+            byJpegPicBuffer = new byte[iBuffSize];
+            dwSizeReturned = 0;
+
+            if (!SK_FVision.HIK_NetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, 1, ref lpJpegPara, byJpegPicBuffer, iBuffSize, ref dwSizeReturned))
+            {
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                str = "NET_DVR_CaptureJPEGPicture_NEW failed, error code= " + iLastErr;
+                DebugInfo(str);
+                return false;
+            }
+            else
+            {
+                str = "NET_DVR_CaptureJPEGPicture_NEW succ and save the data in buffer to 'buffertest.jpg'.";
+                DebugInfo(str);
+                return true;
+            }
+        }
+
+
+        public virtual bool FileExits(string filepath)
+        {
+            if (System.IO.File.Exists(filepath))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         private void DebugInfo(string str)
         {
@@ -305,5 +430,6 @@ namespace SK_FVision
                     break;
             }
         }
+
     }
 }
