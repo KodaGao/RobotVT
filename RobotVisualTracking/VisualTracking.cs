@@ -66,6 +66,17 @@ namespace RobotVT
             this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
 
+
+            this.pictureB1.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB2.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB3.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB4.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB5.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB6.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB7.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureB8.SizeMode = PictureBoxSizeMode.Zoom;
+
+
             mainPlayView.MouseUp = false;
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
@@ -92,6 +103,13 @@ namespace RobotVT
             //System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
             //thread.IsBackground = true;
             //thread.Start();
+
+
+            RobotVT.Controller.StaticInfo.IsLoadCaputeImage = true;
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_LoadCapture));
+            thread.IsBackground = true;
+            thread.Start();
+
 
             //设置报警回调函数
             m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
@@ -281,6 +299,11 @@ namespace RobotVT
             string strIP = pAlarmer.sDeviceIP;
             string stringAlarm = "";
 
+            float x = struAlarm.struTargetInfo.struRect.fX;
+            float g = struAlarm.struTargetInfo.struRect.fY;
+            float width = struAlarm.struTargetInfo.struRect.fWidth;
+            float height = struAlarm.struTargetInfo.struRect.fHeight;
+
             //保存抓拍场景图片
             mainPlayView.sdkCaptureJpeg("");
         }
@@ -437,6 +460,31 @@ namespace RobotVT
         }
         #endregion
         
+
+        private void Thread_LoadCapture()
+        {
+            while (RobotVT.Controller.StaticInfo.IsLoadCaputeImage)
+            {
+                try
+                {
+                    SK_FCommon.FileTimeInfo latest = SK_FCommon.DirFile.GetLatestFileTimeInfo(StaticInfo.CapturePath, ".jpg");
+                    if (latest != null)
+                    {
+                        //if (pictureB1.Image == null)
+                        //{ 
+                            pictureB1.Load(latest.FileName);
+                        //}
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    //throw new Exception("加载人脸比对图片失败，错误信息：" + ex.Message);
+                }
+                System.Threading.Thread.Sleep(2000);
+            }
+        }
+
 
         private void Thread_SaveLogInfo()
         {

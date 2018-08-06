@@ -1,14 +1,46 @@
 ﻿using System;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace SK_FCommon
 {
+    //自定义一个类
+    public class FileTimeInfo
+    {
+        public string FileName;  //文件名
+        public DateTime FileCreateTime; //创建时间
+    }
+
     /// <summary>
     /// 文件操作夹
     /// </summary>
     public static class DirFile
     {
+
+        public static FileTimeInfo GetLatestFileTimeInfo(string dir, string ext)
+        {
+            System.Collections.Generic.List<FileTimeInfo> list = new System.Collections.Generic.List<FileTimeInfo>();
+            DirectoryInfo d = new DirectoryInfo(dir);
+            foreach (FileInfo fi in d.GetFiles())
+            {
+                if (fi.Extension.ToUpper() == ext.ToUpper())
+                {
+                    list.Add(new FileTimeInfo()
+                    {
+                        FileName = fi.FullName,
+                        FileCreateTime = fi.CreationTime
+                    });
+                }
+            }
+            var qry = from x in list
+                      orderby x.FileCreateTime
+                      select x;
+            return qry.LastOrDefault();
+        }
+
+
+
         #region 检测指定目录是否存在
         /// <summary>
         /// 检测指定目录是否存在

@@ -18,6 +18,7 @@ namespace RobotVT.Controller
 
         public static Queue<SK_FModel.SystemMessageInfo> QueueMessageInfo;
         public static bool IsSaveLogInfo;
+        public static bool IsLoadCaputeImage;
 
         /// <summary>
         /// 数据库文件绝对路径
