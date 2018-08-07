@@ -72,6 +72,12 @@
     <Compile Include="HIK_CameraSet.Designer.cs">
       <DependentUpon>HIK_CameraSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="HIK_FaceSnap.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HIK_FaceSnap.Designer.cs">
+      <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
+    </Compile>
     <Compile Include="HIK_PlayView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -91,6 +97,9 @@
   <ItemGroup>
     <EmbeddedResource Include="HIK_CameraSet.resx">
       <DependentUpon>HIK_CameraSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HIK_FaceSnap.resx">
+      <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

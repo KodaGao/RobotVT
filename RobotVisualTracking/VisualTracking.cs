@@ -66,6 +66,14 @@ namespace RobotVT
             this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
             this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
 
+            this.pictureA1.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA2.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA3.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA4.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA5.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA6.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA7.SizeMode = PictureBoxSizeMode.Zoom;
+            this.pictureA8.SizeMode = PictureBoxSizeMode.Zoom;
 
             this.pictureB1.SizeMode = PictureBoxSizeMode.Zoom;
             this.pictureB2.SizeMode = PictureBoxSizeMode.Zoom;
@@ -104,19 +112,17 @@ namespace RobotVT
             //thread.IsBackground = true;
             //thread.Start();
 
-
-            RobotVT.Controller.StaticInfo.IsLoadCaputeImage = true;
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_LoadCapture));
-            thread.IsBackground = true;
-            thread.Start();
-
-
             //设置报警回调函数
             m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
             SK_FVision.HIK_NetSDK.NET_DVR_SetDVRMessageCallBack_V30(m_falarmData, IntPtr.Zero);
             
             Event_SystemLoadFinish?.Invoke();
             LoginAllDev();
+
+            RobotVT.Controller.StaticInfo.IsLoadCaputeImage = true;
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_LoadCapture));
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
@@ -255,13 +261,6 @@ namespace RobotVT
                 default:
                     break;
             }
-
-            //SK_FModel.SystemMessageInfo _MessageInfo = new SK_FModel.SystemMessageInfo();
-            //_MessageInfo.DateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            //_MessageInfo.Content = ste;
-            //_MessageInfo.Source = "布防报警";
-            //_MessageInfo.Type = SK_FModel.SystemEnum.MessageType.Normal;
-            //StaticInfo.QueueMessageInfo.Enqueue(_MessageInfo);
         }
 
         private void ProcessCommAlarm_FaceDetect(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
@@ -441,12 +440,12 @@ namespace RobotVT
         private void LeftOrRight()
         {
             var mw1 = mainWindow.Location;
-            if (mw1.X > 0)
+            if (mw1.X == 0)
             {
                 mw1.X = mainWindow.Location.X - centerMain.Width;
                 mainWindow.Location = mw1;
                 mw1 = mainWindow2.Location;
-                mw1.X = mainWindow2.Location.X + mainWindow2.Width;
+                mw1.X = mainWindow2.Location.X - centerMain.Width;
                 mainWindow2.Location = mw1;
             }
             else
@@ -454,34 +453,93 @@ namespace RobotVT
                 mw1.X = mainWindow.Location.X + centerMain.Width;
                 mainWindow.Location = mw1;
                 mw1 = mainWindow2.Location;
-                mw1.X = mainWindow2.Location.X - mainWindow2.Width;
+                mw1.X = mainWindow2.Location.X + centerMain.Width;
                 mainWindow2.Location = mw1;
             }
+            //var mw1 = mainWindow.Location;
+            //if (mw1.X > 0)
+            //{
+            //    mw1.X = mainWindow.Location.X - centerMain.Width;
+            //    mainWindow.Location = mw1;
+            //    mw1 = mainWindow2.Location;
+            //    mw1.X = mainWindow2.Location.X + mainWindow2.Width;
+            //    mainWindow2.Location = mw1;
+            //}
+            //else
+            //{
+            //    mw1.X = mainWindow.Location.X + centerMain.Width;
+            //    mainWindow.Location = mw1;
+            //    mw1 = mainWindow2.Location;
+            //    mw1.X = mainWindow2.Location.X - mainWindow2.Width;
+            //    mainWindow2.Location = mw1;
+            //}
         }
         #endregion
-        
-
         private void Thread_LoadCapture()
         {
+            int inum = -1;
+            string newfilename = "";
             while (RobotVT.Controller.StaticInfo.IsLoadCaputeImage)
             {
                 try
                 {
                     SK_FCommon.FileTimeInfo latest = SK_FCommon.DirFile.GetLatestFileTimeInfo(StaticInfo.CapturePath, ".jpg");
-                    if (latest != null)
-                    {
-                        //if (pictureB1.Image == null)
-                        //{ 
-                            pictureB1.Load(latest.FileName);
-                        //}
-                    }
 
+                    if (latest != null && newfilename != latest.FileName)
+                    {
+                        if (pictureA1.Image == null && inum == -1)
+                        {
+                            pictureA1.Load(latest.FileName);
+                            inum = 1;
+                        }
+                        switch (inum)
+                        {
+                            case 1:
+                                pictureA1.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 2:
+                                pictureA2.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 3:
+                                pictureA3.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 4:
+                                pictureA4.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 5:
+                                pictureA5.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 6:
+                                pictureA6.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 7:
+                                pictureA7.Load(latest.FileName);
+                                inum++;
+                                break;
+                            case 8:
+                                pictureA8.Load(latest.FileName);
+                                inum++;
+                                break;
+                        }
+                        newfilename = latest.FileName;
+                    }
                 }
                 catch (Exception ex)
                 {
                     //throw new Exception("加载人脸比对图片失败，错误信息：" + ex.Message);
                 }
-                System.Threading.Thread.Sleep(2000);
+                finally
+                {
+                    if (inum == 9)
+                        inum = 1;
+                    Thread.Sleep(100);
+                }
             }
         }
 
@@ -521,7 +579,7 @@ namespace RobotVT
             Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
             string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
             string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
-            
+
             mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
         }
 
