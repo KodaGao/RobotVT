@@ -301,7 +301,7 @@
             this.centerMain.Controls.Add(this.mainWindow2);
             this.centerMain.Controls.Add(this.mainWindow);
             this.centerMain.DisabledBackColor = System.Drawing.Color.Empty;
-            this.centerMain.Location = new System.Drawing.Point(0, 73);
+            this.centerMain.Location = new System.Drawing.Point(0, 61);
             this.centerMain.Name = "centerMain";
             this.centerMain.Size = new System.Drawing.Size(1920, 985);
             this.centerMain.TabIndex = 41;
@@ -1018,7 +1018,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
             this.ClientSize = new System.Drawing.Size(1904, 1084);
-            this.ControlBox = false;
             this.Controls.Add(this.centerMain);
             this.Controls.Add(this.topMain);
             this.DoubleBuffered = true;

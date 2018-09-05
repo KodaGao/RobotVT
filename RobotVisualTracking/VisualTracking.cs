@@ -123,6 +123,35 @@ namespace RobotVT
             System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_LoadCapture));
             thread.IsBackground = true;
             thread.Start();
+
+            mainPlayView.sdkSetAlarm();
+            
+            //byte[] strIP = new byte[16 * 16];
+            //uint dwValidNum = 0;
+            //Boolean bEnableBind = false;
+            //string strListenIP="";
+            ////获取本地PC网卡IP信息
+            //if (SK_FVision.HIK_NetSDK.NET_DVR_GetLocalIP(strIP, ref dwValidNum, ref bEnableBind))
+            //{
+            //    if (dwValidNum > 0)
+            //    {
+            //        //取第一张网卡的IP地址为默认监听端口
+            //        strListenIP = System.Text.Encoding.UTF8.GetString(strIP, 0, 16);
+            //    }
+
+            //}
+
+            //int iListenHandle = SK_FVision.HIK_NetSDK.NET_DVR_StartListen_V30(strListenIP, 7300, m_falarmData, IntPtr.Zero);
+            //if (iListenHandle < 0)
+            //{
+            //    uint iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+            //    string strErr = "启动监听失败，错误号：" + iLastErr; //撤防失败，输出错误号
+            //    MessageBox.Show(strErr);
+            //}
+            //else
+            //{
+            //    MessageBox.Show("成功启动监听！");
+            //}
         }
 
         protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
@@ -146,56 +175,247 @@ namespace RobotVT
 
         #region 报警回调
 
-        private void LoginAllDev()//从数据库中取出所有信息,登陆设备
+
+        private bool m_bInitSDK = false;
+        private bool m_bRecord = false;
+        private uint iLastErr = 0;
+        private Int32 m_lUserID = -1;
+        private Int32 m_lRealHandle = -1;
+        private string str1;
+        private string str2;
+        private Int32 i = 0;
+        private Int32 m_lTree = 0;
+        private string str;
+        private long iSelIndex = 0;
+        private uint dwAChanTotalNum = 0;
+        private uint dwDChanTotalNum = 0;
+        private Int32 m_lPort = -1;
+        private IntPtr m_ptrRealHandle;
+        private int[] iIPDevID = new int[96];
+        private int[] iChannelNum = new int[96];
+        private SK_FVision.HIK_NetSDK.REALDATACALLBACK RealData = null;
+        public SK_FVision.HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
+        public SK_FVision.HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
+        public SK_FVision.HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
+        public SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
+        public SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
+
+
+        public void InfoIPChannel()
         {
-            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
+            uint dwSize = (uint)Marshal.SizeOf(m_struIpParaCfgV40);
 
-            if (_CameraSets.Count <= 0)
+            IntPtr ptrIpParaCfgV40 = Marshal.AllocHGlobal((Int32)dwSize);
+            Marshal.StructureToPtr(m_struIpParaCfgV40, ptrIpParaCfgV40, false);
+
+            uint dwReturn = 0;
+            int iGroupNo = 0;  //该Demo仅获取第一组64个通道，如果设备IP通道大于64路，需要按组号0~i多次调用NET_DVR_GET_IPPARACFG_V40获取
+
+            if (!SK_FVision.HIK_NetSDK.NET_DVR_GetDVRConfig(m_lUserID, SK_FVision.HIK_NetSDK.NET_DVR_GET_IPPARACFG_V40, iGroupNo, ptrIpParaCfgV40, dwSize, ref dwReturn))
             {
-
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                str = "NET_DVR_GET_IPPARACFG_V40 failed, error code= " + iLastErr;
             }
             else
             {
-                foreach (Model.S_D_CameraSet o in _CameraSets)
+                m_struIpParaCfgV40 = (SK_FVision.HIK_NetSDK.NET_DVR_IPPARACFG_V40)Marshal.PtrToStructure(ptrIpParaCfgV40, typeof(SK_FVision.HIK_NetSDK.NET_DVR_IPPARACFG_V40));
+
+                for (int i = 0; i < dwAChanTotalNum; i++)
                 {
-                    string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
-                    Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
-                    string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
-                    string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
+                    ListAnalogChannel(i + 1, m_struIpParaCfgV40.byAnalogChanEnable[i]);
+                    iChannelNum[i] = i + (int)DeviceInfo.byStartChan;
+                }
 
-                    if (o.VT_ID.ToLower() == "cloud")
-                    {
-                        cloudPlayView._CameraSet = o;
-                        //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        mainPlayView.sdkSetAlarm();
+                byte byStreamType = 0;
+                uint iDChanNum = 64;
 
-                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        cloudPlayView.sdkSetAlarm();
+                if (dwDChanTotalNum < 64)
+                {
+                    iDChanNum = dwDChanTotalNum; //如果设备IP通道小于64路，按实际路数获取
+                }
 
-                    }
-                    if (o.VT_ID.ToLower() == "front")
+                for (int i = 0; i < iDChanNum; i++)
+                {
+                    iChannelNum[i + dwAChanTotalNum] = i + (int)m_struIpParaCfgV40.dwStartDChan;
+                    byStreamType = m_struIpParaCfgV40.struStreamMode[i].byGetStreamType;
+
+                    dwSize = (uint)Marshal.SizeOf(m_struIpParaCfgV40.struStreamMode[i].uGetStream);
+                    switch (byStreamType)
                     {
-                        frontPlayView._CameraSet = o;
-                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "back")
-                    {
-                        backPlayView._CameraSet = o;
-                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "left")
-                    {
-                        leftPlayView._CameraSet = o;
-                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    }
-                    if (o.VT_ID.ToLower() == "right")
-                    {
-                        rightPlayView._CameraSet = o;
-                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //目前NVR仅支持直接从设备取流 NVR supports only the mode: get stream from device directly
+                        case 0:
+                            IntPtr ptrChanInfo = Marshal.AllocHGlobal((Int32)dwSize);
+                            Marshal.StructureToPtr(m_struIpParaCfgV40.struStreamMode[i].uGetStream, ptrChanInfo, false);
+                            m_struChanInfo = (SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO)Marshal.PtrToStructure(ptrChanInfo, typeof(SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO));
+
+                            //列出IP通道 List the IP channel
+                            ListIPChannel(i + 1, m_struChanInfo.byEnable, m_struChanInfo.byIPID);
+                            if (m_struChanInfo.byEnable != 0)
+                            {
+                                if (i == 1)
+                                {
+                                    mainPlayView.playScreen(m_lUserID, m_bRecord, m_lRealHandle, iChannelNum[i]);
+                                    mainPlayView.SetAlarm(m_lUserID);
+                                }
+                                if (i == 0)
+                                { 
+                                    cloudPlayView.playScreen(m_lUserID, m_bRecord, m_lRealHandle, iChannelNum[i]);
+                                    cloudPlayView.SetAlarm(m_lUserID);
+                                }
+                            }
+
+
+
+                            iIPDevID[i] = m_struChanInfo.byIPID + m_struChanInfo.byIPIDHigh * 256 - iGroupNo * 64 - 1;
+
+                            Marshal.FreeHGlobal(ptrChanInfo);
+                            break;
+                        case 6:
+                            IntPtr ptrChanInfoV40 = Marshal.AllocHGlobal((Int32)dwSize);
+                            Marshal.StructureToPtr(m_struIpParaCfgV40.struStreamMode[i].uGetStream, ptrChanInfoV40, false);
+                            m_struChanInfoV40 = (SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO_V40)Marshal.PtrToStructure(ptrChanInfoV40, typeof(SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO_V40));
+
+                            //列出IP通道 List the IP channel
+                            ListIPChannel(i + 1, m_struChanInfoV40.byEnable, m_struChanInfoV40.wIPID);
+                            iIPDevID[i] = m_struChanInfoV40.wIPID - iGroupNo * 64 - 1;
+
+                            Marshal.FreeHGlobal(ptrChanInfoV40);
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
+            Marshal.FreeHGlobal(ptrIpParaCfgV40);
+
+        }
+        public void ListIPChannel(Int32 iChanNo, byte byOnline, int byIPID)
+        {
+            str1 = String.Format("IPCamera {0}", iChanNo);
+            m_lTree++;
+
+            if (byIPID == 0)
+            {
+                str2 = "X"; //通道空闲，没有添加前端设备 the channel is idle                  
+            }
+            else
+            {
+                if (byOnline == 0)
+                {
+                    str2 = "offline"; //通道不在线 the channel is off-line
+                }
+                else
+                    str2 = "online"; //通道在线 The channel is on-line
+            }
+
+            //listViewIPChannel.Items.Add(new ListViewItem(new string[] { str1, str2 }));//将通道添加到列表中 add the channel to the list
+        }
+        public void ListAnalogChannel(Int32 iChanNo, byte byEnable)
+        {
+            str1 = String.Format("Camera {0}", iChanNo);
+            m_lTree++;
+
+            if (byEnable == 0)
+            {
+                str2 = "Disabled"; //通道已被禁用 This channel has been disabled               
+            }
+            else
+            {
+                str2 = "Enabled"; //通道处于启用状态 This channel has been enabled
+            }
+
+            //listViewIPChannel.Items.Add(new ListViewItem(new string[] { str1, str2 }));//将通道添加到列表中 add the channel to the list
+        }
+        
+
+        private void LoginAllDev()//从数据库中取出所有信息,登陆设备
+        {
+
+            for (int i = 0; i < 64; i++)
+            {
+                iIPDevID[i] = -1;
+                iChannelNum[i] = -1;
+            }
+            //登录设备 Login the device
+            m_lUserID = SK_FVision.HIK_NetSDK.NET_DVR_Login_V30("192.168.6.69", 8000, "admin", "zx123456", ref DeviceInfo);
+            if (m_lUserID < 0)
+            {
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                str = "NET_DVR_Login_V30 failed, error code= " + iLastErr; //登录失败，输出错误号 Failed to login and output the error code
+                
+                return;
+            }
+            else
+            {
+                //登录成功
+                dwAChanTotalNum = (uint)DeviceInfo.byChanNum;
+                dwDChanTotalNum = (uint)DeviceInfo.byIPChanNum + 256 * (uint)DeviceInfo.byHighDChanNum;
+                if (dwDChanTotalNum > 0)
+                {
+                    InfoIPChannel();
+                }
+                else
+                {
+                    for (int i = 0; i < dwAChanTotalNum; i++)
+                    {
+                        ListAnalogChannel(i + 1, 1);
+                        iChannelNum[i] = i + (int)DeviceInfo.byStartChan;
+                    }
+
+                }
+            }
+
+
+
+            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
+
+            //if (_CameraSets.Count <= 0)
+            //{
+
+            //}
+            //else
+            //{
+            //    foreach (Model.S_D_CameraSet o in _CameraSets)
+            //    {
+            //        string DVRIPAddress = o.VT_IP; //设备IP地址或者域名 Device IP
+            //        Int16 DVRPortNumber = Int16.Parse(o.VT_PORT);//设备服务端口号 Device Port
+            //        string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
+            //        string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
+
+            //        if (o.VT_ID.ToLower() == "cloud")
+            //        {
+
+            //            cloudPlayView._CameraSet = o;
+            //            //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
+            //            mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+
+                        
+            //            //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            //            //cloudPlayView.sdkSetAlarm();
+
+            //        }
+            //        //if (o.VT_ID.ToLower() == "front")
+            //        //{
+            //        //    frontPlayView._CameraSet = o;
+            //        //    frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            //        //}
+            //        //if (o.VT_ID.ToLower() == "back")
+            //        //{
+            //        //    backPlayView._CameraSet = o;
+            //        //    backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            //        //}
+            //        //if (o.VT_ID.ToLower() == "left")
+            //        //{
+            //        //    leftPlayView._CameraSet = o;
+            //        //    leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            //        //}
+            //        //if (o.VT_ID.ToLower() == "right")
+            //        //{
+            //        //    rightPlayView._CameraSet = o;
+            //        //    rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            //        //}
+            //    }
+            //}
 
 
 
@@ -203,14 +423,14 @@ namespace RobotVT
 
         private void LoginOutAll()
         {
-            mainPlayView.sdkCloseAlarm();
-            cloudPlayView.sdkCloseAlarm();
-            mainPlayView.sdkLoginOut();
-            cloudPlayView.sdkLoginOut();
-            frontPlayView.sdkLoginOut();
-            backPlayView.sdkLoginOut();
-            leftPlayView.sdkLoginOut();
-            rightPlayView.sdkLoginOut();
+            //mainPlayView.sdkCloseAlarm();
+            //cloudPlayView.sdkCloseAlarm();
+            //mainPlayView.sdkLoginOut();
+            //cloudPlayView.sdkLoginOut();
+            //frontPlayView.sdkLoginOut();
+            //backPlayView.sdkLoginOut();
+            //leftPlayView.sdkLoginOut();
+            //rightPlayView.sdkLoginOut();
         }
         
         private void LoginCloseAlarm(int m_lUserID)
@@ -241,20 +461,17 @@ namespace RobotVT
             //通过lCommand来判断接收到的报警信息类型，不同的lCommand对应不同的pAlarmInfo内容
             switch (lCommand)
             {
-                case SK_FVision.HIK_NetSDK.COMM_ALARM_FACE://人脸检测识别报警信息，对应NET_DVR_FACEDETECT_ALARM
-
-                    ste = "人脸检测识别报警信息 " + lCommand.ToString();
-
-                    ProcessCommAlarm_FaceDetect(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
-
-                    break;
                 case SK_FVision.HIK_NetSDK.COMM_UPLOAD_FACESNAP_RESULT://人脸识别结果上传
                     ste = "人脸识别结果上传 " + lCommand.ToString();
                     ProcessCommAlarm_FaceSNAP(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
                     break;
 
-
                 case SK_FVision.HIK_NetSDK.COMM_SNAP_MATCH_ALARM://黑名单比对结果上传
+                    ste = "人脸比对结果上传 " + lCommand.ToString();
+                    ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+                    break;
+
+                case SK_FVision.HIK_NetSDK.COMM_ALARM_FACE_DETECTION://黑名单比对结果上传
                     ste = "黑名单比对结果上传 " + lCommand.ToString();
                     ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
                     break;
@@ -270,11 +487,7 @@ namespace RobotVT
 
             struAlarmFACEDETECT = (SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM));
 
-            string strIP = pAlarmer.sDeviceIP;
-            string stringAlarm = "";
-
-            //保存抓拍场景图片
-            mainPlayView.sdkCaptureJpeg("");
+            mainPlayView.sdkCaptureJpeg(struAlarmFACEDETECT);
             //switch (struAlarmFACEDETECT.byAlarmPicType)// 0 - 异常人脸报警图片 1 - 人脸图片,2 - 多张人脸
             //{
             //    case 0:
@@ -295,16 +508,18 @@ namespace RobotVT
 
             struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT));
 
-            string strIP = pAlarmer.sDeviceIP;
-            string stringAlarm = "";
+            //string strIP = pAlarmer.sDeviceIP;
+            //string stringAlarm = "";
 
-            float x = struAlarm.struTargetInfo.struRect.fX;
-            float g = struAlarm.struTargetInfo.struRect.fY;
-            float width = struAlarm.struTargetInfo.struRect.fWidth;
-            float height = struAlarm.struTargetInfo.struRect.fHeight;
+            //float x = struAlarm.struTargetInfo.struRect.fX;
+            //float g = struAlarm.struTargetInfo.struRect.fY;
+            //float width = struAlarm.struTargetInfo.struRect.fWidth;
+            //float height = struAlarm.struTargetInfo.struRect.fHeight;
 
-            //保存抓拍场景图片
-            mainPlayView.sdkCaptureJpeg("");
+            mainPlayView.sdkCaptureJpeg(struAlarm);
+
+
+
         }
 
         private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
@@ -314,10 +529,8 @@ namespace RobotVT
 
             struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
 
-            string strIP = pAlarmer.sDeviceIP;
-            string stringAlarm = "";
-            //保存抓拍场景图片
-            mainPlayView.sdkCaptureJpeg("");
+
+            mainPlayView.sdkCaptureJpeg(struAlarm);
         }
 
 

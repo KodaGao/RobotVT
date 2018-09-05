@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace RobotVT.Controller
 {
@@ -24,29 +25,58 @@ namespace RobotVT.Controller
             InitializeComponent();
         }
 
-        public override void sdkCaptureJpeg(string file)
+        public override void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm)
         {
-            base.sdkCaptureJpeg(file);
-            byte[] byJpegBuffer = new byte[0];
-            uint dwSizeReturned = 0;
-
-            if (NET_DVR_CaptureJPEGPicture_NEW(ref byJpegBuffer,ref dwSizeReturned))
+            //报警图片保存
+            if (struAlarm.dwFacePicLen > 0)
             {
                 SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
                 //将缓冲区里的JPEG图片数据写入文件 save the data into a file
                 string str = DateTime.Now.ToString("hhMMss") + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
-                SK_FCommon.DirFile.CreateFile(strname, byJpegBuffer);
+                int iLen = (int)struAlarm.dwFacePicLen;
+                byte[] by = new byte[iLen];
+                System.Runtime.InteropServices.Marshal.Copy(struAlarm.pBuffer1, by, 0, iLen);
 
+                SK_FCommon.DirFile.CreateFile(strname, by, iLen);
+            }
+        }
 
-                //System.IO.FileStream fs = new System.IO.FileStream(strname, System.IO.FileMode.Create);
-                //int iLen = (int)dwSizeReturned;
-                //fs.Write(byJpegBuffer, 0, iLen);
-                //fs.Close();
+        public override void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarm)
+        {
+            //报警图片保存
+            if (struAlarm.dwFacePicDataLen > 0)
+            {
+                SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
+                //将缓冲区里的JPEG图片数据写入文件 save the data into a file
+                string str = DateTime.Now.ToString("hhMMss") + ".jpg";
+                string strname = StaticInfo.CapturePath + str;
+                //FileStream fs = new FileStream(strname, FileMode.Create);
+                int iLen = (int)struAlarm.dwFacePicDataLen;
+                byte[] by = new byte[iLen];
+                System.Runtime.InteropServices.Marshal.Copy(struAlarm.pFaceImage, by, 0, iLen);
+                SK_FCommon.DirFile.CreateFile(strname, by, iLen);
 
             }
         }
 
+        public override void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
+        {
+            //报警图片保存
+            if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
+            {
+                SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
+                //将缓冲区里的JPEG图片数据写入文件 save the data into a file
+                string str = DateTime.Now.ToString("hhMMss") + ".jpg";
+                string strname = StaticInfo.CapturePath + str;
+                //FileStream fs = new FileStream(strname, FileMode.Create);
+                int iLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
+                byte[] by = new byte[iLen];
+                System.Runtime.InteropServices.Marshal.Copy(struAlarm.struSnapInfo.pBuffer1, by, 0, iLen);
+                SK_FCommon.DirFile.CreateFile(strname, by, iLen);
+
+            }
+        }
 
         public override void PlayView_Load(object sender, EventArgs e)
         {
@@ -91,6 +121,8 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (_CameraSet == null) return;
+
             Event_PlayViewMouseDoubleClick?.Invoke(_CameraSet.VT_ID);
 
             base.RealPlayWnd_MouseDoubleClick(sender, e);

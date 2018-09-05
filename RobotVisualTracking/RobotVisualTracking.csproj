@@ -59,9 +59,6 @@
     <Reference Include="SK_FModel">
       <HintPath>..\DLL\SK_FModel.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FVision">
-      <HintPath>..\DLL\SK_FVision.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -121,6 +118,10 @@
     <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SK_ForVision\SK_FVision.csproj">
+      <Project>{365184b2-8499-41cd-a4a3-9c2cc9dba750}</Project>
+      <Name>SK_FVision</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

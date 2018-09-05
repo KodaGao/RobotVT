@@ -870,7 +870,7 @@ namespace SK_FVision
         public const int COMM_ALARM_RULE = 0x1102;//行为分析报警信息，对应NET_VCA_RULE_ALARM
         public const int COMM_ALARM_PDC = 0x1103;//人流量统计报警上传，对应NET_DVR_PDC_ALRAM_INFO
         public const int COMM_ALARM_ALARMHOST = 0x1105;//网络报警主机报警上传，对应NET_DVR_ALARMHOST_ALARMINFO
-        public const int COMM_ALARM_FACE = 0x1106;//人脸检测识别报警信息，对应NET_DVR_FACEDETECT_ALARM
+        public const int COMM_ALARM_FACE_DETECTION = 0x1106;//人脸检测识别报警信息，对应NET_DVR_FACEDETECT_ALARM
         public const int COMM_RULE_INFO_UPLOAD = 0x1107;  // 事件数据信息上传
         public const int COMM_ALARM_AID = 0x1110;  //交通事件报警信息
         public const int COMM_ALARM_TPS = 0x1111;  //交通参数统计报警信息
@@ -13637,6 +13637,8 @@ namespace SK_FVision
             public uint dwSize;
             public byte byLevel;//布防优先级：0- 一等级（高），1- 二等级（中），2- 三等级（低，保留）
             public byte byAlarmInfoType;//上传报警信息类型（智能交通摄像机支持）：0- 老报警信息（NET_DVR_PLATE_RESULT），1- 新报警信息(NET_ITS_PLATE_RESULT) 
+            public byte byFaceAlarmDetection;
+            public byte byAlarmTypeURL;
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 14, ArraySubType = UnmanagedType.I1)]
             public byte[] byRes;//这里保留音频的压缩参数 
         }

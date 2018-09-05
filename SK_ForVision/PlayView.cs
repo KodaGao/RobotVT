@@ -108,7 +108,7 @@ namespace SK_FVision
                     HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
                     lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
                     lpPreviewInfo.lChannel = 1;//预览的设备通道 the device channel number
-                    lpPreviewInfo.dwStreamType = 0;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
+                    lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                     lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
                     lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
                     lpPreviewInfo.byPreviewMode = 0;
@@ -121,7 +121,76 @@ namespace SK_FVision
                     //if (playModel == "0")
                     //{
 
-                    //    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(user_ID, ref lpPreviewInfo, null, pUser);
+                    //    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, null, pUser);
+                    //}
+                    //else
+                    //{
+                        lpPreviewInfo.hPlayWnd = IntPtr.Zero;
+                        m_ptrRealHandle = RealPlayWnd.Handle;
+                        RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
+                        m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
+                    //}
+
+                    if (m_lRealHandle < 0)
+                    {
+                        iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
+                        str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr;
+                        return;
+                    }
+                    //map.Add(index,handle);
+                    RealPlayWnd.Invalidate();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+
+        public void playScreen(Int32 m_lUserID, bool m_bRecord, Int32 m_lRealHandle, Int32 m_lChannel)
+        {
+            if (m_lUserID < 0)
+            {
+                MessageBox.Show("Please login the device firstly!");
+                return;
+            }
+
+            if (m_bRecord)
+            {
+                MessageBox.Show("Please stop recording firstly!");
+                return;
+            }
+
+            ////handle为空则不播放
+            //if (!map.ContainsKey(index))
+            //{
+            //    return;
+            //}
+
+
+            //ViewHandle handle = map[index];
+            try
+            {
+                if (m_lRealHandle < 0)
+                {
+                    HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
+                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+                    lpPreviewInfo.lChannel = m_lChannel;//预览的设备通道 the device channel number
+                    lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
+                    lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
+                    lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
+                    lpPreviewInfo.byPreviewMode = 0;
+                    lpPreviewInfo.byProtoType = 0;
+                    lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
+
+                    IntPtr pUser = IntPtr.Zero;
+                    //int user_ID = handle.m_userID;
+
+                    //if (playModel == "0")
+                    //{
+
+                    //    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, null, pUser);
                     //}
                     //else
                     //{
@@ -138,6 +207,7 @@ namespace SK_FVision
                         return;
                     }
                     //map.Add(index,handle);
+                    RealPlayWnd.Invalidate();
                 }
             }
             catch (Exception e)
@@ -145,6 +215,8 @@ namespace SK_FVision
                 Console.WriteLine(e.Message);
             }
         }
+
+
 
         public void sdkLoginOut()
         {
@@ -211,21 +283,51 @@ namespace SK_FVision
         {
             HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
             struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
-            struAlarmParam.byLevel = 1; //0- 一级布防,1- 二级布防
-            struAlarmParam.byAlarmInfoType = 1;//智能交通设备有效，新报警信息类型
-            
+            //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
+            //struAlarmParam.byAlarmInfoType = 1;
+            struAlarmParam.byFaceAlarmDetection = 1;
+
             m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
             if (m_lAlarmHandle < 0)
             {
                 iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
-                str = "布防失败，错误号：" + iLastErr; //布防失败，输出错误号
+                str = "布防失败，错误号：" + iLastErr;
+                sdkLoginOut();
             }
             else
             {
-                str = "布防成功，设备SN：" + DeviceInfo.sSerialNumber.ToString(); //布防成功，输出设备序列号
+                str = "布防成功，设备SN：" + System.Text.Encoding.UTF8.GetString(DeviceInfo.sSerialNumber).TrimEnd('\0'); //布防成功，输出设备序列号                
             }
             DebugInfo(str);
+
+            //System.Text.Encoding.UTF8.GetString(DeviceInfo.sSerialNumber);
         }
+
+
+        public void SetAlarm(int m_lUserID)
+        {
+            HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
+            struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
+            //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
+            //struAlarmParam.byAlarmInfoType = 1;
+            struAlarmParam.byFaceAlarmDetection = 1;
+
+            m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
+            if (m_lAlarmHandle < 0)
+            {
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                str = "布防失败，错误号：" + iLastErr;
+                sdkLoginOut();
+            }
+            else
+            {
+                str = "布防成功，设备SN："; //布防成功，输出设备序列号                
+            }
+            DebugInfo(str);
+
+            //System.Text.Encoding.UTF8.GetString(DeviceInfo.sSerialNumber);
+        }
+
 
         public virtual void sdkCloseAlarm()
         {
@@ -252,6 +354,17 @@ namespace SK_FVision
         public virtual void sdkCaptureJpeg(string file)
         {
         }
+
+        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm)
+        {
+        }
+        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarm)
+        {
+        }
+        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
+        {
+        }
+
 
         public  bool NET_DVR_CaptureJPEGPicture_NEW(ref byte[] byJpegPicBuffer,ref uint dwSizeReturned)
         {
