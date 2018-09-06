@@ -57,7 +57,6 @@ namespace RobotVT.Controller
                 string _SqlScript = string.Format("Select VT_ID, VT_NAME, VT_PASSWORD, VT_IP, VT_PORT From S_D_CameraSet WHERE VT_ID ='{0}';", vtid);
                 System.Data.DataTable _DTTemp = StaticInfo.FirebirdDBOperator.ReturnDataTable(_SqlScript);
 
-
                 Model.S_D_CameraSet _S_D_CameraSet = new Model.S_D_CameraSet();
                 foreach (System.Data.DataRow _DR in _DTTemp.Rows)
                 {

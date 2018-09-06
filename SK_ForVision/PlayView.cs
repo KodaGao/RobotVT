@@ -182,7 +182,7 @@ namespace SK_FVision
                     lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
                     lpPreviewInfo.byPreviewMode = 0;
                     lpPreviewInfo.byProtoType = 0;
-                    lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
+                    lpPreviewInfo.dwDisplayBufNum = 3; //播放库显示缓冲区最大帧数
 
                     IntPtr pUser = IntPtr.Zero;
                     //int user_ID = handle.m_userID;
@@ -285,7 +285,7 @@ namespace SK_FVision
             struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
             //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
             //struAlarmParam.byAlarmInfoType = 1;
-            struAlarmParam.byFaceAlarmDetection = 1;
+            struAlarmParam.byFaceAlarmDetection = 0;
 
             m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
             if (m_lAlarmHandle < 0)
@@ -308,9 +308,9 @@ namespace SK_FVision
         {
             HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
             struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
-            struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
-            struAlarmParam.byAlarmInfoType = 1;
-            struAlarmParam.byFaceAlarmDetection = 0;
+            //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
+            //struAlarmParam.byAlarmInfoType = 1;
+            struAlarmParam.byFaceAlarmDetection = 1;
 
             m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
             if (m_lAlarmHandle < 0)

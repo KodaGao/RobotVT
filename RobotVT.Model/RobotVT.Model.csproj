@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="S_D_CameraSet.cs" />
+    <Compile Include="S_P_COM.cs" />
     <Content Include="FirebirdSQL.sql" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

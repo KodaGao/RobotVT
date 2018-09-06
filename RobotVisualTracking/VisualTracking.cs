@@ -3,6 +3,7 @@ using RobotVT.Controller;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -42,41 +43,6 @@ namespace RobotVT
             this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
 
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
-            this.CompareBox1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox3.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel3.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox4.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel4.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox5.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel5.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox6.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel6.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel7.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-            this.CompareBox8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.comparebg;
-            this.CompareTextPanel8.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.greenBg;
-
-            this.pictureA1.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA2.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA3.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA4.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA5.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA6.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA7.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureA8.SizeMode = PictureBoxSizeMode.Zoom;
-
-            this.pictureB1.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB2.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB3.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB4.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB5.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB6.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB7.SizeMode = PictureBoxSizeMode.Zoom;
-            this.pictureB8.SizeMode = PictureBoxSizeMode.Zoom;
-
 
             mainPlayView.MouseUp = false;
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
@@ -108,7 +74,9 @@ namespace RobotVT
             //设置报警回调函数
             m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
             SK_FVision.HIK_NetSDK.NET_DVR_SetDVRMessageCallBack_V30(m_falarmData, IntPtr.Zero);
-            
+
+            SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
+
             Event_SystemLoadFinish?.Invoke();
             LoginAllDev();
 
@@ -117,7 +85,7 @@ namespace RobotVT
             thread.IsBackground = true;
             thread.Start();
 
-            mainPlayView.sdkSetAlarm();
+            //mainPlayView.sdkSetAlarm();
             
             //byte[] strIP = new byte[16 * 16];
             //uint dwValidNum = 0;
@@ -169,7 +137,6 @@ namespace RobotVT
         #region 报警回调
 
 
-        private bool m_bInitSDK = false;
         private bool m_bRecord = false;
         private uint iLastErr = 0;
         private Int32 m_lUserID = -1;
@@ -179,14 +146,12 @@ namespace RobotVT
         private Int32 i = 0;
         private Int32 m_lTree = 0;
         private string str;
-        private long iSelIndex = 0;
         private uint dwAChanTotalNum = 0;
         private uint dwDChanTotalNum = 0;
         private Int32 m_lPort = -1;
         private IntPtr m_ptrRealHandle;
         private int[] iIPDevID = new int[96];
         private int[] iChannelNum = new int[96];
-        private SK_FVision.HIK_NetSDK.REALDATACALLBACK RealData = null;
         public SK_FVision.HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
         public SK_FVision.HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
         public SK_FVision.HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
@@ -257,8 +222,6 @@ namespace RobotVT
                                 }
                             }
 
-
-
                             iIPDevID[i] = m_struChanInfo.byIPID + m_struChanInfo.byIPIDHigh * 256 - iGroupNo * 64 - 1;
 
                             Marshal.FreeHGlobal(ptrChanInfo);
@@ -280,7 +243,6 @@ namespace RobotVT
                 }
             }
             Marshal.FreeHGlobal(ptrIpParaCfgV40);
-
         }
         public void ListIPChannel(Int32 iChanNo, byte byOnline, int byIPID)
         {
@@ -335,7 +297,7 @@ namespace RobotVT
             {
                 iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
                 str = "NET_DVR_Login_V30 failed, error code= " + iLastErr; //登录失败，输出错误号 Failed to login and output the error code
-                
+
                 return;
             }
             else
@@ -360,7 +322,7 @@ namespace RobotVT
 
 
 
-            List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
+            //List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
 
             //if (_CameraSets.Count <= 0)
             //{
@@ -382,7 +344,7 @@ namespace RobotVT
             //            //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
             //            mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        
+
             //            //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
             //            //cloudPlayView.sdkSetAlarm();
 
@@ -438,7 +400,6 @@ namespace RobotVT
         private delegate void DealVideoDelegate(int lCommand, ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser);
         private void MsgCallback(int lCommand, ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
-
             //视频数据使用委托方式处理，否则会出现内存回收异常
             DealVideoDelegate videoDlegate = new DealVideoDelegate(dealAlarm);
             videoDlegate(lCommand, ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
@@ -518,9 +479,30 @@ namespace RobotVT
 
             struFaceMatchAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
 
-            if (struFaceMatchAlarm.fSimilarity > 0)
+            if (struFaceMatchAlarm.fSimilarity > 0 && struFaceMatchAlarm.pSnapPicBuffer != null && struFaceMatchAlarm.byPicTransType == 0)
             {
-                mainPlayView.sdkCaptureJpeg(struFaceMatchAlarm);
+                //mainPlayView.sdkCaptureJpeg(struFaceMatchAlarm);
+                try
+                { 
+                string str = DateTime.Now.ToString("HHmmss") + ".jpg";
+                string strname = StaticInfo.CapturePath + str;
+
+                FileStream fs = new FileStream(strname, FileMode.Create);
+                int iLen = (int)struFaceMatchAlarm.dwModelDataLen;
+                byte[] by = new byte[iLen];
+                Marshal.Copy(struFaceMatchAlarm.pModelDataBuffer, by, 0, iLen);
+                fs.Write(by, 0, iLen);
+                fs.Close();
+
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                //int iLen = (int)struFaceMatchAlarm.struSnapInfo.dwSnapFacePicLen;
+                //byte[] by = new byte[iLen];
+                //System.Runtime.InteropServices.Marshal.Copy(struFaceMatchAlarm.struSnapInfo.pBuffer1, by, 0, iLen);
+                //SK_FCommon.DirFile.CreateFile(strname, by, iLen);
             }
             else
             {
@@ -567,8 +549,8 @@ namespace RobotVT
             {
                 clickb = true;
             }
-            float newX = this.Width / X;//获取当前宽度与初始宽度的比例
-            float newY = this.Height / Y;//获取当前高度与初始高度的比例
+            float newX = this.ClientSize.Width / X;//获取当前宽度与初始宽度的比例
+            float newY = this.ClientSize.Height / Y;//获取当前高度与初始高度的比例
             if ((double)Width / (double)Height > X / Y)
             {
                 newX = newY;
@@ -699,43 +681,43 @@ namespace RobotVT
 
                     if (latest != null && newfilename != latest.FileName)
                     {
-                        if (pictureA1.Image == null && inum == -1)
-                        {
-                            pictureA1.Load(latest.FileName);
-                            inum = 1;
-                        }
+                        //if (pictureA1.Image == null && inum == -1)
+                        //{
+                        //    pictureA1.Load(latest.FileName);
+                        //    inum = 1;
+                        //}
                         switch (inum)
                         {
                             case 1:
-                                pictureA1.Load(latest.FileName);
+                                //pictureA1.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 2:
-                                pictureA2.Load(latest.FileName);
+                                //pictureA2.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 3:
-                                pictureA3.Load(latest.FileName);
+                                //pictureA3.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 4:
-                                pictureA4.Load(latest.FileName);
+                                //pictureA4.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 5:
-                                pictureA5.Load(latest.FileName);
+                                //pictureA5.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 6:
-                                pictureA6.Load(latest.FileName);
+                                //pictureA6.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 7:
-                                pictureA7.Load(latest.FileName);
+                                //pictureA7.Load(latest.FileName);
                                 inum++;
                                 break;
                             case 8:
-                                pictureA8.Load(latest.FileName);
+                                //pictureA8.Load(latest.FileName);
                                 inum++;
                                 break;
                         }
