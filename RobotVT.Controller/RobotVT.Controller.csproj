@@ -87,11 +87,21 @@
     <Compile Include="Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticInfo.cs" />
+    <Compile Include="ZX_RobotInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ZX_RobotInfo.Designer.cs">
+      <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RobotVT.Model\RobotVT.Model.csproj">
       <Project>{826B742D-0210-47DC-B339-4A13350DA884}</Project>
       <Name>RobotVT.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
+      <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
+      <Name>RobotVT.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HIK_FaceSnap.resx">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ZX_RobotInfo.resx">
+      <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
