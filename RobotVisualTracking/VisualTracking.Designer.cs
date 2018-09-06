@@ -30,6 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             this.styleManager = new DevComponents.DotNetBar.StyleManager(this.components);
+            this.topMain = new DevComponents.DotNetBar.PanelEx();
+            this.speed = new DevComponents.DotNetBar.LabelX();
+            this.time = new DevComponents.DotNetBar.LabelX();
+            this.lamp = new DevComponents.DotNetBar.PanelEx();
+            this.robotPower = new DevComponents.DotNetBar.PanelEx();
+            this.label2 = new DevComponents.DotNetBar.LabelX();
+            this.power2 = new DevComponents.DotNetBar.PanelEx();
+            this.label1 = new DevComponents.DotNetBar.LabelX();
+            this.power1 = new DevComponents.DotNetBar.PanelEx();
+            this.power1_number = new DevComponents.DotNetBar.LabelX();
+            this.signal = new DevComponents.DotNetBar.PanelEx();
             this.centerMain = new DevComponents.DotNetBar.PanelEx();
             this.mainWindow2 = new DevComponents.DotNetBar.PanelEx();
             this.label4 = new DevComponents.DotNetBar.LabelX();
@@ -87,7 +98,10 @@
             this.cloudPlayView = new RobotVT.Controller.HIK_PlayView();
             this.mainCamera = new DevComponents.DotNetBar.PanelEx();
             this.mainPlayView = new RobotVT.Controller.HIK_PlayView();
-            this.zX_RobotInfo1 = new RobotVT.Controller.ZX_RobotInfo();
+            this.topMain.SuspendLayout();
+            this.robotPower.SuspendLayout();
+            this.power2.SuspendLayout();
+            this.power1.SuspendLayout();
             this.centerMain.SuspendLayout();
             this.mainWindow2.SuspendLayout();
             this.CompareBox4.SuspendLayout();
@@ -136,6 +150,150 @@
             this.styleManager.ManagerColorTint = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
             this.styleManager.ManagerStyle = DevComponents.DotNetBar.eStyle.VisualStudio2012Dark;
             this.styleManager.MetroColorParameters = new DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48))))), System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204))))));
+            // 
+            // topMain
+            // 
+            this.topMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.topMain.Controls.Add(this.speed);
+            this.topMain.Controls.Add(this.time);
+            this.topMain.Controls.Add(this.lamp);
+            this.topMain.Controls.Add(this.robotPower);
+            this.topMain.Controls.Add(this.power2);
+            this.topMain.Controls.Add(this.power1);
+            this.topMain.Controls.Add(this.signal);
+            this.topMain.DisabledBackColor = System.Drawing.Color.Empty;
+            this.topMain.Location = new System.Drawing.Point(0, 0);
+            this.topMain.Name = "topMain";
+            this.topMain.Size = new System.Drawing.Size(1912, 72);
+            this.topMain.TabIndex = 40;
+            // 
+            // speed
+            // 
+            this.speed.AutoSize = true;
+            this.speed.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.speed.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.speed.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.speed.ForeColor = System.Drawing.Color.White;
+            this.speed.Location = new System.Drawing.Point(1597, 26);
+            this.speed.Name = "speed";
+            this.speed.Size = new System.Drawing.Size(76, 28);
+            this.speed.TabIndex = 6;
+            this.speed.Text = "9.8m/s";
+            // 
+            // time
+            // 
+            this.time.AutoSize = true;
+            this.time.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.time.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.time.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.time.ForeColor = System.Drawing.Color.White;
+            this.time.Location = new System.Drawing.Point(470, 25);
+            this.time.Name = "time";
+            this.time.Size = new System.Drawing.Size(65, 28);
+            this.time.TabIndex = 5;
+            this.time.Text = "23:23";
+            // 
+            // lamp
+            // 
+            this.lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.lamp.DisabledBackColor = System.Drawing.Color.Empty;
+            this.lamp.Location = new System.Drawing.Point(1850, 20);
+            this.lamp.Name = "lamp";
+            this.lamp.Size = new System.Drawing.Size(50, 34);
+            this.lamp.TabIndex = 4;
+            // 
+            // robotPower
+            // 
+            this.robotPower.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.robotPower.Controls.Add(this.label2);
+            this.robotPower.DisabledBackColor = System.Drawing.Color.Empty;
+            this.robotPower.Location = new System.Drawing.Point(1317, 8);
+            this.robotPower.Name = "robotPower";
+            this.robotPower.Size = new System.Drawing.Size(92, 57);
+            this.robotPower.TabIndex = 3;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            // 
+            // 
+            // 
+            this.label2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.label2.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(30, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(38, 25);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "60%";
+            // 
+            // power2
+            // 
+            this.power2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.power2.Controls.Add(this.label1);
+            this.power2.DisabledBackColor = System.Drawing.Color.Empty;
+            this.power2.Location = new System.Drawing.Point(1029, 8);
+            this.power2.Name = "power2";
+            this.power2.Size = new System.Drawing.Size(92, 57);
+            this.power2.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            // 
+            // 
+            // 
+            this.label1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.label1.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(30, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 25);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "40%";
+            // 
+            // power1
+            // 
+            this.power1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.power1.Controls.Add(this.power1_number);
+            this.power1.DisabledBackColor = System.Drawing.Color.Empty;
+            this.power1.Location = new System.Drawing.Point(741, 8);
+            this.power1.Name = "power1";
+            this.power1.Size = new System.Drawing.Size(92, 57);
+            this.power1.TabIndex = 1;
+            // 
+            // power1_number
+            // 
+            this.power1_number.AutoSize = true;
+            this.power1_number.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            // 
+            // 
+            // 
+            this.power1_number.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.power1_number.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.power1_number.ForeColor = System.Drawing.Color.White;
+            this.power1_number.Location = new System.Drawing.Point(29, 19);
+            this.power1_number.Name = "power1_number";
+            this.power1_number.Size = new System.Drawing.Size(38, 25);
+            this.power1_number.TabIndex = 7;
+            this.power1_number.Text = "60%";
+            // 
+            // signal
+            // 
+            this.signal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.signal.DisabledBackColor = System.Drawing.Color.Empty;
+            this.signal.Location = new System.Drawing.Point(166, 8);
+            this.signal.Name = "signal";
+            this.signal.Size = new System.Drawing.Size(92, 57);
+            this.signal.TabIndex = 0;
             // 
             // centerMain
             // 
@@ -854,32 +1012,28 @@
             this.mainPlayView.Size = new System.Drawing.Size(1056, 565);
             this.mainPlayView.TabIndex = 0;
             // 
-            // zX_RobotInfo1
-            // 
-            this.zX_RobotInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_RobotInfo1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.zX_RobotInfo1.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.zX_RobotInfo1.Location = new System.Drawing.Point(0, 0);
-            this.zX_RobotInfo1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_RobotInfo1.Name = "zX_RobotInfo1";
-            this.zX_RobotInfo1.Size = new System.Drawing.Size(1904, 72);
-            this.zX_RobotInfo1.TabIndex = 48;
-            // 
             // VisualTracking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.ClientSize = new System.Drawing.Size(1904, 1053);
-            this.Controls.Add(this.zX_RobotInfo1);
+            this.ClientSize = new System.Drawing.Size(1904, 1084);
             this.Controls.Add(this.centerMain);
+            this.Controls.Add(this.topMain);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "VisualTracking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.VisualTracking_Load);
+            this.topMain.ResumeLayout(false);
+            this.topMain.PerformLayout();
+            this.robotPower.ResumeLayout(false);
+            this.robotPower.PerformLayout();
+            this.power2.ResumeLayout(false);
+            this.power2.PerformLayout();
+            this.power1.ResumeLayout(false);
+            this.power1.PerformLayout();
             this.centerMain.ResumeLayout(false);
             this.mainWindow2.ResumeLayout(false);
             this.mainWindow2.PerformLayout();
@@ -936,6 +1090,17 @@
 
         #endregion
         private DevComponents.DotNetBar.StyleManager styleManager;
+        private DevComponents.DotNetBar.PanelEx topMain;
+        private DevComponents.DotNetBar.LabelX speed;
+        private DevComponents.DotNetBar.LabelX time;
+        private DevComponents.DotNetBar.PanelEx lamp;
+        private DevComponents.DotNetBar.PanelEx robotPower;
+        private DevComponents.DotNetBar.LabelX label2;
+        private DevComponents.DotNetBar.PanelEx power2;
+        private DevComponents.DotNetBar.LabelX label1;
+        private DevComponents.DotNetBar.PanelEx power1;
+        private DevComponents.DotNetBar.LabelX power1_number;
+        private DevComponents.DotNetBar.PanelEx signal;
         private DevComponents.DotNetBar.PanelEx centerMain;
         private DevComponents.DotNetBar.PanelEx mainWindow2;
         private DevComponents.DotNetBar.LabelX label4;
@@ -993,7 +1158,6 @@
         private Controller.HIK_PlayView backPlayView;
         private Controller.HIK_PlayView leftPlayView;
         private Controller.HIK_PlayView rightPlayView;
-        private Controller.ZX_RobotInfo zX_RobotInfo1;
     }
 }
 
