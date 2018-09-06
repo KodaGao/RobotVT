@@ -308,9 +308,9 @@ namespace SK_FVision
         {
             HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
             struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
-            //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
-            //struAlarmParam.byAlarmInfoType = 1;
-            struAlarmParam.byFaceAlarmDetection = 1;
+            struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
+            struAlarmParam.byAlarmInfoType = 1;
+            struAlarmParam.byFaceAlarmDetection = 0;
 
             m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
             if (m_lAlarmHandle < 0)

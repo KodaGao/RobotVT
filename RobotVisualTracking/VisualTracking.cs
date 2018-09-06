@@ -33,14 +33,7 @@ namespace RobotVT
             this.Icon = Properties.Resources.ZX32x32;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.WindowState = FormWindowState.Normal;
-
-            this.topMain.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.top_img;
-            this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_5;
-            this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
-            this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
-            this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
-            this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp_0;
-
+            
             this.mainCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainCarmer;
             this.cloudCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudCarmer;
             this.frontCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.frontCamer;
@@ -461,20 +454,20 @@ namespace RobotVT
             //通过lCommand来判断接收到的报警信息类型，不同的lCommand对应不同的pAlarmInfo内容
             switch (lCommand)
             {
-                case SK_FVision.HIK_NetSDK.COMM_UPLOAD_FACESNAP_RESULT://人脸识别结果上传
-                    ste = "人脸识别结果上传 " + lCommand.ToString();
+                case SK_FVision.HIK_NetSDK.COMM_ALARM_FACE_DETECTION:
+                    ste = "人脸侦测报警信息 " + lCommand.ToString();
+
+                    ProcessCommAlarm_FaceDetect(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+                    break;
+                case SK_FVision.HIK_NetSDK.COMM_UPLOAD_FACESNAP_RESULT:
+                    ste = "人脸抓拍报警信息 " + lCommand.ToString();
                     ProcessCommAlarm_FaceSNAP(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
                     break;
-
-                case SK_FVision.HIK_NetSDK.COMM_SNAP_MATCH_ALARM://黑名单比对结果上传
-                    ste = "人脸比对结果上传 " + lCommand.ToString();
+                case SK_FVision.HIK_NetSDK.COMM_SNAP_MATCH_ALARM:
+                    ste = "人脸比对结果信息 " + lCommand.ToString();
                     ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
                     break;
 
-                case SK_FVision.HIK_NetSDK.COMM_ALARM_FACE_DETECTION://黑名单比对结果上传
-                    ste = "黑名单比对结果上传 " + lCommand.ToString();
-                    ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
-                    break;
                 default:
                     break;
             }
@@ -483,11 +476,16 @@ namespace RobotVT
         private void ProcessCommAlarm_FaceDetect(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
 
-            SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarmFACEDETECT = new SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM();
+            SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struFaceDetectionAlarm = new SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM();
 
-            struAlarmFACEDETECT = (SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM));
+            struFaceDetectionAlarm = (SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM));
 
-            mainPlayView.sdkCaptureJpeg(struAlarmFACEDETECT);
+            //保存抓拍场景图片
+            if (struFaceDetectionAlarm.dwFacePicDataLen > 0 && struFaceDetectionAlarm.pFaceImage != null)
+            {
+                mainPlayView.sdkCaptureJpeg(struFaceDetectionAlarm);
+            }
+
             //switch (struAlarmFACEDETECT.byAlarmPicType)// 0 - 异常人脸报警图片 1 - 人脸图片,2 - 多张人脸
             //{
             //    case 0:
@@ -504,33 +502,34 @@ namespace RobotVT
 
         private void ProcessCommAlarm_FaceSNAP(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
-            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT();
+            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struFaceSnap = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT();
 
-            struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT));
+            struFaceSnap = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT));
 
-            //string strIP = pAlarmer.sDeviceIP;
-            //string stringAlarm = "";
-
-            //float x = struAlarm.struTargetInfo.struRect.fX;
-            //float g = struAlarm.struTargetInfo.struRect.fY;
-            //float width = struAlarm.struTargetInfo.struRect.fWidth;
-            //float height = struAlarm.struTargetInfo.struRect.fHeight;
-
-            mainPlayView.sdkCaptureJpeg(struAlarm);
-
-
-
+            if (struFaceSnap.dwBackgroundPicLen > 0 && struFaceSnap.pBuffer2 != null)
+            {
+                mainPlayView.sdkCaptureJpeg(struFaceSnap);
+            }
         }
 
         private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
+            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struFaceMatchAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM();
 
-            SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM();
+            struFaceMatchAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
 
-            struAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
+            if (struFaceMatchAlarm.fSimilarity > 0)
+            {
+                mainPlayView.sdkCaptureJpeg(struFaceMatchAlarm);
+            }
+            else
+            {
+                //保存黑名单人脸图片
+                if (struFaceMatchAlarm.struBlackListInfo.dwBlackListPicLen > 0 && struFaceMatchAlarm.struBlackListInfo.pBuffer1 != null)
+                {
 
-
-            mainPlayView.sdkCaptureJpeg(struAlarm);
+                }
+            }
         }
 
 
@@ -581,11 +580,11 @@ namespace RobotVT
             setControls(newX, newY, this);
             if ((double)Width / (double)Height > X / Y)
             {
-                var point = topMain.Location;
-                point.X = (Width - topMain.Width) / 2;
-                topMain.Location = point;
+                var point = zX_RobotInfo1.Location;
+                point.X = (Width - zX_RobotInfo1.Width) / 2;
+                zX_RobotInfo1.Location = point;
                 point = centerMain.Location;
-                point.X = (Width - topMain.Width) / 2;
+                point.X = (Width - zX_RobotInfo1.Width) / 2;
                 centerMain.Location = point;
                 //point = cloudCenterContorl.Location;
                 //point.X = (Width - topMain.Width) / 2;

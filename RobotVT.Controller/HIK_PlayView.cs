@@ -48,7 +48,6 @@ namespace RobotVT.Controller
             if (struAlarm.dwFacePicDataLen > 0)
             {
                 SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
-                //将缓冲区里的JPEG图片数据写入文件 save the data into a file
                 string str = DateTime.Now.ToString("hhMMss") + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
                 //FileStream fs = new FileStream(strname, FileMode.Create);
@@ -66,13 +65,12 @@ namespace RobotVT.Controller
             if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
             {
                 SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
-                //将缓冲区里的JPEG图片数据写入文件 save the data into a file
                 string str = DateTime.Now.ToString("hhMMss") + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
                 //FileStream fs = new FileStream(strname, FileMode.Create);
                 int iLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
                 byte[] by = new byte[iLen];
-                System.Runtime.InteropServices.Marshal.Copy(struAlarm.struSnapInfo.pBuffer1, by, 0, iLen);
+                System.Runtime.InteropServices.Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, by, 0, iLen);
                 SK_FCommon.DirFile.CreateFile(strname, by, iLen);
 
             }
