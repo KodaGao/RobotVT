@@ -87,6 +87,12 @@
     <Compile Include="Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticInfo.cs" />
+    <Compile Include="ZX_MatchInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ZX_MatchInfo.Designer.cs">
+      <DependentUpon>ZX_MatchInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="ZX_RobotInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -110,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HIK_FaceSnap.resx">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ZX_MatchInfo.resx">
+      <DependentUpon>ZX_MatchInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ZX_RobotInfo.resx">
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
