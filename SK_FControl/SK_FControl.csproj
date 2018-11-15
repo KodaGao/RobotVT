@@ -58,11 +58,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Form\SerialPortForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SerialPortForm.Designer.cs">
+      <DependentUpon>SerialPortForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UC\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Form\SerialPortForm.resx">
+      <DependentUpon>SerialPortForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
@@ -73,6 +82,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SplashScreen.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\serialport01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\serialport02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\serialport03.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
