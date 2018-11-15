@@ -66,43 +66,31 @@
   <ItemGroup>
     <Compile Include="ConfigInfo.cs" />
     <Compile Include="DataAccess.cs" />
-    <Compile Include="Form\HIK_CameraSet.cs">
+    <Compile Include="HIK_CameraSet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\HIK_CameraSet.Designer.cs">
+    <Compile Include="HIK_CameraSet.Designer.cs">
       <DependentUpon>HIK_CameraSet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\HIK_FaceSnap.cs">
+    <Compile Include="HIK_FaceSnap.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Control\HIK_FaceSnap.Designer.cs">
+    <Compile Include="HIK_FaceSnap.Designer.cs">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\HIK_PlayView.cs">
+    <Compile Include="HIK_PlayView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Control\HIK_PlayView.Designer.cs">
+    <Compile Include="HIK_PlayView.Designer.cs">
       <DependentUpon>HIK_PlayView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\HIK_SerialPort.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\HIK_SerialPort.Designer.cs">
-      <DependentUpon>HIK_SerialPort.cs</DependentUpon>
     </Compile>
     <Compile Include="Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticInfo.cs" />
-    <Compile Include="Control\ZX_MatchInfo.cs">
+    <Compile Include="ZX_RobotInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Control\ZX_MatchInfo.Designer.cs">
-      <DependentUpon>ZX_MatchInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ZX_RobotInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ZX_RobotInfo.Designer.cs">
+    <Compile Include="ZX_RobotInfo.Designer.cs">
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -117,20 +105,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form\HIK_CameraSet.resx">
+    <EmbeddedResource Include="HIK_CameraSet.resx">
       <DependentUpon>HIK_CameraSet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\HIK_FaceSnap.resx">
+    <EmbeddedResource Include="HIK_FaceSnap.resx">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\ZX_MatchInfo.resx">
-      <DependentUpon>ZX_MatchInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ZX_RobotInfo.resx">
+    <EmbeddedResource Include="ZX_RobotInfo.resx">
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\HIK_SerialPort.resx">
-      <DependentUpon>HIK_SerialPort.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

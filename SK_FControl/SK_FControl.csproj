@@ -46,19 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form\SerailPortSet.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\SerailPortSet.Designer.cs">
-      <DependentUpon>SerailPortSet.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form\SplashScreen.Designer.cs">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\SerialPortEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -70,9 +63,6 @@
     <Folder Include="UC\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form\SerailPortSet.resx">
-      <DependentUpon>SerailPortSet.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form\SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
@@ -83,15 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SplashScreen.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\serialport01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\serialport02.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\serialport03.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

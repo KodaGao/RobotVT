@@ -20,7 +20,7 @@ namespace RobotVT.Controller
         public string PlayModel { get; set; }
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
 
-        public HIK_PlayView() 
+        public HIK_PlayView()
         {
             InitializeComponent();
         }
@@ -51,26 +51,28 @@ namespace RobotVT.Controller
                 string str = DateTime.Now.ToString("hhMMss") + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
                 //FileStream fs = new FileStream(strname, FileMode.Create);
-                int iLen = (int)struAlarm.dwFacePicDataLen; 
+                int iLen = (int)struAlarm.dwFacePicDataLen;
                 byte[] by = new byte[iLen];
                 System.Runtime.InteropServices.Marshal.Copy(struAlarm.pFaceImage, by, 0, iLen);
                 SK_FCommon.DirFile.CreateFile(strname, by, iLen);
+
             }
         }
 
         public override void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
         {
             //报警图片保存
-            if (struAlarm.dwSnapPicLen > 0)
+            if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
             {
                 SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
                 string str = DateTime.Now.ToString("hhMMss") + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
+                //FileStream fs = new FileStream(strname, FileMode.Create);
                 int iLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
                 byte[] by = new byte[iLen];
-                System.Runtime.InteropServices.Marshal.Copy(struAlarm.pSnapPicBuffer, by, 0, iLen);
-                
+                System.Runtime.InteropServices.Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, by, 0, iLen);
                 SK_FCommon.DirFile.CreateFile(strname, by, iLen);
+
             }
         }
 
@@ -83,6 +85,7 @@ namespace RobotVT.Controller
         {
             if (e.Button == MouseButtons.Right)
             {
+
                 if (!MouseUp && this.PlayModel == null) return;
 
                 HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
@@ -93,6 +96,7 @@ namespace RobotVT.Controller
                 }
                 hIK_CameraSet.PlayModel = this.PlayModel;
                 hIK_CameraSet.ShowDialog();
+
             }
             base.RealPlayWnd_MouseUp(sender, e);
         }
@@ -110,6 +114,7 @@ namespace RobotVT.Controller
 
             sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
             _CameraSet = _cameraSetNew;
+
         }
 
         public override void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)

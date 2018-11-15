@@ -45,8 +45,5 @@
     <Compile Include="SystemEnum.cs" />
     <Compile Include="SystemMessageInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DB\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

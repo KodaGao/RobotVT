@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
       <SubType>Form</SubType>
