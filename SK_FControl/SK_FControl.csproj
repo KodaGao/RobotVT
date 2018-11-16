@@ -66,6 +66,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Methods\" />
     <Folder Include="UC\" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\serialport03.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SK_FDBUtility\SK_FDBUtility.csproj">
+      <Project>{aad08c7d-670b-491c-a57e-0e97c438a089}</Project>
+      <Name>SK_FDBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SK_FModel\SK_FModel.csproj">
+      <Project>{ab2cca12-3749-413f-a7ff-d7af7f9688af}</Project>
+      <Name>SK_FModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

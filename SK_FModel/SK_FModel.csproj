@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialPortEnum.cs" />
     <Compile Include="SystemDelegate.cs" />
     <Compile Include="SystemEnum.cs" />
     <Compile Include="SystemMessageInfo.cs" />
