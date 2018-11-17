@@ -78,7 +78,6 @@
     <Compile Include="Form\HIK_SPortSet.Designer.cs">
       <DependentUpon>HIK_SPortSet.cs</DependentUpon>
     </Compile>
-    <Compile Include="DBMethods\SerialPortMethods.cs" />
     <Compile Include="UserControl\HIK_FaceSnap.cs">
       <SubType>UserControl</SubType>
     </Compile>

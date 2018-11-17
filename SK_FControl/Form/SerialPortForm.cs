@@ -16,6 +16,8 @@ namespace SK_FControl
     public partial class SerialPortForm : MetroForm
     {
         public virtual event SK_FModel.SystemDelegate.del_SystemSetFinish Event_SetFinish;
+        public virtual SK_FDBUtility.DB.S_D_SERIALPORT SPort { get; set; }
+        public virtual string SPortKey { get; set; }
 
         public string serialport = string.Empty;
         public string baudrate = string.Empty;
@@ -24,8 +26,7 @@ namespace SK_FControl
         public string stopbit = string.Empty;
         public string timeout = string.Empty;
         public string samplerate = string.Empty;
-
-
+        
         public SerialPortForm()
         {
             InitializeComponent();
@@ -59,7 +60,7 @@ namespace SK_FControl
             //7) SampleTime
             tBXSample.Text = "1000";
 
-            databaseValue();
+            DatabaseValue();
         }
 
         #region 常用的列表数据获取和绑定操作
@@ -135,20 +136,69 @@ namespace SK_FControl
         }
 
         #endregion
+
         private void DatabaseValue()
         {
-            cBEPortName.Text = serialport;
-            cBEBaudRate.Text = baudrate;
-            cBEDataBits.Text = databit;
-            cBEParity.Text = parity;
-            cBEStopBits.Text = stopbit;
-            tBXTimeOut.Text = timeout;
-            tBXSample.Text = samplerate;
+            cBEPortName.Text = SPort.SP_PORT;
+            cBEBaudRate.Text = SPort.SP_BAUDRATE;
+            cBEDataBits.Text = SPort.SP_DATABIT;
+            cBEParity.Text = SPort.SP_PRATITY;
+            cBEStopBits.Text = SPort.SP_STOPBIT;
+            tBXTimeOut.Text = SPort.SP_TIMEOUT;
+            tBXSample.Text = SPort.SP_SAMPLE;
         }
 
         public virtual void btX_Save_Click(object sender, EventArgs e)
         {
-            Event_SetFinish?.Invoke();
+            if (SPort == null)
+            {
+                SPort = new SK_FDBUtility.DB.S_D_SERIALPORT();
+                SPort.SP_KEY = SPortKey;
+            }
+
+            bool bmodify = false;
+
+            if (SPort.SP_KEY != cBEPortName.SelectedValue.ToString())
+            {
+                bmodify = true;
+                SPort.SP_KEY = cBEPortName.SelectedValue.ToString();
+            }
+            if (SPort.SP_BAUDRATE != cBEBaudRate.SelectedValue.ToString())
+            {
+                bmodify = true;
+                SPort.SP_BAUDRATE = cBEBaudRate.SelectedValue.ToString();
+            }
+            if (SPort.SP_DATABIT != cBEDataBits.SelectedValue.ToString())
+            {
+                bmodify = true;
+                SPort.SP_DATABIT = cBEDataBits.SelectedValue.ToString();
+            }
+            if (SPort.SP_PRATITY != cBEParity.SelectedValue.ToString())
+            {
+                bmodify = true;
+                SPort.SP_PRATITY = cBEParity.SelectedValue.ToString();
+            }
+            if (SPort.SP_STOPBIT != cBEStopBits.SelectedValue.ToString())
+            {
+                bmodify = true;
+                SPort.SP_STOPBIT = cBEStopBits.SelectedValue.ToString();
+            }
+            if (SPort.SP_TIMEOUT != tBXTimeOut.Text)
+            {
+                bmodify = true;
+                SPort.SP_TIMEOUT = tBXTimeOut.Text;
+            }
+            if (SPort.SP_SAMPLE != tBXSample.Text)
+            {
+                bmodify = true;
+                SPort.SP_SAMPLE = tBXSample.Text;
+            }
+            if (bmodify)
+            {
+                //new Controller.DataAccess().UpdateCameraSet(_CameraSet);
+                Event_SetFinish?.Invoke();
+            }
+            
             this.Close();
         }
 

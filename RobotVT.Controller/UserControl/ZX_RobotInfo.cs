@@ -12,6 +12,7 @@ namespace RobotVT.Controller
 {
     public partial class ZX_RobotInfo : UserControl
     {
+        public SK_FDBUtility.DB.S_D_SERIALPORT _Sport { get; set; }
         public ZX_RobotInfo()
         {
             InitializeComponent();
@@ -34,16 +35,14 @@ namespace RobotVT.Controller
         {
             if (e.Button == MouseButtons.Right)
             {
-
                 //if (!MouseUp && this.PlayModel == null) return;
 
                 HIK_SPortSet hIK_SPort = new HIK_SPortSet();
-
                 hIK_SPort.Event_SetFinish += HIK_SPortSet_Event_SetFinish;
-                //if (_CameraSet != null)
-                //{
-                //    hIK_CameraSet._CameraSet = _CameraSet;
-                //}
+                if (_Sport != null)
+                {
+                    hIK_SPort.SPort = _Sport;
+                }
                 //hIK_SPort.PlayModel = this.PlayModel;
                 hIK_SPort.ShowDialog();
 

@@ -70,10 +70,7 @@ namespace RobotVT.Controller
                 int iLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
                 byte[] by = new byte[iLen];
                 System.Runtime.InteropServices.Marshal.Copy(struAlarm.pSnapPicBuffer, by, 0, iLen);
-
-
-
-
+               
                 SK_FCommon.DirFile.CreateFile(strname, by, iLen);
 
             }
