@@ -33,9 +33,9 @@
             this.time = new DevComponents.DotNetBar.LabelX();
             this.lamp = new DevComponents.DotNetBar.PanelEx();
             this.robotPower = new DevComponents.DotNetBar.PanelEx();
-            this.label2 = new DevComponents.DotNetBar.LabelX();
+            this.robotPower_number = new DevComponents.DotNetBar.LabelX();
             this.power2 = new DevComponents.DotNetBar.PanelEx();
-            this.label1 = new DevComponents.DotNetBar.LabelX();
+            this.power2_number = new DevComponents.DotNetBar.LabelX();
             this.power1 = new DevComponents.DotNetBar.PanelEx();
             this.power1_number = new DevComponents.DotNetBar.LabelX();
             this.signal = new DevComponents.DotNetBar.PanelEx();
@@ -107,54 +107,54 @@
             // robotPower
             // 
             this.robotPower.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.robotPower.Controls.Add(this.label2);
+            this.robotPower.Controls.Add(this.robotPower_number);
             this.robotPower.DisabledBackColor = System.Drawing.Color.Empty;
             this.robotPower.Location = new System.Drawing.Point(1317, 8);
             this.robotPower.Name = "robotPower";
             this.robotPower.Size = new System.Drawing.Size(92, 57);
             this.robotPower.TabIndex = 3;
             // 
-            // label2
+            // robotPower_number
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.robotPower_number.AutoSize = true;
+            this.robotPower_number.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             // 
             // 
             // 
-            this.label2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.label2.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(30, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 25);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "60%";
+            this.robotPower_number.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.robotPower_number.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.robotPower_number.ForeColor = System.Drawing.Color.White;
+            this.robotPower_number.Location = new System.Drawing.Point(30, 17);
+            this.robotPower_number.Name = "robotPower_number";
+            this.robotPower_number.Size = new System.Drawing.Size(38, 25);
+            this.robotPower_number.TabIndex = 9;
+            this.robotPower_number.Text = "60%";
             // 
             // power2
             // 
             this.power2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.power2.Controls.Add(this.label1);
+            this.power2.Controls.Add(this.power2_number);
             this.power2.DisabledBackColor = System.Drawing.Color.Empty;
             this.power2.Location = new System.Drawing.Point(1029, 8);
             this.power2.Name = "power2";
             this.power2.Size = new System.Drawing.Size(92, 57);
             this.power2.TabIndex = 2;
             // 
-            // label1
+            // power2_number
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.power2_number.AutoSize = true;
+            this.power2_number.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             // 
             // 
             // 
-            this.label1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.label1.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(30, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 25);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "40%";
+            this.power2_number.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.power2_number.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.power2_number.ForeColor = System.Drawing.Color.White;
+            this.power2_number.Location = new System.Drawing.Point(30, 18);
+            this.power2_number.Name = "power2_number";
+            this.power2_number.Size = new System.Drawing.Size(38, 25);
+            this.power2_number.TabIndex = 8;
+            this.power2_number.Text = "40%";
             // 
             // power1
             // 
@@ -221,9 +221,9 @@
         private DevComponents.DotNetBar.LabelX time;
         private DevComponents.DotNetBar.PanelEx lamp;
         private DevComponents.DotNetBar.PanelEx robotPower;
-        private DevComponents.DotNetBar.LabelX label2;
+        private DevComponents.DotNetBar.LabelX robotPower_number;
         private DevComponents.DotNetBar.PanelEx power2;
-        private DevComponents.DotNetBar.LabelX label1;
+        private DevComponents.DotNetBar.LabelX power2_number;
         private DevComponents.DotNetBar.PanelEx power1;
         private DevComponents.DotNetBar.LabelX power1_number;
         private DevComponents.DotNetBar.PanelEx signal;

@@ -1,11 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.IO.Ports;
+using static SK_FModel.SerialPortEnum;
 
 namespace SK_FModel
 {
+    public enum Protocol
+    {
+        ///// <summary>
+        ///// TCP（Transmission Control Protocol，传输控制协议）;IP（Internet Protocol，网际协议）
+        ///// </summary>
+        //[Description("TCPIP")]
+        //TCPIP,
+        /// <summary>
+        /// Serial Communications Interface，串行通讯接口
+        /// </summary>
+        [Description("串口通讯")]
+        SerialPort,
+        /// <summary>
+        /// Image Processing and Pattern Recognition（图像处理和模式识别）
+        /// </summary>
+        [Description("图像识别")]
+        IPPR,
+        ///// <summary>
+        ///// Universal Serial Bus，通用串行总线
+        ///// </summary>
+        //[Description("USB")]
+        //USB,
+        /// <summary>
+        /// 4~20mA，电流信号
+        /// </summary>
+        [Description("电流信号")]
+        ADC
+    }
+
+    public class SerialModel
+    {
+        public string serialport { get; set; }
+        public SerialPortBaudRates baudrate { get; set; }
+        public SerialPortDatabits databit { get; set; }
+        public Parity parity { get; set; }
+        public StopBits stopbit { get; set; }
+        public int timeout { get; set; }
+        public int samplerate { get; set; }
+        public string sp_active { get; set; }
+    }
     public class SerialPortEnum
     {
         /// <summary>
@@ -75,6 +113,12 @@ namespace SK_FModel
             SixBits = 6,
             SeventBits = 7,
             EightBits = 8
+        }
+
+        public enum CRC16CodeCheckType
+        {
+            CRC16,
+            CRCTable
         }
     }
 }

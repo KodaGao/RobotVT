@@ -42,5 +42,28 @@ namespace SK_FModel
             Exception
         }
 
+
+        public enum GraphSelectPointType
+        {
+            HighPoint,
+            LowPoint
+        }
+
+        /// <summary>
+        /// 数据格式类型
+        /// </summary>
+        public enum DataFormatType
+        {
+            Byte,
+            String
+        }
+
+        public enum RunStatus
+        {
+            Unknown,
+            Normal,
+            Exception
+        }
+
     }
 }

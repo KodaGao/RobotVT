@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVT.Model", "RobotVT.Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVT.Resources", "RobotVT.Resources\RobotVT.Resources.csproj", "{1A218A51-5ECD-47F5-BAD7-2703F16A2794}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FInterface", "SK_FInterface\SK_FInterface.csproj", "{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FModbus", "SK_FModbus\SK_FModbus.csproj", "{44527D2B-86A6-4213-9328-7FA9A13962F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

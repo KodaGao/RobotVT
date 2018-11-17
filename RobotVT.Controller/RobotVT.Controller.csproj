@@ -66,7 +66,6 @@
   <ItemGroup>
     <Compile Include="ConfigInfo.cs" />
     <Compile Include="DBMethods\DataAccess.cs" />
-    <Compile Include="DBMethods\SerialPortMethods.cs" />
     <Compile Include="Form\HIK_CameraSet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +78,7 @@
     <Compile Include="Form\HIK_SPortSet.Designer.cs">
       <DependentUpon>HIK_SPortSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="RobotInfoModule.cs" />
     <Compile Include="UserControl\HIK_FaceSnap.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -116,6 +116,10 @@
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SK_FInterface\SK_FInterface.csproj">
+      <Project>{0c8eeedd-8cb3-47fa-be56-66786f223de8}</Project>
+      <Name>SK_FInterface</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\HIK_CameraSet.resx">
@@ -134,6 +138,8 @@
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SerialPortMethods\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
