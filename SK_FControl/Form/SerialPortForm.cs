@@ -15,18 +15,14 @@ namespace SK_FControl
 {
     public partial class SerialPortForm : MetroForm
     {
-        public virtual event SK_FModel.SystemDelegate.del_SystemSetFinish Event_SetFinish;
-        public virtual SK_FDBUtility.DB.S_D_SERIALPORT SPort { get; set; }
-        public virtual string SPortKey { get; set; }
+        public event SK_FModel.SystemDelegate.del_SystemSetFinish Event_SetFinish;
+        SK_FControl.SerialPortMethods spMethods = new SerialPortMethods();
 
-        public string serialport = string.Empty;
-        public string baudrate = string.Empty;
-        public string databit = string.Empty;
-        public string parity = string.Empty;
-        public string stopbit = string.Empty;
-        public string timeout = string.Empty;
-        public string samplerate = string.Empty;
+        public  SK_FDBUtility.DB.S_D_SERIALPORT SPort { get; set; }
         
+        public  string SPortKey { get; set; }
+        public  SK_FDBUtility.FirebirdDBOperator FirebirdDBOperator { get; set; }
+
         public SerialPortForm()
         {
             InitializeComponent();
@@ -59,6 +55,9 @@ namespace SK_FControl
             tBXTimeOut.Text = "1000";
             //7) SampleTime
             tBXSample.Text = "1000";
+
+
+            StaticInfo.FirebirdDBOperator = FirebirdDBOperator;
 
             DatabaseValue();
         }
@@ -139,6 +138,22 @@ namespace SK_FControl
 
         private void DatabaseValue()
         {
+            SPort = spMethods.GetSerialPortSet(SPortKey);
+            if (SPort == null)
+            {
+                SPort = new SK_FDBUtility.DB.S_D_SERIALPORT();
+
+                SPort.SP_KEY = SPortKey;
+                SPort.SP_PORT = "COM1";
+                SPort.SP_BAUDRATE = "9600";
+                cBEDataBits.Text = SPort.SP_DATABIT = "8";
+                cBEParity.Text = SPort.SP_PRATITY = "None";
+                cBEStopBits.Text = SPort.SP_STOPBIT = "One";
+                tBXTimeOut.Text = SPort.SP_TIMEOUT = "1000";
+                tBXSample.Text = SPort.SP_SAMPLE = "1000";
+                spMethods.InsertSerialPortSet(SPort);
+            }
+
             cBEPortName.Text = SPort.SP_PORT;
             cBEBaudRate.Text = SPort.SP_BAUDRATE;
             cBEDataBits.Text = SPort.SP_DATABIT;
@@ -148,40 +163,39 @@ namespace SK_FControl
             tBXSample.Text = SPort.SP_SAMPLE;
         }
 
-        public virtual void btX_Save_Click(object sender, EventArgs e)
+        private void btX_Save_Click(object sender, EventArgs e)
         {
             if (SPort == null)
             {
                 SPort = new SK_FDBUtility.DB.S_D_SERIALPORT();
                 SPort.SP_KEY = SPortKey;
             }
-
             bool bmodify = false;
 
-            if (SPort.SP_KEY != cBEPortName.SelectedValue.ToString())
+            if (SPort.SP_PORT != cBEPortName.SelectedItem.ToString())
             {
                 bmodify = true;
-                SPort.SP_KEY = cBEPortName.SelectedValue.ToString();
+                SPort.SP_PORT = cBEPortName.SelectedItem.ToString();
             }
-            if (SPort.SP_BAUDRATE != cBEBaudRate.SelectedValue.ToString())
+            if (SPort.SP_BAUDRATE != cBEBaudRate.SelectedItem.ToString())
             {
                 bmodify = true;
-                SPort.SP_BAUDRATE = cBEBaudRate.SelectedValue.ToString();
+                SPort.SP_BAUDRATE = cBEBaudRate.SelectedItem.ToString();
             }
-            if (SPort.SP_DATABIT != cBEDataBits.SelectedValue.ToString())
+            if (SPort.SP_DATABIT != cBEDataBits.SelectedItem.ToString())
             {
                 bmodify = true;
-                SPort.SP_DATABIT = cBEDataBits.SelectedValue.ToString();
+                SPort.SP_DATABIT = cBEDataBits.SelectedItem.ToString();
             }
-            if (SPort.SP_PRATITY != cBEParity.SelectedValue.ToString())
+            if (SPort.SP_PRATITY != cBEParity.SelectedItem.ToString())
             {
                 bmodify = true;
-                SPort.SP_PRATITY = cBEParity.SelectedValue.ToString();
+                SPort.SP_PRATITY = cBEParity.SelectedItem.ToString();
             }
-            if (SPort.SP_STOPBIT != cBEStopBits.SelectedValue.ToString())
+            if (SPort.SP_STOPBIT != cBEStopBits.SelectedItem.ToString())
             {
                 bmodify = true;
-                SPort.SP_STOPBIT = cBEStopBits.SelectedValue.ToString();
+                SPort.SP_STOPBIT = cBEStopBits.SelectedItem.ToString();
             }
             if (SPort.SP_TIMEOUT != tBXTimeOut.Text)
             {
@@ -195,14 +209,14 @@ namespace SK_FControl
             }
             if (bmodify)
             {
+                spMethods.UpdateSerialPortSet(SPort);
                 //new Controller.DataAccess().UpdateCameraSet(_CameraSet);
                 Event_SetFinish?.Invoke();
             }
-            
             this.Close();
         }
 
-        public virtual void btX_Cancel_Click(object sender, EventArgs e)
+        private void btX_Cancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
