@@ -16,6 +16,8 @@ namespace RobotVT.Controller
         public static string CapturePath = SystemStartPath + "\\CaptureImage\\"+ DateTime.Today.ToString("yyyyMMdd") + "\\";
         public static string CameraSetFormTitle = "设备信息";
 
+        public static string WirelessController = "VTWire";
+
         public static Queue<SK_FModel.SystemMessageInfo> QueueMessageInfo;
         public static bool IsSaveLogInfo;
         public static bool IsLoadCaputeImage;
@@ -35,5 +37,6 @@ namespace RobotVT.Controller
         /// 共享的配置参数信息
         /// </summary>
         public static ConfigInfo ConfigInfo;
+
     }
 }

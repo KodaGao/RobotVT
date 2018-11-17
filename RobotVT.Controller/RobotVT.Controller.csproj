@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="ConfigInfo.cs" />
     <Compile Include="DBMethods\DataAccess.cs" />
+    <Compile Include="DBMethods\SerialPortMethods.cs" />
     <Compile Include="Form\HIK_CameraSet.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -28,6 +28,8 @@ namespace RobotVT.Controller
             this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
             this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
             this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp_0;
+
+            
         }
 
 
@@ -35,15 +37,14 @@ namespace RobotVT.Controller
         {
             if (e.Button == MouseButtons.Right)
             {
-                //if (!MouseUp && this.PlayModel == null) return;
-
                 HIK_SPortSet hIK_SPort = new HIK_SPortSet();
                 hIK_SPort.Event_SetFinish += HIK_SPortSet_Event_SetFinish;
+                hIK_SPort.FirebirdDBOperator = StaticInfo.FirebirdDBOperator;
+                hIK_SPort.SPortKey = StaticInfo.WirelessController;
                 if (_Sport != null)
                 {
                     hIK_SPort.SPort = _Sport;
                 }
-                //hIK_SPort.PlayModel = this.PlayModel;
                 hIK_SPort.ShowDialog();
 
             }
