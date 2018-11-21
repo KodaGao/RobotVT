@@ -1,8 +1,5 @@
-﻿using System;
+﻿using SK_FModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SK_FInterface
 {
@@ -12,15 +9,15 @@ namespace SK_FInterface
 
         //event SystemDelegate.del_SubmitUploadData Event_SubmitUploadData;
 
-        ///// <summary>
-        ///// 运行消息事件
-        ///// </summary>
-        //event SystemDelegate.del_RuningMessage Event_RuningMessage;
+        /// <summary>
+        /// 运行消息事件
+        /// </summary>
+        event SystemDelegate.del_RuningMessage Event_RuningMessage;
 
-        ///// <summary>
-        ///// Debug消息事件
-        ///// </summary>
-        //event SystemDelegate.del_DebugMessage Event_DebugMessage;
+        /// <summary>
+        /// Debug消息事件
+        /// </summary>
+        event SystemDelegate.del_DebugMessage Event_DebugMessage;
 
         ///// <summary>
         ///// 获取仪器信息列表
@@ -73,11 +70,11 @@ namespace SK_FInterface
 
         #region 方法
 
-        ///// <summary>
-        ///// 初始化
-        ///// </summary>
-        ///// <param name="SerialPortInfo"></param>
-        //void Init(Model.DB.M_D_PRODUCTS M_D_PRODUCTS);
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="SerialPortInfo"></param>
+        void Init();
 
         void InitSerialPortInfo(SK_FModel.SerialPortInfo SerialPortInfo);
 

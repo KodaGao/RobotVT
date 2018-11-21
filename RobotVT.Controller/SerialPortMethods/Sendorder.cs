@@ -70,6 +70,11 @@ namespace RobotVT.Controller.SerialPortMethods
         internal short RegisterNum { get; set; }
 
         /// <summary>
+        /// 寄存器地址
+        /// </summary>
+        internal short RegisterAddressN { get; set; }
+
+        /// <summary>
         /// 值
         /// </summary>
         internal List<byte> value { get; set; }

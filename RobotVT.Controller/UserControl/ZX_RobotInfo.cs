@@ -15,6 +15,7 @@ namespace RobotVT.Controller
             InitializeComponent();
             topMain.MouseUp += new MouseEventHandler(this.topMainWnd_MouseUp);
             topMain.MouseDoubleClick += new MouseEventHandler(this.topMainWnd_MouseDoubleClick);
+            StaticInfo.RobotIM.Event_UpdateRealTimeData += RobotInfo_Event_UpdateRealTimeData;
         }
 
         private void ZX_RobotInfo_Load(object sender, EventArgs e)
@@ -34,15 +35,8 @@ namespace RobotVT.Controller
             SK_FControl.StaticInfo.FirebirdDBOperator = StaticInfo.FirebirdDBOperator;
             _Sport = _spMethods.GetSerialPortSet(StaticInfo.WirelessController);
             SerialPortInfo = _spMethods.GetSerialPortInfo(StaticInfo.WirelessController);
-
-            if (SerialPortInfo == null)
-            {
-                SerialPortInfo = new SK_FModel.SerialPortInfo();
-            }
-
-            SerialPortInfo.SenderOrderInterval = StaticInfo.SenderOrderInterval;
-            StaticInfo.ModbusHelper.Init(SerialPortInfo);
-            StaticInfo.RobotIM.Event_UpdateRealTimeData += RobotInfo_Event_UpdateRealTimeData;
+            
+            StaticInfo.RobotIM.InitSerialPortInfo(SerialPortInfo);
             StaticInfo.RobotIM.Start();
         }
 
@@ -55,6 +49,7 @@ namespace RobotVT.Controller
                 hIK_SPort.Event_SetFinish += HIK_SPortSet_Event_SetFinish;
                 hIK_SPort.FirebirdDBOperator = StaticInfo.FirebirdDBOperator;
                 hIK_SPort.SPortKey = StaticInfo.WirelessController;
+
                 if (_Sport != null)
                 {
                     hIK_SPort.SPort = _Sport;
@@ -66,18 +61,11 @@ namespace RobotVT.Controller
 
         private void HIK_SPortSet_Event_SetFinish()
         {
-            //sdkLoginOut();
+            StaticInfo.RobotIM.Stop();
+            SerialPortInfo = _spMethods.GetSerialPortInfo(StaticInfo.WirelessController);
 
-            //Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(_CameraSet.VT_ID);
-
-            //string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
-            //Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
-            //string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
-            //string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
-
-            //sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-            //_CameraSet = _cameraSetNew;
-
+            StaticInfo.RobotIM.InitSerialPortInfo(SerialPortInfo);
+            StaticInfo.RobotIM.Start();
         }
 
         private void topMainWnd_MouseDoubleClick(object sender, MouseEventArgs e)

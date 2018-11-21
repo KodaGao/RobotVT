@@ -55,15 +55,11 @@ namespace RobotVT.Controller
         }
         private void ModbusHelper_Event_UpdateRealTimeData(object sender)
         {
-            Event_UpdateRealTimeData?.Invoke(sender);
-        }
-        private void ModbusHelper_Event_ReceiveData(ReceiveData receiveData)
-        {
+            ReceiveData receiveData = (ReceiveData)sender;
             if (RobotInfo == null)
             {
                 RobotInfo = new RobotInfo();
             }
-
 
             List<short> receData = new List<short>(255);
             for (int i = 0; i < receiveData.DataItem.Length / 2; i++)
@@ -83,11 +79,15 @@ namespace RobotVT.Controller
             RobotInfo.RobotStatus = ValidItem[4];
 
             Event_UpdateRealTimeData?.Invoke(RobotInfo);
-        }        
+        }
+        private void ModbusHelper_Event_ReceiveData(ReceiveData receiveData)
+        {
+
+        }
         private void ModbusHelper_Event_SendData(ReceiveData receiveData)
         {
-            List<byte> value = new List<byte>(20);
-            ReturnOrder returnOrder =StaticInfo.ModbusHelper.CreateReturnOrder(receiveData.DeviceAddressId, receiveData.FunctionCode, receiveData.Quantity, value);
+            List<byte> value = new List<byte>(receiveData.Quantity * 2);
+            ReturnOrder returnOrder = StaticInfo.ModbusHelper.CreateReturnOrder(receiveData.DeviceAddressId, receiveData.FunctionCode, receiveData.RegisterAddress, receiveData.Quantity, value);
             StaticInfo.ModbusHelper.SubmitOrder(returnOrder);
         }
 
@@ -118,32 +118,34 @@ namespace RobotVT.Controller
             {
                 try
                 {
-                    //if (StaticInfo.ParaInfo.ModbusHelper != null)
-                    //{
-                    //    StaticInfo.ParaInfo.ModbusHelper.ClearSendOrder();
-                    //    StaticInfo.ParaInfo.ModbusHelper.Stop();
-                    //}
+                    if (StaticInfo.ModbusHelper != null)
+                    {
+                        StaticInfo.ModbusHelper.ClearSendOrder();
+                        StaticInfo.ModbusHelper.Stop();
+                        StaticInfo.ModbusHelper.DiscardOutBuffer();
+                        StaticInfo.ModbusHelper.DiscardInBuffer();
+                    }
                 }
                 catch { }
-
-                //if (CheckControl != null)
-                //    CheckControl.Disconnect();
-                //if (Event_RuningMessage != null)
-                //    Event_RuningMessage(StaticInfo.ParaInfo.M_D_PRODUCTS, "仪器已断开！", Relations.Model.CommonEnum.MessageType.Normal);
+                Event_RuningMessage?.Invoke(StaticInfo.ControlObject, "仪器已断开！", SK_FModel.SystemEnum.MessageType.Normal);
                 //StaticInfo.ParaInfo.RuningStatus = SystemEnum.RuningStatus.Stop;
                 return true;
             }
             catch (Exception ex)
             {
-                //Event_RuningMessage?.Invoke(StaticInfo.ParaInfo.M_D_PRODUCTS, "停止失败，错误信息：" + ex.Message, Relations.Model.CommonEnum.MessageType.Exception);
+                Event_RuningMessage?.Invoke(StaticInfo.ControlObject, "停止失败，错误信息：" + ex.Message, SK_FModel.SystemEnum.MessageType.Exception);
                 return false;
             }
         }
 
         public void InitSerialPortInfo(SK_FModel.SerialPortInfo SerialPortInfo)
         {
-            //SerialPortInfo.SenderOrderInterval = StaticInfo.ParaInfo.SenderOrderInterval;
-            //StaticInfo.ParaInfo.ModbusHelper.Init(SerialPortInfo);
+            if (SerialPortInfo == null)
+            {
+                SerialPortInfo = new SK_FModel.SerialPortInfo();
+            }
+            SerialPortInfo.SenderOrderInterval = StaticInfo.SenderOrderInterval;
+            StaticInfo.ModbusHelper.Init(SerialPortInfo);
         }
 
         public void SetReceiveDataInfo(List<SK_FModel.ReceiveDataInfo> ReceiveDataInfoList)

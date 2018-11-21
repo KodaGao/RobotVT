@@ -184,14 +184,12 @@ namespace SK_FModbus
                         ReceiveDataList.AddRange(_ReadDataByte);
                     }
                     ReceiveDataTime = DateTime.Now;
-                    if (Event_ReceiveOrder != null)
-                        Event_ReceiveOrder(serialPortInfo.PortName,_ReadDataByte);
+                    Event_ReceiveOrder?.Invoke(serialPortInfo.PortName, _ReadDataByte);
                 }               
             }
             catch (Exception ex)
             {
-                if (Event_RunException != null)
-                    Event_RunException("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "]Modbus接收数据失败，错误信息：" + ex.Message);
+                Event_RunException?.Invoke("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "]Modbus接收数据失败，错误信息：" + ex.Message);
             }
         }
 

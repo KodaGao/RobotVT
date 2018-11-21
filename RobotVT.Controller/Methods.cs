@@ -77,6 +77,7 @@ namespace RobotVT.Controller
         {
             try
             {
+                StaticInfo.RobotIM.Stop();
                 DBClose();
                 ClearTempResources();
             }

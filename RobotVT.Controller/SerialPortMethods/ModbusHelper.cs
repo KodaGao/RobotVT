@@ -153,7 +153,7 @@ namespace RobotVT.Controller.SerialPortMethods
         /// <param name="RegisterNum">寄存器数量</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        private byte[] CreateReturnOrder(byte DeviceAddressId, SystemEnum.RegisterAddress RegisterAddress, SK_FModel.SerialPortEnum.FunctionCode FunctionCode, short RegisterNum, byte[] value)
+        private byte[] CreateReturnOrder(byte DeviceAddressId, short RegisterAddress, SK_FModel.SerialPortEnum.FunctionCode FunctionCode, short RegisterNum, byte[] value)
         {
             try
             {
@@ -164,15 +164,18 @@ namespace RobotVT.Controller.SerialPortMethods
                 switch (FunctionCode)
                 {
                     case SK_FModel.SerialPortEnum.FunctionCode.Code03:
-                        _Result = new byte[8];
+                        _Result = new byte[RegisterNum * 2 + 5];
                         _Result[0] = DeviceAddressId;
-                        _Result[1] = 0x06;
-                        _TempByte = BitConverter.GetBytes((short)RegisterAddress);
-                        Array.Reverse(_TempByte);
-                        _Result[2] = _TempByte[0];
-                        _Result[3] = _TempByte[1];
-                        _Result[4] = value[0];
-                        _Result[5] = value[1];
+                        _Result[1] = (byte)(int)FunctionCode;
+                        _Result[2] = (byte)(RegisterNum * 2);
+
+                        for(int i=0;i<value.Length;i++)
+                        {
+                            _TempByte = BitConverter.GetBytes(value[i]);
+                            Array.Reverse(_TempByte);
+                            _Result[(1 + i) * 2 + 1] = _TempByte[0];
+                            _Result[(2 + i) * 2] = _TempByte[1];
+                        }
                         _TempByte = new byte[_Result.Length - 2];
                         Array.Copy(_Result, _TempByte, _TempByte.Length);
                         _CRC16.GetCRC(_TempByte, ref _CRC16Byte);
@@ -183,7 +186,7 @@ namespace RobotVT.Controller.SerialPortMethods
                         _Result = new byte[8];
                         _Result[0] = DeviceAddressId;
                         _Result[1] = (byte)(int)FunctionCode;
-                        _TempByte = BitConverter.GetBytes((short)RegisterAddress);
+                        _TempByte = BitConverter.GetBytes(RegisterAddress);
                         Array.Reverse(_TempByte);
                         _Result[2] = _TempByte[0];
                         _Result[3] = _TempByte[1];
@@ -205,9 +208,7 @@ namespace RobotVT.Controller.SerialPortMethods
                 throw new Exception("生成指令数据失败，错误信息：" + ex.Message);
             }
         }
-
-
-
+        
         internal void UpdateReceivedBytesThreshold(int value)
         {
             if (ModbusMng == null) return;
@@ -275,7 +276,7 @@ namespace RobotVT.Controller.SerialPortMethods
         /// <param name="RegisterNum"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal ReturnOrder CreateReturnOrder(byte DeviceAddressId, SK_FModel.SerialPortEnum.FunctionCode FunctionCode, short RegisterNum, List<byte> value)
+        internal ReturnOrder CreateReturnOrder(byte DeviceAddressId, SK_FModel.SerialPortEnum.FunctionCode FunctionCode, short RegisterAddress, short RegisterNum, List<byte> value)
         {
             ReturnOrder _ReturnOrder;
             try
@@ -287,12 +288,12 @@ namespace RobotVT.Controller.SerialPortMethods
                 {
                     case SK_FModel.SerialPortEnum.FunctionCode.Code03:
                         _ReturnOrder.RegisterNum = RegisterNum;
-                        _ReturnOrder.value = new List<byte>();
+                        _ReturnOrder.value = value;
                         break;
 
                     case SK_FModel.SerialPortEnum.FunctionCode.Code16:
+                        _ReturnOrder.RegisterAddressN = RegisterAddress;
                         _ReturnOrder.RegisterNum = RegisterNum;
-                        _ReturnOrder.value = value;
                         break;
                 }
                 return _ReturnOrder;
@@ -340,7 +341,7 @@ namespace RobotVT.Controller.SerialPortMethods
                 throw new Exception("仪器未连接！");
             try
             {
-                byte[] _OrderItem = CreateOrder(SendOrder.DeviceAddressId, SendOrder.RegisterAddress, SendOrder.ReadWriteType, SendOrder.FunctionCode, SendOrder.RegisterNum, SendOrder.value == null ? new byte[] { } : SendOrder.value.ToArray());
+                byte[] _OrderItem = CreateReturnOrder(SendOrder.DeviceAddressId, SendOrder.RegisterAddressN, SendOrder.FunctionCode, SendOrder.RegisterNum, SendOrder.value == null ? new byte[] { } : SendOrder.value.ToArray());
                 ModbusMng.AddSendOrder(_OrderItem);
             }
             catch (Exception ex)
@@ -424,6 +425,11 @@ namespace RobotVT.Controller.SerialPortMethods
                             _ReceiveData.DeviceAddressId = _DataItem[0];
                             _ReceiveData.FunctionCode = (SK_FModel.SerialPortEnum.FunctionCode)_DataItem[1];
 
+                            byte[] _RegisterAddress = new byte[2];
+                            _RegisterAddress[0] = _DataItem[3];
+                            _RegisterAddress[1] = _DataItem[2];
+                            _ReceiveData.RegisterAddress = (byte)SK_FCommon.ValueHelper.Instance.GetShort(_RegisterAddress);
+
                             byte[] _RegisterNumber = new byte[2];
                             _RegisterNumber[0] = _DataItem[5];
                             _RegisterNumber[1] = _DataItem[4];
@@ -438,8 +444,8 @@ namespace RobotVT.Controller.SerialPortMethods
                                         _ReceiveData.DataItem = new byte[_ByteLen];
                                         Array.Copy(_DataItem, 3, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
 
-                                        ClearSendOrder();
-                                        Event_ReceiveData?.Invoke(_ReceiveData);
+                                        //ClearSendOrder();
+                                        //Event_ReceiveData?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -453,6 +459,7 @@ namespace RobotVT.Controller.SerialPortMethods
                                         Array.Copy(_DataItem, 7, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
                                         Event_ReceiveData?.Invoke(_ReceiveData);
                                         Event_UpdateRealTimeData?.Invoke(_ReceiveData);
+                                        Event_SendData?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -465,7 +472,7 @@ namespace RobotVT.Controller.SerialPortMethods
                 {
                     Event_RuningMessage?.Invoke(StaticInfo.ControlObject, "解析数据失败，错误信息：" + ex.Message, SK_FModel.SystemEnum.MessageType.Exception);
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1);
             }
         }
 

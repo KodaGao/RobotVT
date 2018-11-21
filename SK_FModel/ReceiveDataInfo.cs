@@ -25,6 +25,11 @@ namespace SK_FModel
         /// <summary>
         /// 设备地址码 默认：0x01
         /// </summary>
+        public byte RegisterAddress { get; set; }
+
+        /// <summary>
+        /// 寄存器个数
+        /// </summary>
         public byte Quantity { get; set; }
 
         /// <summary>

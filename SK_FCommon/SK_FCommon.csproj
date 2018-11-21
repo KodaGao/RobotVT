@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\DLL\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -42,17 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommuncationProtocal\SerialPortUtil.cs" />
     <Compile Include="DirFile.cs" />
     <Compile Include="LogHelper.cs" />
     <Compile Include="Methods.cs" />
-    <Compile Include="ModbusRTUControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CommuncationProtocal\ProtocalIPPRWapper.cs" />
-    <Compile Include="CommuncationProtocal\ProtocalSerialPortWapper.cs" />
-    <Compile Include="CommuncationProtocal\ProtocalTCPIPWapper.cs" />
-    <Compile Include="CommuncationProtocal\ProtocalUSBWapper.cs" />
-    <Compile Include="CommuncationProtocal\ProtocalWapper.cs" />
     <Compile Include="ValueHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +54,5 @@
       <Name>SK_FModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
