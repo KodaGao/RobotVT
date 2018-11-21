@@ -1,12 +1,22 @@
 ﻿
 using System;
 using System.IO;
+using RobotVT.Controller.SerialPortMethods;
 using SK_FVision;
 
 namespace RobotVT.Controller
 {
     public class Methods
     {
+        /// <summary>
+        /// 运行消息事件
+        /// </summary>SearchSensorBaseInfo
+        public event SK_FModel.SystemDelegate.del_RuningMessage Event_RuningMessage;
+        /// <summary>
+        /// Debug消息事件
+        /// </summary>
+        public event SK_FModel.SystemDelegate.del_DebugMessage Event_DebugMessage;
+
         /// <summary>
         /// 保存异常日志
         /// </summary>
@@ -50,32 +60,8 @@ namespace RobotVT.Controller
         {
             try
             {
-                //Relations.Common.IniMng _IniMng = GetIniMng();
-                //StaticInfo.ConfigInfo = new RelationsLMPModel.Config();
-                //StaticInfo.ConfigInfo.ApplicatinType = (RelationsLMPModel.SystemEnum.ApplicatinType)_IniMng.ReadIntValue("Config", "ApplicatinType", 0, 255);
-                //StaticInfo.ConfigInfo.ShowDebugMessage = _IniMng.ReadBoolValue("Config", "ShowDebug", false);
-                //StaticInfo.ConfigInfo.DataTrans = _IniMng.ReadBoolValue("Config", "DataTrans", false);
-                //StaticInfo.ConfigInfo.DataTransToManage = _IniMng.ReadBoolValue("Config", "DataTransToManage", false);
-                //StaticInfo.ConfigInfo.ClearMessageInterval = _IniMng.ReadIntValue("Config", "ClearMessageInterval", 10, 255);
-                //StaticInfo.ConfigInfo.DefaultPRODUCTID = _IniMng.ReadStringValue("Config", "DefaultPRODUCTID", string.Empty, 255);
-                //StaticInfo.ConfigInfo.Humidity = _IniMng.ReadFloatValue("Config", "Humidity", 0, 255);
-                //StaticInfo.ConfigInfo.Temperature = _IniMng.ReadIntValue("Config", "Temperature", 0, 255);
-                //StaticInfo.ConfigInfo.ReportPrefix = _IniMng.ReadStringValue("Config", "ReportPrefix", string.Empty, 255);
-                //StaticInfo.ConfigInfo.CustomerType = (RelationsLMPModel.SystemEnum.CustomerType)_IniMng.ReadIntValue("Config", "CustomerType", 0, 255);
-                //StaticInfo.ConfigInfo.CreateFactoryNumber = _IniMng.ReadBoolValue("Config", "CreateFactoryNumber", false);
-                //StaticInfo.ConfigInfo.IPEndPoint = new System.Net.IPEndPoint(System.Net.IPAddress.Parse(_IniMng.ReadStringValue("Config", "IpAddress", "127.0.0.1", 255)), _IniMng.ReadIntValue("Config", "Port", 9000, 255));
-
-                //StaticInfo.FTPServerInfo = new RelationsLMPModel.FTPServerInfo();
-                //StaticInfo.FTPServerInfo.RemoteHost = _IniMng.ReadStringValue("FTP", "RemoteHost", "192.168.1.83", 255);
-                //StaticInfo.FTPServerInfo.RemotePath = _IniMng.ReadStringValue("FTP", "RemotePath", "", 255);
-                //StaticInfo.FTPServerInfo.UserName = _IniMng.ReadStringValue("FTP", "UserName", "lmpuser", 255);
-                //StaticInfo.FTPServerInfo.PassWord = _IniMng.ReadStringValue("FTP", "PassWord", "aaaaaa", 255);
-                //StaticInfo.FTPServerInfo.RemotePort = _IniMng.ReadIntValue("FTP", "RemotePort", 22, 255);
-
-                //StaticInfo.ConfigInfo.ReportHomePath = StaticInfo.SystemStartPath + "Report\\";
-                //StaticInfo.ConfigInfo.ReportTemplateHomePath = StaticInfo.SystemStartPath + "ReportTemplate\\";
-                //StaticInfo.ConfigInfo.TempDirPath = StaticInfo.SystemStartPath + "Temp\\";
-                //StaticInfo.AccuracyInfo = new RelationsLMPModel.AccuracyInfo();
+                StaticInfo.RobotIM = new RobotInfoModule();
+                StaticInfo.RobotIM.Init();
             }
             catch (Exception _Ex)
             {

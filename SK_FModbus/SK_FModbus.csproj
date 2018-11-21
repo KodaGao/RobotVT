@@ -48,6 +48,10 @@
     <Compile Include="SerialPortMng.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
+      <Project>{499970f7-0091-4be7-b452-365067b41108}</Project>
+      <Name>SK_FCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SK_FModel\SK_FModel.csproj">
       <Project>{ab2cca12-3749-413f-a7ff-d7af7f9688af}</Project>
       <Name>SK_FModel</Name>

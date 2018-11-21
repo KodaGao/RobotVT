@@ -32,30 +32,30 @@
             this.styleManager = new DevComponents.DotNetBar.StyleManager(this.components);
             this.centerMain = new DevComponents.DotNetBar.PanelEx();
             this.mainWindow2 = new DevComponents.DotNetBar.PanelEx();
+            this.zX_MatchInfo8 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo7 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo6 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo5 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo4 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo3 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo2 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo1 = new RobotVT.Controller.ZX_MatchInfo();
             this.label4 = new DevComponents.DotNetBar.LabelX();
             this.label3 = new DevComponents.DotNetBar.LabelX();
             this.mainWindow = new DevComponents.DotNetBar.PanelEx();
             this.backCamera = new DevComponents.DotNetBar.PanelEx();
-            this.leftCamera = new DevComponents.DotNetBar.PanelEx();
-            this.rightCamera = new DevComponents.DotNetBar.PanelEx();
-            this.frontCamera = new DevComponents.DotNetBar.PanelEx();
-            this.cloudCamera = new DevComponents.DotNetBar.PanelEx();
-            this.mainCamera = new DevComponents.DotNetBar.PanelEx();
-            this.zX_RobotInfo1 = new RobotVT.Controller.ZX_RobotInfo();
             this.backPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.leftCamera = new DevComponents.DotNetBar.PanelEx();
             this.rightPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.rightCamera = new DevComponents.DotNetBar.PanelEx();
             this.leftPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.frontCamera = new DevComponents.DotNetBar.PanelEx();
             this.frontPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.cloudCamera = new DevComponents.DotNetBar.PanelEx();
             this.cloudPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.mainCamera = new DevComponents.DotNetBar.PanelEx();
             this.mainPlayView = new RobotVT.Controller.HIK_PlayView();
-            this.zX_MatchInfo1 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo2 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo3 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo4 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo5 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo6 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo7 = new RobotVT.Controller.ZX_MatchInfo();
-            this.zX_MatchInfo8 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_RobotInfo = new RobotVT.Controller.ZX_RobotInfo();
             this.centerMain.SuspendLayout();
             this.mainWindow2.SuspendLayout();
             this.mainWindow.SuspendLayout();
@@ -104,6 +104,86 @@
             this.mainWindow2.Name = "mainWindow2";
             this.mainWindow2.Size = new System.Drawing.Size(1890, 951);
             this.mainWindow2.TabIndex = 2;
+            // 
+            // zX_MatchInfo8
+            // 
+            this.zX_MatchInfo8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo8.Location = new System.Drawing.Point(1267, 646);
+            this.zX_MatchInfo8.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo8.Name = "zX_MatchInfo8";
+            this.zX_MatchInfo8.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo8.TabIndex = 39;
+            // 
+            // zX_MatchInfo7
+            // 
+            this.zX_MatchInfo7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo7.Location = new System.Drawing.Point(640, 646);
+            this.zX_MatchInfo7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo7.Name = "zX_MatchInfo7";
+            this.zX_MatchInfo7.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo7.TabIndex = 38;
+            // 
+            // zX_MatchInfo6
+            // 
+            this.zX_MatchInfo6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo6.Location = new System.Drawing.Point(12, 646);
+            this.zX_MatchInfo6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo6.Name = "zX_MatchInfo6";
+            this.zX_MatchInfo6.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo6.TabIndex = 37;
+            // 
+            // zX_MatchInfo5
+            // 
+            this.zX_MatchInfo5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo5.Location = new System.Drawing.Point(1267, 340);
+            this.zX_MatchInfo5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo5.Name = "zX_MatchInfo5";
+            this.zX_MatchInfo5.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo5.TabIndex = 36;
+            // 
+            // zX_MatchInfo4
+            // 
+            this.zX_MatchInfo4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo4.Location = new System.Drawing.Point(12, 340);
+            this.zX_MatchInfo4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo4.Name = "zX_MatchInfo4";
+            this.zX_MatchInfo4.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo4.TabIndex = 35;
+            // 
+            // zX_MatchInfo3
+            // 
+            this.zX_MatchInfo3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo3.Location = new System.Drawing.Point(1267, 34);
+            this.zX_MatchInfo3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo3.Name = "zX_MatchInfo3";
+            this.zX_MatchInfo3.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo3.TabIndex = 34;
+            // 
+            // zX_MatchInfo2
+            // 
+            this.zX_MatchInfo2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo2.Location = new System.Drawing.Point(640, 34);
+            this.zX_MatchInfo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo2.Name = "zX_MatchInfo2";
+            this.zX_MatchInfo2.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo2.TabIndex = 33;
+            // 
+            // zX_MatchInfo1
+            // 
+            this.zX_MatchInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo1.Location = new System.Drawing.Point(12, 34);
+            this.zX_MatchInfo1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo1.Name = "zX_MatchInfo1";
+            this.zX_MatchInfo1.Size = new System.Drawing.Size(611, 290);
+            this.zX_MatchInfo1.TabIndex = 32;
             // 
             // label4
             // 
@@ -162,68 +242,6 @@
             this.backCamera.Size = new System.Drawing.Size(530, 294);
             this.backCamera.TabIndex = 3;
             // 
-            // leftCamera
-            // 
-            this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.leftCamera.Controls.Add(this.rightPlayView);
-            this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.leftCamera.Location = new System.Drawing.Point(663, 642);
-            this.leftCamera.Name = "leftCamera";
-            this.leftCamera.Size = new System.Drawing.Size(530, 294);
-            this.leftCamera.TabIndex = 4;
-            // 
-            // rightCamera
-            // 
-            this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.rightCamera.Controls.Add(this.leftPlayView);
-            this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.rightCamera.Location = new System.Drawing.Point(97, 642);
-            this.rightCamera.Name = "rightCamera";
-            this.rightCamera.Size = new System.Drawing.Size(530, 294);
-            this.rightCamera.TabIndex = 3;
-            // 
-            // frontCamera
-            // 
-            this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.frontCamera.Controls.Add(this.frontPlayView);
-            this.frontCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.frontCamera.Location = new System.Drawing.Point(1280, 319);
-            this.frontCamera.Name = "frontCamera";
-            this.frontCamera.Size = new System.Drawing.Size(530, 294);
-            this.frontCamera.TabIndex = 2;
-            // 
-            // cloudCamera
-            // 
-            this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.cloudCamera.Controls.Add(this.cloudPlayView);
-            this.cloudCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.cloudCamera.Location = new System.Drawing.Point(1280, 0);
-            this.cloudCamera.Name = "cloudCamera";
-            this.cloudCamera.Size = new System.Drawing.Size(530, 294);
-            this.cloudCamera.TabIndex = 1;
-            // 
-            // mainCamera
-            // 
-            this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.mainCamera.Controls.Add(this.mainPlayView);
-            this.mainCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.mainCamera.Location = new System.Drawing.Point(97, 0);
-            this.mainCamera.Name = "mainCamera";
-            this.mainCamera.Size = new System.Drawing.Size(1096, 613);
-            this.mainCamera.TabIndex = 0;
-            // 
-            // zX_RobotInfo1
-            // 
-            this.zX_RobotInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.zX_RobotInfo1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.zX_RobotInfo1.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.zX_RobotInfo1.ForeColor = System.Drawing.Color.White;
-            this.zX_RobotInfo1.Location = new System.Drawing.Point(0, 0);
-            this.zX_RobotInfo1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_RobotInfo1.Name = "zX_RobotInfo1";
-            this.zX_RobotInfo1.Size = new System.Drawing.Size(1904, 72);
-            this.zX_RobotInfo1.TabIndex = 48;
-            // 
             // backPlayView
             // 
             this.backPlayView._CameraSet = null;
@@ -234,6 +252,16 @@
             this.backPlayView.PlayModel = null;
             this.backPlayView.Size = new System.Drawing.Size(489, 246);
             this.backPlayView.TabIndex = 0;
+            // 
+            // leftCamera
+            // 
+            this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.leftCamera.Controls.Add(this.rightPlayView);
+            this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
+            this.leftCamera.Location = new System.Drawing.Point(663, 642);
+            this.leftCamera.Name = "leftCamera";
+            this.leftCamera.Size = new System.Drawing.Size(530, 294);
+            this.leftCamera.TabIndex = 4;
             // 
             // rightPlayView
             // 
@@ -246,6 +274,16 @@
             this.rightPlayView.Size = new System.Drawing.Size(489, 246);
             this.rightPlayView.TabIndex = 0;
             // 
+            // rightCamera
+            // 
+            this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.rightCamera.Controls.Add(this.leftPlayView);
+            this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
+            this.rightCamera.Location = new System.Drawing.Point(97, 642);
+            this.rightCamera.Name = "rightCamera";
+            this.rightCamera.Size = new System.Drawing.Size(530, 294);
+            this.rightCamera.TabIndex = 3;
+            // 
             // leftPlayView
             // 
             this.leftPlayView._CameraSet = null;
@@ -256,6 +294,16 @@
             this.leftPlayView.PlayModel = null;
             this.leftPlayView.Size = new System.Drawing.Size(489, 246);
             this.leftPlayView.TabIndex = 0;
+            // 
+            // frontCamera
+            // 
+            this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.frontCamera.Controls.Add(this.frontPlayView);
+            this.frontCamera.DisabledBackColor = System.Drawing.Color.Empty;
+            this.frontCamera.Location = new System.Drawing.Point(1280, 319);
+            this.frontCamera.Name = "frontCamera";
+            this.frontCamera.Size = new System.Drawing.Size(530, 294);
+            this.frontCamera.TabIndex = 2;
             // 
             // frontPlayView
             // 
@@ -268,6 +316,16 @@
             this.frontPlayView.Size = new System.Drawing.Size(489, 246);
             this.frontPlayView.TabIndex = 1;
             // 
+            // cloudCamera
+            // 
+            this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.cloudCamera.Controls.Add(this.cloudPlayView);
+            this.cloudCamera.DisabledBackColor = System.Drawing.Color.Empty;
+            this.cloudCamera.Location = new System.Drawing.Point(1280, 0);
+            this.cloudCamera.Name = "cloudCamera";
+            this.cloudCamera.Size = new System.Drawing.Size(530, 294);
+            this.cloudCamera.TabIndex = 1;
+            // 
             // cloudPlayView
             // 
             this.cloudPlayView._CameraSet = null;
@@ -278,6 +336,16 @@
             this.cloudPlayView.PlayModel = null;
             this.cloudPlayView.Size = new System.Drawing.Size(489, 246);
             this.cloudPlayView.TabIndex = 0;
+            // 
+            // mainCamera
+            // 
+            this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.mainCamera.Controls.Add(this.mainPlayView);
+            this.mainCamera.DisabledBackColor = System.Drawing.Color.Empty;
+            this.mainCamera.Location = new System.Drawing.Point(97, 0);
+            this.mainCamera.Name = "mainCamera";
+            this.mainCamera.Size = new System.Drawing.Size(1096, 613);
+            this.mainCamera.TabIndex = 0;
             // 
             // mainPlayView
             // 
@@ -290,85 +358,18 @@
             this.mainPlayView.Size = new System.Drawing.Size(1056, 565);
             this.mainPlayView.TabIndex = 0;
             // 
-            // zX_MatchInfo1
+            // zX_RobotInfo
             // 
-            this.zX_MatchInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo1.Location = new System.Drawing.Point(12, 34);
-            this.zX_MatchInfo1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo1.Name = "zX_MatchInfo1";
-            this.zX_MatchInfo1.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo1.TabIndex = 32;
-            // 
-            // zX_MatchInfo2
-            // 
-            this.zX_MatchInfo2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo2.Location = new System.Drawing.Point(640, 34);
-            this.zX_MatchInfo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo2.Name = "zX_MatchInfo2";
-            this.zX_MatchInfo2.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo2.TabIndex = 33;
-            // 
-            // zX_MatchInfo3
-            // 
-            this.zX_MatchInfo3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo3.Location = new System.Drawing.Point(1267, 34);
-            this.zX_MatchInfo3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo3.Name = "zX_MatchInfo3";
-            this.zX_MatchInfo3.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo3.TabIndex = 34;
-            // 
-            // zX_MatchInfo4
-            // 
-            this.zX_MatchInfo4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo4.Location = new System.Drawing.Point(12, 340);
-            this.zX_MatchInfo4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo4.Name = "zX_MatchInfo4";
-            this.zX_MatchInfo4.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo4.TabIndex = 35;
-            // 
-            // zX_MatchInfo5
-            // 
-            this.zX_MatchInfo5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo5.Location = new System.Drawing.Point(1267, 340);
-            this.zX_MatchInfo5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo5.Name = "zX_MatchInfo5";
-            this.zX_MatchInfo5.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo5.TabIndex = 36;
-            // 
-            // zX_MatchInfo6
-            // 
-            this.zX_MatchInfo6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo6.Location = new System.Drawing.Point(12, 646);
-            this.zX_MatchInfo6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo6.Name = "zX_MatchInfo6";
-            this.zX_MatchInfo6.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo6.TabIndex = 37;
-            // 
-            // zX_MatchInfo7
-            // 
-            this.zX_MatchInfo7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo7.Location = new System.Drawing.Point(640, 646);
-            this.zX_MatchInfo7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo7.Name = "zX_MatchInfo7";
-            this.zX_MatchInfo7.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo7.TabIndex = 38;
-            // 
-            // zX_MatchInfo8
-            // 
-            this.zX_MatchInfo8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
-            this.zX_MatchInfo8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.zX_MatchInfo8.Location = new System.Drawing.Point(1267, 646);
-            this.zX_MatchInfo8.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.zX_MatchInfo8.Name = "zX_MatchInfo8";
-            this.zX_MatchInfo8.Size = new System.Drawing.Size(611, 290);
-            this.zX_MatchInfo8.TabIndex = 39;
+            this.zX_RobotInfo._Sport = null;
+            this.zX_RobotInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.zX_RobotInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.zX_RobotInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.zX_RobotInfo.ForeColor = System.Drawing.Color.White;
+            this.zX_RobotInfo.Location = new System.Drawing.Point(0, 0);
+            this.zX_RobotInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_RobotInfo.Name = "zX_RobotInfo";
+            this.zX_RobotInfo.Size = new System.Drawing.Size(1904, 72);
+            this.zX_RobotInfo.TabIndex = 48;
             // 
             // VisualTracking
             // 
@@ -376,10 +377,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
             this.ClientSize = new System.Drawing.Size(1904, 1053);
-            this.Controls.Add(this.zX_RobotInfo1);
+            this.Controls.Add(this.zX_RobotInfo);
             this.Controls.Add(this.centerMain);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "VisualTracking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -417,7 +419,7 @@
         private Controller.HIK_PlayView backPlayView;
         private Controller.HIK_PlayView leftPlayView;
         private Controller.HIK_PlayView rightPlayView;
-        private Controller.ZX_RobotInfo zX_RobotInfo1;
+        private Controller.ZX_RobotInfo zX_RobotInfo;
         private Controller.ZX_MatchInfo zX_MatchInfo1;
         private Controller.ZX_MatchInfo zX_MatchInfo8;
         private Controller.ZX_MatchInfo zX_MatchInfo7;

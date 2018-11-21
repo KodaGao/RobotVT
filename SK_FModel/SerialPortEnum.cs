@@ -120,5 +120,14 @@ namespace SK_FModel
             CRC16,
             CRCTable
         }
+
+        /// <summary>
+        /// 读写类型
+        /// </summary>
+        public enum ReadWriteType : byte
+        {
+            Read,
+            Write
+        }
     }
 }

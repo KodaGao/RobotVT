@@ -119,6 +119,14 @@
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SK_FDBUtility\SK_FDBUtility.csproj">
+      <Project>{aad08c7d-670b-491c-a57e-0e97c438a089}</Project>
+      <Name>SK_FDBUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SK_FInterface\SK_FInterface.csproj">
+      <Project>{0c8eeedd-8cb3-47fa-be56-66786f223de8}</Project>
+      <Name>SK_FInterface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SK_ForVision\SK_FVision.csproj">
       <Project>{365184b2-8499-41cd-a4a3-9c2cc9dba750}</Project>
       <Name>SK_FVision</Name>

@@ -19,22 +19,22 @@ namespace SK_FModbus.SerialPort
         /// <summary>
         /// 接收数据
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_DataReceived Event_DataReceived;
+        public event SK_FModel.SerialPortDelegate.DataReceivedEventHandler Event_DataReceived;
 
         /// <summary>
         /// 运行异常事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_RunException Event_RunException;
+        public event SK_FModel.SerialPortDelegate.RunExceptionEventHandler Event_RunException;
 
         /// <summary>
         ///发送指令事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_SenderOrder Event_SenderOrder;
+        public event SK_FModel.SerialPortDelegate.SenderOrderEventHandler Event_SenderOrder;
 
         /// <summary>
         /// 接收指令事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_ReceiveOrder Event_ReceiveOrder;
+        public event SK_FModel.SerialPortDelegate.ReceiveOrderEventHandler Event_ReceiveOrder;
 
         /// <summary>
         /// 发送指令间隔

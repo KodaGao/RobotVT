@@ -14,22 +14,22 @@ namespace SK_FModbus
         /// <summary>
         /// 接收数据
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_DataReceived Event_DataReceived;
+        public event SK_FModel.SerialPortDelegate.DataReceivedEventHandler Event_DataReceived;
 
         /// <summary>
         /// 异常运行事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_RunException Event_RunException;
+        public event SK_FModel.SerialPortDelegate.RunExceptionEventHandler Event_RunException;
 
         /// <summary>
         ///发送指令事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_SenderOrder Event_SenderOrder;
+        public event SK_FModel.SerialPortDelegate.SenderOrderEventHandler Event_SenderOrder;
 
         /// <summary>
         /// 接收指令事件
         /// </summary>
-        public event SK_FModel.SerialPortDelegate.del_ReceiveOrder Event_ReceiveOrder;
+        public event SK_FModel.SerialPortDelegate.ReceiveOrderEventHandler Event_ReceiveOrder;
 
         private List<byte> ReceiveDataList;
         private System.IO.Ports.SerialPort SerialPortMng;
@@ -374,13 +374,12 @@ namespace SK_FModbus
 
         private void Thread_AnalysisData()
         {
-            byte[] _DataItem, _CRCResult;
-            CRC16 _CRC16 = new CRC16();
-            CRC16Table _CRC16Table = new CRC16Table();
-            bool _Result = false;
-            _CRCResult = new byte[2];
+            byte[] _DataItem;
             int _DataLen;
             byte _FunctionCode;
+            byte[] _RegisterNumber = new byte[2];
+            int _CoilNumber;
+
             while (ThreadRunFlag)
             {
                 try
@@ -388,25 +387,19 @@ namespace SK_FModbus
                     if (ReceiveDataList.Count >= 1 && ReceiveDataList.Count >= ReceiveOrderLen)// serialPortInfo.ReceivedBytesThreshold)
                     {
                         _FunctionCode = ReceiveDataList[1];
+                        _RegisterNumber[0] = ReceiveDataList[5];
+                        _RegisterNumber[1] = ReceiveDataList[4];
+                        int len = SK_FCommon.ValueHelper.Instance.GetShort(_RegisterNumber);
                         switch (_FunctionCode)
                         {
                             case 0x01:
                             case 0x03:
                             case 0x04:
-                                _DataItem = new byte[ReceiveOrderLen];
+                                _DataItem = new byte[8];
                                 ReceiveDataList.CopyTo(0, _DataItem, 0, _DataItem.Length);
-                                ReceiveDataList.RemoveRange(0, _DataItem.Length);
-                                if (cRC16CodeCheckType == SK_FModel.SerialPortEnum.CRC16CodeCheckType.CRC16)
-                                    _Result = _CRC16.CheckResponse(_DataItem, ref _CRCResult);
-                                else
-                                    _Result = _CRC16Table.CheckResponse(_DataItem, ref _CRCResult);
-                                if (_Result && Event_DataReceived != null)
-                                    Event_DataReceived(_DataItem);
-                                else if (!_Result && Event_RunException != null)
+                                if (ModbusCRCCheck(_DataItem))
                                 {
-                                    ReceiveDataList.Clear();
-                                    DiscardInBuffer();
-                                    Event_RunException("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "]Modbus接收数据失败，错误信息：校验失败！" + BitConverter.ToString(_DataItem).Replace("-", " ") + " 结果：" + BitConverter.ToString(_CRCResult).Replace("-", " "));
+                                    ReceiveDataList.RemoveRange(0, _DataItem.Length);
                                 }
                                 break;
 
@@ -414,27 +407,18 @@ namespace SK_FModbus
                             case 16:
                             case 15:
                             case 0x16:
-                                _DataLen = 8;
+                                _CoilNumber = ReceiveDataList[6];
+                                _DataLen = _CoilNumber + 2 + 7;
                                 if (ReceiveDataList.Count >= _DataLen)
                                 {
                                     _DataItem = new byte[_DataLen];
                                     lock (ReceiveDataListLock)
                                     {
                                         ReceiveDataList.CopyTo(0, _DataItem, 0, _DataItem.Length);
-                                        ReceiveDataList.RemoveRange(0, _DataItem.Length);
-                                    }
-                                    if (cRC16CodeCheckType == SK_FModel.SerialPortEnum.CRC16CodeCheckType.CRC16)
-                                        _Result = _CRC16.CheckResponse(_DataItem, ref _CRCResult);
-                                    else
-                                        _Result = _CRC16Table.CheckResponse(_DataItem, ref _CRCResult);
-
-                                    if (_Result && Event_DataReceived != null)
-                                        Event_DataReceived(_DataItem);
-                                    else if (!_Result && Event_RunException != null)
-                                    {
-                                        ReceiveDataList.Clear();
-                                        DiscardInBuffer();
-                                        Event_RunException("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "]Modbus接收数据失败，错误信息：校验失败！" + BitConverter.ToString(_DataItem).Replace("-", " ") + " 结果：" + BitConverter.ToString(_CRCResult).Replace("-", " "));
+                                        if (ModbusCRCCheck(_DataItem))
+                                        {
+                                            ReceiveDataList.RemoveRange(0, _DataItem.Length);
+                                        }
                                     }
                                 }
                                 break;
@@ -454,6 +438,31 @@ namespace SK_FModbus
                 }
                 Thread.Sleep(1);
             }
+        }
+
+        private bool ModbusCRCCheck(byte[] DataItem)
+        {
+            byte[] _CRCResult;
+            CRC16 _CRC16 = new CRC16();
+            CRC16Table _CRC16Table = new CRC16Table();
+            bool _Result = false;
+            _CRCResult = new byte[2];
+
+            if (cRC16CodeCheckType == SK_FModel.SerialPortEnum.CRC16CodeCheckType.CRC16)
+                _Result = _CRC16.CheckResponse(DataItem, ref _CRCResult);
+            else
+                _Result = _CRC16Table.CheckResponse(DataItem, ref _CRCResult);
+            if (_Result && Event_DataReceived != null)
+                Event_DataReceived(DataItem);
+            else if (!_Result && Event_RunException != null)
+            {
+                ReceiveDataList.Clear();
+                DiscardInBuffer();
+                Event_RunException("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "]Modbus接收数据失败，错误信息：校验失败！" + BitConverter.ToString(DataItem).Replace("-", " ") + " 结果：" + BitConverter.ToString(_CRCResult).Replace("-", " "));
+                return false;
+            }
+
+            return true;
         }
 
         private void SerialPortMng_Event_DataReceived(string PortName, object DataItem)

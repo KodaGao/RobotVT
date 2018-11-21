@@ -3,6 +3,36 @@ using static SK_FModel.SerialPortEnum;
 
 namespace SK_FModel
 {
+
+    public class ReceiveData
+    {
+        public ReceiveData()
+        {
+            DataItem = new byte[] { };
+            FunctionCode = SerialPortEnum.FunctionCode.Code04;
+        }
+
+        /// <summary>
+        /// 设备地址码 默认：0x01
+        /// </summary>
+        public byte DeviceAddressId { get; set; }
+
+        /// <summary>
+        /// 功能码
+        /// </summary>
+        public SerialPortEnum.FunctionCode FunctionCode { get; set; }
+
+        /// <summary>
+        /// 设备地址码 默认：0x01
+        /// </summary>
+        public byte Quantity { get; set; }
+
+        /// <summary>
+        /// 数据信息
+        /// </summary>
+        public byte[] DataItem { get; set; }
+    }
+
     /// <summary>
     /// 接收数据信息
     /// </summary>

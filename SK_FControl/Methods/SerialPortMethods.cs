@@ -1,13 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SK_FControl
 {
     public class SerialPortMethods
     {
+        public SK_FModel.SerialPortInfo GetSerialPortInfo(string spkey)
+        {
+            try
+            {
+                string _SqlScript = string.Format("SELECT SP_KEY, SP_PORT, SP_BAUDRATE, SP_DATABIT, SP_PRATITY,SP_STOPBIT, SP_TIMEOUT, SP_SAMPLE, SP_ACTIVE FROM S_D_SERIALPORT WHERE SP_KEY ='{0}';", spkey);
+                System.Data.DataTable _DTTemp = StaticInfo.FirebirdDBOperator.ReturnDataTable(_SqlScript);
+
+                if (_DTTemp.Rows.Count <= 0) return null;
+                SK_FModel.SerialPortInfo serialPortInfo = new SK_FModel.SerialPortInfo();
+                foreach (System.Data.DataRow _DR in _DTTemp.Rows)
+                {
+                    serialPortInfo.PortName = _DR["SP_PORT"].ToString();
+                    serialPortInfo.BaudRate = int.Parse(_DR["SP_BAUDRATE"].ToString());
+                    serialPortInfo.DataBits = int.Parse(_DR["SP_DATABIT"].ToString());
+                    serialPortInfo.Parity = (System.IO.Ports.Parity)Enum.Parse(typeof(System.IO.Ports.Parity), _DR["SP_PRATITY"].ToString());
+                    serialPortInfo.StopBits = (System.IO.Ports.StopBits)Enum.Parse(typeof(System.IO.Ports.StopBits), _DR["SP_STOPBIT"].ToString());
+                }
+                return serialPortInfo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询" + spkey + "串口参数信息失败，错误信息：" + ex.Message);
+            }
+
+        }
+
+
         public SK_FDBUtility.DB.S_D_SERIALPORT GetSerialPortSet(string spkey)
         {
             try

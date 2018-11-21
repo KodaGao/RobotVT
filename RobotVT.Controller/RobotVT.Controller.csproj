@@ -79,6 +79,9 @@
       <DependentUpon>HIK_SPortSet.cs</DependentUpon>
     </Compile>
     <Compile Include="RobotInfoModule.cs" />
+    <Compile Include="SerialPortMethods\ModbusHelper.cs" />
+    <Compile Include="SerialPortMethods\Sendorder.cs" />
+    <Compile Include="SerialPortMethods\SystemEnum.cs" />
     <Compile Include="UserControl\HIK_FaceSnap.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -120,6 +123,10 @@
       <Project>{0c8eeedd-8cb3-47fa-be56-66786f223de8}</Project>
       <Name>SK_FInterface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SK_FModbus\SK_FModbus.csproj">
+      <Project>{44527d2b-86a6-4213-9328-7fa9a13962f1}</Project>
+      <Name>SK_FModbus</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\HIK_CameraSet.resx">
@@ -138,8 +145,9 @@
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="SerialPortMethods\" />
+    <Content Include="wireless.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

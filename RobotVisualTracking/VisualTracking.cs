@@ -61,6 +61,7 @@ namespace RobotVT
 
             rightPlayView.PlayModel = "right";
             rightPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+
         }
 
         private void VisualTracking_Load(object sender, EventArgs e)
@@ -563,11 +564,11 @@ namespace RobotVT
             setControls(newX, newY, this);
             if ((double)Width / (double)Height > X / Y)
             {
-                var point = zX_RobotInfo1.Location;
-                point.X = (Width - zX_RobotInfo1.Width) / 2;
-                zX_RobotInfo1.Location = point;
+                var point = zX_RobotInfo.Location;
+                point.X = (Width - zX_RobotInfo.Width) / 2;
+                zX_RobotInfo.Location = point;
                 point = centerMain.Location;
-                point.X = (Width - zX_RobotInfo1.Width) / 2;
+                point.X = (Width - zX_RobotInfo.Width) / 2;
                 centerMain.Location = point;
                 //point = cloudCenterContorl.Location;
                 //point.X = (Width - topMain.Width) / 2;
@@ -737,8 +738,7 @@ namespace RobotVT
                 }
             }
         }
-
-
+        
         private void Thread_SaveLogInfo()
         {
             while (RobotVT.Controller.StaticInfo.IsSaveLogInfo)
@@ -777,7 +777,6 @@ namespace RobotVT
 
             mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
         }
-
 
     }
 }

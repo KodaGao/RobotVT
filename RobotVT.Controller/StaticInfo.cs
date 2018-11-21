@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RobotVT.Controller.SerialPortMethods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace RobotVT.Controller
         public static string LogFileHomePath = SystemStartPath + "\\SysLog\\";
         public static string CapturePath = SystemStartPath + "\\CaptureImage\\"+ DateTime.Today.ToString("yyyyMMdd") + "\\";
         public static string CameraSetFormTitle = "设备信息";
+        public static string ControlObject = "控制器";
 
         public static string WirelessController = "VTWire";
 
@@ -37,6 +39,22 @@ namespace RobotVT.Controller
         /// 共享的配置参数信息
         /// </summary>
         public static ConfigInfo ConfigInfo;
+
+        /// <summary>
+        /// Modbus
+        /// </summary>
+        internal static ModbusHelper ModbusHelper;
+
+        /// <summary>
+        /// RobotInfoModule
+        /// </summary>
+        internal static RobotInfoModule RobotIM;
+        
+
+        /// <summary>
+        /// 指令发送间隔 单位：ms
+        /// </summary>
+        public static int SenderOrderInterval = 500;
 
     }
 }
