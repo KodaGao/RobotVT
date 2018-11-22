@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,9 @@
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
+    <Reference Include="FFmpeg.AutoGen, Version=4.1.0.1, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFmpeg.AutoGen.4.1.0.1\lib\net45\FFmpeg.AutoGen.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FFmpeg.AutoGen\tstRtmp.cs" />
+    <Compile Include="FFmpeg.AutoGen\frmPlayer.cs" />
+    <Compile Include="FFmpeg.AutoGen\H264VideoStreamEncoder.cs" />
     <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
@@ -84,6 +91,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\webcam_32px.ico" />
   </ItemGroup>
   <ItemGroup>

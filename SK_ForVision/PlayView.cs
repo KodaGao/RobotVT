@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using SK_FCommon;
+using System.Windows.Forms;
 
 namespace SK_FVision
 {
@@ -41,6 +33,9 @@ namespace SK_FVision
             this.Load += new System.EventHandler(this.PlayView_Load);
             RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
             RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
+
+            
+
         }
 
         public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
