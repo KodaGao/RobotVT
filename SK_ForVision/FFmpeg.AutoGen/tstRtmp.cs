@@ -29,8 +29,8 @@ namespace SK_FVision.FFmpeg.AutoGen
 
             Console.WriteLine(@"Current directory: " + Environment.CurrentDirectory);
             Console.WriteLine(@"Runnung in {0}-bit mode.", Environment.Is64BitProcess ? @"64" : @"32");
-            //FFmpegDLL目录查找和设置
-            FFmpegBinariesHelper.RegisterFFmpegBinaries();
+            ////FFmpegDLL目录查找和设置
+            //FFmpegBinariesHelper.RegisterFFmpegBinaries();
 
             #region ffmpeg 初始化
             // 初始化注册ffmpeg相关的编码器

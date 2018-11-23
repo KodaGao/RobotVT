@@ -62,6 +62,8 @@ namespace RobotVT.Controller
             {
                 StaticInfo.RobotIM = new RobotInfoModule();
                 StaticInfo.RobotIM.Init();
+
+                SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
             }
             catch (Exception _Ex)
             {
@@ -111,6 +113,7 @@ namespace RobotVT.Controller
                     //保存SDK日志 To save the SDK log
                     HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
                 }
+                StaticInfo.HIKAnalysis = new HIK_AnalysisData();
 
             }
             catch (Exception _Ex)

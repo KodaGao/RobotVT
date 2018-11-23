@@ -345,64 +345,7 @@ namespace SK_FVision
             }
             DebugInfo(str);
         }
-
-        public virtual void sdkCaptureJpeg(string file)
-        {
-        }
-
-        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm)
-        {
-        }
-        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarm)
-        {
-        }
-        public virtual void sdkCaptureJpeg(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
-        {
-        }
-
-
-        public  bool NET_DVR_CaptureJPEGPicture_NEW(ref byte[] byJpegPicBuffer,ref uint dwSizeReturned)
-        {
-            SK_FVision.HIK_NetSDK.NET_DVR_JPEGPARA lpJpegPara = new SK_FVision.HIK_NetSDK.NET_DVR_JPEGPARA();
-            lpJpegPara.wPicQuality = 0; //图像质量 Image quality
-            lpJpegPara.wPicSize = 0xff; //抓图分辨率 Picture size: 0xff-Auto(使用当前码流分辨率) 
-
-            ////JEPG抓图，数据保存在缓冲区中 Capture a JPEG picture and save in the buffer
-            uint iBuffSize = 400000; //缓冲区大小需要不小于一张图片数据的大小 The buffer size should not be less than the picture size
-            //byte[] byJpegPicBuffer = new byte[iBuffSize];
-            //uint dwSizeReturned = 0;
-            byJpegPicBuffer = new byte[iBuffSize];
-            dwSizeReturned = 0;
-
-            if (!SK_FVision.HIK_NetSDK.NET_DVR_CaptureJPEGPicture_NEW(m_lUserID, 1, ref lpJpegPara, byJpegPicBuffer, iBuffSize, ref dwSizeReturned))
-            {
-                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
-                str = "NET_DVR_CaptureJPEGPicture_NEW failed, error code= " + iLastErr;
-                DebugInfo(str);
-                return false;
-            }
-            else
-            {
-                str = "NET_DVR_CaptureJPEGPicture_NEW succ and save the data in buffer to 'buffertest.jpg'.";
-                DebugInfo(str);
-                return true;
-            }
-        }
-
-
-        public virtual bool FileExits(string filepath)
-        {
-            if (System.IO.File.Exists(filepath))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
+        
         private void DebugInfo(string str)
         {
             if (str.Length > 0)

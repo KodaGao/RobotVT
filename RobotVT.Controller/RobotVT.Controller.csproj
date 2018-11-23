@@ -89,6 +89,7 @@
     <Compile Include="Form\HIK_SPortSet.Designer.cs">
       <DependentUpon>HIK_SPortSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="HIK_AnalysisData.cs" />
     <Compile Include="RobotInfoModule.cs" />
     <Compile Include="SerialPortMethods\ModbusHelper.cs" />
     <Compile Include="SerialPortMethods\Sendorder.cs" />
