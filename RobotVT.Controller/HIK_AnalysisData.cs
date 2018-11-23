@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,6 +10,16 @@ namespace RobotVT.Controller
 {
     public class HIK_AnalysisData
     {
+        private Queue<HIK_AlarmInfo> AlarmInfoList;
+        /// <summary>
+        /// 人脸抓拍报警信号处理
+        /// </summary>
+        /// <param name="FaceSnapAlarm"></param>
+        internal delegate void FaceSnapAlarmEventHandler(HIK_AlarmInfo HIKAlarmInfo);
+        /// <summary>
+        /// 接收数据事件事件
+        /// </summary>
+        internal event FaceSnapAlarmEventHandler Event_FaceSnapAlarm;
 
         public string AbsTimetoDatetime(uint _time_)
         { 
@@ -20,12 +31,11 @@ namespace RobotVT.Controller
             uint minute = (((_time_) >> 6) & 63);
             uint second = (((_time_) >> 0) & 63);
 
-            datetime = year.ToString() + "-" + month.ToString() + "-" + day.ToString() + " " + hour.ToString() + "~" + minute.ToString() + "~" + second.ToString();
+            datetime = year.ToString() + "-" + month.ToString() + "-" + day.ToString() + " " + hour.ToString() + ":" + minute.ToString() + ":" + second.ToString();
 
             return datetime;
         }
-
-
+        
         /// <summary>
         /// 视频数据处理
         /// </summary>
@@ -74,10 +84,9 @@ namespace RobotVT.Controller
 
             if (struFaceSnap.dwBackgroundPicLen > 0 && struFaceSnap.pBuffer2 != null)
             {
-                FaceSnapPicSave(struFaceSnap);
+                FaceSnapPic(struFaceSnap);
             }
         }
-
 
         private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
@@ -87,33 +96,24 @@ namespace RobotVT.Controller
 
             if (struFaceMatchAlarm.fSimilarity > 0 && struFaceMatchAlarm.pSnapPicBuffer != null && struFaceMatchAlarm.byPicTransType == 0)
             {
-                //mainPlayView.sdkCaptureJpeg(struFaceMatchAlarm);
-                try
-                {
-                    Facesnap_Mathch(struFaceMatchAlarm);
-                }
-                catch (Exception ex)
-                {
-                }
+                Facesnap_Mathch(struFaceMatchAlarm);
             }
-            else
+            //保存黑名单人脸图片
+            if (struFaceMatchAlarm.struBlackListInfo.dwBlackListPicLen > 0 && struFaceMatchAlarm.struBlackListInfo.pBuffer1 != null)
             {
-                //保存黑名单人脸图片
-                if (struFaceMatchAlarm.struBlackListInfo.dwBlackListPicLen > 0 && struFaceMatchAlarm.struBlackListInfo.pBuffer1 != null)
-                {
-
-                }
+                Facesnap_MathchBlack(struFaceMatchAlarm);
             }
-        }
+        }  
 
-
-        private void FaceSnapPicSave(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm)
+        private void FaceSnapPic(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_RESULT struAlarm)
         {
             //人脸抓拍
             if (struAlarm.dwFacePicLen > 0)
             {
+                HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
+
                 string devIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString().Replace('.', '_');
-                string time = AbsTimetoDatetime(struAlarm.dwAbsTime);
+                string time = AbsTimetoDatetime(struAlarm.dwAbsTime).Replace(':', '~');
 
                 string str = devIP + "@" + time + ".jpg";
                 string strname = StaticInfo.CapturePath + str;
@@ -128,9 +128,27 @@ namespace RobotVT.Controller
                 byte[] byFace = new byte[iFaceLen];
                 Marshal.Copy(struAlarm.pBuffer1, byFace, 0, iFaceLen);
                 SK_FCommon.DirFile.CreateFile(strnameFace, byFace, iFaceLen);
+
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
+                iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                System.IO.MemoryStream msface = new System.IO.MemoryStream(byFace);
+                iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
+                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.dwAbsTime);
+                iK_AlarmInfo.DevIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString();
+
+                if (AlarmInfoList.Count <= 0 || AlarmInfoList.Count % 8 == 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = 1;
+                }
+                else if (AlarmInfoList.Count > 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = AlarmInfoList.Count % 8 + 1;
+                }
+
+                AlarmInfoList.Enqueue(iK_AlarmInfo);
+                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
             }
         }
-
 
         private void FaceDetectPicSave(SK_FVision.HIK_NetSDK.NET_DVR_FACEDETECT_ALARM struAlarm)
         {
@@ -156,25 +174,96 @@ namespace RobotVT.Controller
 
             }
         }
-
-
+        
         private void Facesnap_Mathch(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
         {
-            //人脸比对结果
-            if (struAlarm.dwSnapPicLen > 0)
+            //人脸抓拍
+            if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
             {
-                SK_FCommon.DirFile.CreateDirectory(StaticInfo.CapturePath);
-                string devIP = "";
-                string time = DateTime.Now.ToString("HHMMss");
+                HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
 
-                string str = devIP + "@" + time + ".jpg";
+                string devIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString().Replace('.', '_');
+                string time = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime).Replace(':', '~');
+                
+                string str = devIP + "@" + time + "@face.jpg";
                 string strname = StaticInfo.CapturePath + str;
-                int iLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
-                byte[] by = new byte[iLen];
-                System.Runtime.InteropServices.Marshal.Copy(struAlarm.pSnapPicBuffer, by, 0, iLen);
+                int iSnapLen = (int)struAlarm.dwSnapPicLen;
+                byte[] bySnap = new byte[iSnapLen];
+                Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
+                //SK_FCommon.DirFile.CreateFile(strname, bySnap, iSnapLen);
 
-                SK_FCommon.DirFile.CreateFile(strname, by, iLen);
+                string strFace = devIP + "@" + time + "@model.jpg";
+                string strnameModel = StaticInfo.CapturePath + strFace;
+                int iModelLen = (int)struAlarm.dwModelDataLen;
+                byte[] byModel = new byte[iModelLen];
+                Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
+                //SK_FCommon.DirFile.CreateFile(strnameModel, byModel, iModelLen);
 
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
+                iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                System.IO.MemoryStream msface = new System.IO.MemoryStream(bySnap);
+                iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
+                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
+                
+
+                if (AlarmInfoList.Count <= 0 || AlarmInfoList.Count % 8 == 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = 1;
+                }
+                else if (AlarmInfoList.Count > 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = AlarmInfoList.Count % 8 + 1;
+                }
+
+                AlarmInfoList.Enqueue(iK_AlarmInfo);
+                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+            }
+        }
+
+        private void Facesnap_MathchBlack(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
+        {
+            //人脸抓拍
+            if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
+            {
+                HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
+
+                string devIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString().Replace('.', '_');
+                string time = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime).Replace(':', '~');
+
+                string str = devIP + "@" + time + "@face.jpg";
+                string strname = StaticInfo.CapturePath + str;
+                int iSnapLen = (int)struAlarm.dwSnapPicLen;
+                byte[] bySnap = new byte[iSnapLen];
+                Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
+                //SK_FCommon.DirFile.CreateFile(strname, bySnap, iSnapLen);
+
+                string strFace = devIP + "@" + time + "@black.jpg";
+                string strnameModel = StaticInfo.CapturePath + strFace;
+                int iModelLen = (int)struAlarm.struBlackListInfo.dwBlackListPicLen;
+                byte[] byModel = new byte[iModelLen];
+                Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, byModel, 0, iModelLen);
+                //SK_FCommon.DirFile.CreateFile(strnameModel, byModel, iModelLen);
+
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
+                iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                System.IO.MemoryStream msface = new System.IO.MemoryStream(bySnap);
+                iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
+                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
+
+
+                if (AlarmInfoList.Count <= 0 || AlarmInfoList.Count % 8 == 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = 1;
+                }
+                else if (AlarmInfoList.Count > 0)
+                {
+                    iK_AlarmInfo.QueueNubmer = AlarmInfoList.Count % 8 + 1;
+                }
+
+                AlarmInfoList.Enqueue(iK_AlarmInfo);
+                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
             }
         }
     }

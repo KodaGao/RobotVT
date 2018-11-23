@@ -360,7 +360,6 @@
             // 
             // zX_RobotInfo
             // 
-            this.zX_RobotInfo._Sport = null;
             this.zX_RobotInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.zX_RobotInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.zX_RobotInfo.Font = new System.Drawing.Font("微软雅黑", 9F);

@@ -57,9 +57,10 @@ namespace RobotVT.Controller
         public static int SenderOrderInterval = 500;
 
         /// <summary>
-        /// 海康数据接卸
+        /// 海康数据解析
         /// </summary>
-        public static HIK_AnalysisData HIKAnalysis; 
+        public static HIK_AnalysisData HIKAnalysis;
+
 
     }
 }

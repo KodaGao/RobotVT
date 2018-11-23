@@ -44,7 +44,16 @@ namespace RobotVT
             this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
 
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
-
+            
+            this.zX_MatchInfo8.Number = 8;
+            this.zX_MatchInfo7.Number = 7;
+            this.zX_MatchInfo6.Number = 6;
+            this.zX_MatchInfo5.Number = 5;
+            this.zX_MatchInfo4.Number = 4;
+            this.zX_MatchInfo3.Number = 3;
+            this.zX_MatchInfo2.Number = 2;
+            this.zX_MatchInfo1.Number = 1;
+            
             mainPlayView.MouseUp = false;
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
@@ -183,15 +192,12 @@ namespace RobotVT
 
                     if (o.VT_ID.ToLower() == "cloud")
                     {
-
                         cloudPlayView._CameraSet = o;
                         //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
                         mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-
                         cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                         cloudPlayView.sdkSetAlarm();
-
                     }
                     if (o.VT_ID.ToLower() == "front")
                     {

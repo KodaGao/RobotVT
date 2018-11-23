@@ -7,7 +7,7 @@ namespace RobotVT.Controller
     {
         private SK_FModel.SerialPortInfo SerialPortInfo;
 
-        public SK_FDBUtility.DB.S_D_SERIALPORT _Sport { get; set; }
+        private SK_FDBUtility.DB.S_D_SERIALPORT _Sport;
         SK_FControl.SerialPortMethods _spMethods = new SK_FControl.SerialPortMethods();
 
         public ZX_RobotInfo()

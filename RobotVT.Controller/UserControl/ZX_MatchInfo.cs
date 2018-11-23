@@ -7,14 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace RobotVT.Controller
 {
     public partial class ZX_MatchInfo : UserControl
     {
+        public int Number;
+
         public ZX_MatchInfo()
         {
             InitializeComponent();
+            StaticInfo.HIKAnalysis.Event_FaceSnapAlarm += HIKAnalysis_Event_FaceSnapAlarm;
         }
 
         private void ZX_MatchInfo_Load(object sender, EventArgs e)
@@ -24,6 +28,21 @@ namespace RobotVT.Controller
 
             this.pictureA.SizeMode = PictureBoxSizeMode.Zoom;
             this.pictureB.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+        
+
+        private void HIKAnalysis_Event_FaceSnapAlarm(HIK_AlarmInfo AlarmInfo)
+        {
+            if (AlarmInfo.QueueNubmer != Number) return;
+
+            this.Invoke(new MethodInvoker(delegate
+            {
+                pictureA.Image = AlarmInfo.FacePic;
+                pictureB.Image = AlarmInfo.FaceModelPic;
+                lbXCompare.Text = "人脸打分" + AlarmInfo.FaceScore;
+                lbXAbstime.Text = AlarmInfo.Abstime;
+                lbXDevInfo.Text = AlarmInfo.DevIP;
+            }));
         }
     }
 }
