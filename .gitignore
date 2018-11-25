@@ -328,3 +328,21 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/DLL/AForge.Vision.dll
+/DLL/AForge.Video.Ximea.dll
+/DLL/AForge.Video.VFW.dll
+/DLL/AForge.Video.Kinect.dll
+/DLL/AForge.Video.DirectShow.dll
+/DLL/AForge.Robotics.TeRK.dll
+/DLL/AForge.Robotics.Surveyor.dll
+/DLL/AForge.Robotics.Lego.dll
+/DLL/AForge.Neuro.dll
+/DLL/AForge.Math.dll
+/DLL/AForge.MachineLearning.dll
+/DLL/AForge.Imaging.IPPrototyper.dll
+/DLL/AForge.Imaging.Formats.dll
+/DLL/AForge.Genetic.dll
+/DLL/AForge.Fuzzy.dll
+/DLL/AForge.DebuggerVisualizers (2010).dll
+/ffmpeg-4.1-win64-shared
+/ffmpeg-4.1-win64-shared.zip

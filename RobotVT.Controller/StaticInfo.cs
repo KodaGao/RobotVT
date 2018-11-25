@@ -23,6 +23,10 @@ namespace RobotVT.Controller
         public static Queue<SK_FModel.SystemMessageInfo> QueueMessageInfo;
         public static bool IsSaveLogInfo;
         public static bool IsLoadCaputeImage;
+        public static string TargetFollowIP = "192.168.1.53";
+        public static int TargetFollowPort = 17632;
+        public static string MulticastGroupIP = "224.0.2.3";
+        public static int MulticastGroupPort = 11111;
 
         /// <summary>
         /// 数据库文件绝对路径
@@ -60,6 +64,10 @@ namespace RobotVT.Controller
         /// 海康数据解析
         /// </summary>
         public static HIK_AnalysisData HIKAnalysis;
+        /// <summary>
+        /// 目标跟踪
+        /// </summary>
+        public static TargetFollow TargetFollow;
 
 
     }

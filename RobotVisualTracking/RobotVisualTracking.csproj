@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ZX32x32.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AForge">
       <HintPath>E:\Code Source\公共DLL\trunk\AForge.dll</HintPath>
@@ -43,9 +46,6 @@
     </Reference>
     <Reference Include="AForge.Video">
       <HintPath>E:\Code Source\公共DLL\trunk\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow">
-      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
@@ -128,6 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ZX32x32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ZX32x32.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

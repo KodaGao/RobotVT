@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,9 @@
     <Reference Include="DevComponents.DotNetBar2, Version=14.0.0.3, Culture=neutral, PublicKeyToken=c39c3242a43eee2b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
+    </Reference>
+    <Reference Include="FFmpeg.AutoGen, Version=4.1.0.1, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFmpeg.AutoGen.4.1.0.1\lib\net45\FFmpeg.AutoGen.dll</HintPath>
     </Reference>
     <Reference Include="SK_FCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -95,6 +99,8 @@
     <Compile Include="SerialPortMethods\ModbusHelper.cs" />
     <Compile Include="SerialPortMethods\Sendorder.cs" />
     <Compile Include="SerialPortMethods\SystemEnum.cs" />
+    <Compile Include="TargetFollow.cs" />
+    <Compile Include="TargetFollowInfo.cs" />
     <Compile Include="UserControl\HIK_FaceSnap.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -150,7 +156,9 @@
       <DependentUpon>ZX_RobotInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="wireless.txt" />
   </ItemGroup>

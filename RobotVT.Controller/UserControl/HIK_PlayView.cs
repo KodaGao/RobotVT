@@ -23,6 +23,24 @@ namespace RobotVT.Controller
         public HIK_PlayView()
         {
             InitializeComponent();
+            StaticInfo.TargetFollow.Event_Multicast += TargetFollow_Event_Multicast;
+            PlayModel = "ind";
+        }
+
+        private void TargetFollow_Event_Multicast(List<byte> recvBuflist)
+        {
+            if (PlayModel == null || PlayModel.ToLower() != "cloud") return;
+            MemoryStream ms = new MemoryStream(recvBuflist.ToArray());
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                try
+                {
+                    //RealPlayWnd.VideoSource = Image.FromStream(ms); 
+                }
+                catch (ArgumentException)
+                { }
+            }));
         }
 
         public override void PlayView_Load(object sender, EventArgs e)
@@ -30,11 +48,20 @@ namespace RobotVT.Controller
             base.PlayView_Load(sender, e);
         }
 
+        public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
+        {
+            int x = RealPlayWnd.Size.Width / 2;
+            int y = RealPlayWnd.Size.Width / 2;
+
+            base.GetPictureSize();
+            Point _mousePoint = e.Location;
+            StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+        }
+
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-
                 if (!MouseUp && this.PlayModel == null) return;
 
                 HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
@@ -45,8 +72,14 @@ namespace RobotVT.Controller
                 }
                 hIK_CameraSet.PlayModel = this.PlayModel;
                 hIK_CameraSet.ShowDialog();
-
             }
+
+            if (e.Button == MouseButtons.Left)
+            {
+                Point _mousePoint = e.Location;
+                StaticInfo.TargetFollow.SendingCoordinates(0, 0, _mousePoint);
+            }
+
             base.RealPlayWnd_MouseUp(sender, e);
         }
 

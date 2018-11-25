@@ -29,10 +29,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge.Controls">
-      <HintPath>E:\Code Source\公共DLL\trunk\AForge.Controls.dll</HintPath>
+    <Reference Include="AForge.Controls, Version=2.2.5.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\AForge.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\AForge.Video.dll</HintPath>
     </Reference>
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
@@ -52,9 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FFmpeg.AutoGen\tstRtmp.cs" />
-    <Compile Include="FFmpeg.AutoGen\frmPlayer.cs" />
-    <Compile Include="FFmpeg.AutoGen\H264VideoStreamEncoder.cs" />
     <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
@@ -102,6 +105,9 @@
       <Project>{499970F7-0091-4BE7-B452-365067B41108}</Project>
       <Name>SK_FCommon</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FFmpeg.AutoGen\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -38,8 +38,17 @@ namespace RobotVT.Controller
             this.Invoke(new MethodInvoker(delegate
             {
                 pictureA.Image = AlarmInfo.FacePic;
-                pictureB.Image = AlarmInfo.FaceModelPic;
-                lbXCompare.Text = "人脸打分" + AlarmInfo.FaceScore;
+                pictureB.Image = AlarmInfo.BackgroudPic;
+                if (AlarmInfo.FaceType == 1)
+                { 
+                    lbXCompare.Text = "相似度 " + AlarmInfo.FaceScore;
+                    lbXCompare.ForeColor = Color.Green;
+                }
+                if (AlarmInfo.FaceType == 0)
+                { 
+                    lbXCompare.Text = "陌生人";
+                    lbXCompare.ForeColor = Color.Red;
+                }
                 lbXAbstime.Text = AlarmInfo.Abstime;
                 lbXDevInfo.Text = AlarmInfo.DevIP;
             }));

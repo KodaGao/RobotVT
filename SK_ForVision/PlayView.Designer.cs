@@ -28,20 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.RealPlayWnd = new AForge.Controls.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).BeginInit();
+            this.RealPlayWnd = new AForge.Controls.VideoSourcePlayer();
             this.SuspendLayout();
             // 
             // RealPlayWnd
             // 
             this.RealPlayWnd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RealPlayWnd.Image = null;
             this.RealPlayWnd.Location = new System.Drawing.Point(0, 0);
             this.RealPlayWnd.Name = "RealPlayWnd";
             this.RealPlayWnd.Size = new System.Drawing.Size(410, 208);
-            this.RealPlayWnd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.RealPlayWnd.TabIndex = 0;
-            this.RealPlayWnd.TabStop = false;
+            this.RealPlayWnd.TabIndex = 1;
+            this.RealPlayWnd.Text = "videoSourcePlayer1";
+            this.RealPlayWnd.VideoSource = null;
             // 
             // PlayView
             // 
@@ -50,14 +48,11 @@
             this.Controls.Add(this.RealPlayWnd);
             this.Name = "PlayView";
             this.Size = new System.Drawing.Size(410, 208);
-            ((System.ComponentModel.ISupportInitialize)(this.RealPlayWnd)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private AForge.Controls.PictureBox RealPlayWnd;
+        public AForge.Controls.VideoSourcePlayer RealPlayWnd;
     }
 }

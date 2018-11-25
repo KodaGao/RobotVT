@@ -12167,22 +12167,35 @@ namespace SK_FVision
             public uint dwSnapFacePicID;
             public uint dwSnapFacePicLen;
             public NET_VCA_DEV_INFO struDevInfo;//人脸抓拍上传信息
-
-            public byte byFaceScore;
-            public byte bySex;
-            public byte byGlasses;
-            public byte byAge;
-            public byte byAgeDeviation;
-            public byte byAgeGroup;
-            public byte[] byRes1;
-            public uint dwUIDLen;
-            public IntPtr pUIDBuffer;
-
-
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.I1)]
             public byte[] byRes;//保留
             public IntPtr pBuffer1;//指向图片的指针
         }
+        ////人脸抓拍信息
+        //[StructLayoutAttribute(LayoutKind.Sequential)]
+        //public struct NET_VCA_FACESNAP_INFO_ALARM
+        //{
+        //    public uint dwRelativeTime;
+        //    public uint dwAbsTime;
+        //    public uint dwSnapFacePicID;
+        //    public uint dwSnapFacePicLen;
+        //    public NET_VCA_DEV_INFO struDevInfo;//人脸抓拍上传信息
+
+        //    public byte byFaceScore;
+        //    public byte bySex;
+        //    public byte byGlasses;
+        //    public byte byAge;
+        //    public byte byAgeDeviation;
+        //    public byte byAgeGroup;
+        //    public byte[] byRes1;
+        //    public uint dwUIDLen;
+        //    public IntPtr pUIDBuffer;
+
+
+        //    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 20, ArraySubType = UnmanagedType.I1)]
+        //    public byte[] byRes;//保留
+        //    public IntPtr pBuffer1;//指向图片的指针
+        //}
         //黑名单报警信息
         [StructLayoutAttribute(LayoutKind.Sequential)]
         public struct NET_VCA_BLACKLIST_INFO_ALARM
@@ -12194,6 +12207,18 @@ namespace SK_FVision
             public IntPtr pBuffer1;//指向图片的指针
         }
 
+        ////黑名单比对结果报警上传
+        //[StructLayoutAttribute(LayoutKind.Sequential)]
+        //public struct NET_VCA_FACESNAP_MATCH_ALARM
+        //{
+        //    public uint dwSize;
+        //    public float fSimilarity;//相似度，取值范围：[0.001,1]
+        //    public NET_VCA_FACESNAP_INFO_ALARM struSnapInfo;//人脸抓拍上传信息
+        //    public NET_VCA_BLACKLIST_INFO_ALARM struBlackListInfo;//黑名单报警信息
+        //    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 60, ArraySubType = UnmanagedType.I1)]
+        //    public byte[] byRes;//保留
+        //}
+
         //黑名单比对结果报警上传
         [StructLayoutAttribute(LayoutKind.Sequential)]
         public struct NET_VCA_FACESNAP_MATCH_ALARM
@@ -12203,23 +12228,26 @@ namespace SK_FVision
             public NET_VCA_FACESNAP_INFO_ALARM struSnapInfo;//人脸抓拍上传信息
             public NET_VCA_BLACKLIST_INFO_ALARM struBlackListInfo;//黑名单报警信息
 
+            // char[16]
+            [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string sStorageIP;
+            //public string wStoragePort;            //存储服务端口号
+
             public byte byMatchPicNum;
             public byte byPicTransType;//图片数据传输方式: 0- 二进制，1- URL路径(HTTP协议的图片URL) 
+
             public uint dwSnapPicLen;
             public IntPtr pSnapPicBuffer;
-            public NET_VCA_RECT struRegion;
 
+            public NET_VCA_RECT struRegion;
 
             public uint dwModelDataLen;
             public IntPtr pModelDataBuffer;
 
-
-
-
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 60, ArraySubType = UnmanagedType.I1)]
             public byte[] byRes;//保留
-        }   
-   
+        }
+
         [StructLayoutAttribute(LayoutKind.Sequential)]
         public struct NET_VCA_BLACKLIST_INFO_ALARM_LOG
         {

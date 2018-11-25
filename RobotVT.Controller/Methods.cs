@@ -114,6 +114,8 @@ namespace RobotVT.Controller
                     HIK_NetSDK.NET_DVR_SetLogToFile(3, @"SdkLog\", true);
                 }
                 StaticInfo.HIKAnalysis = new HIK_AnalysisData();
+                StaticInfo.TargetFollow = new TargetFollow();
+                StaticInfo.TargetFollow.Init();
 
             }
             catch (Exception _Ex)

@@ -18,10 +18,11 @@ namespace RobotVT
         public VisualTracking()
         {
             InitializeComponent();
+            InitMatchInfo(); InitRobotInfo();
             this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
             this.FormClosing += new FormClosingEventHandler(this.VisualTracking_FormClosing);
             this.FormClosed += new FormClosedEventHandler(VisualTracking_FormClosed);
-            
+
             Init();
             X = this.Width;//赋值初始窗体宽度
             Y = this.Height;//赋值初始窗体高度
@@ -29,6 +30,133 @@ namespace RobotVT
         }
 
         #region 窗体事件
+        private void InitMatchInfo()
+        {
+            #region  构造
+
+            this.zX_MatchInfo8 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo7 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo6 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo5 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo4 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo3 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo2 = new RobotVT.Controller.ZX_MatchInfo();
+            this.zX_MatchInfo1 = new RobotVT.Controller.ZX_MatchInfo();
+            // 
+            // zX_MatchInfo1
+            // 
+            this.zX_MatchInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo1.Location = new System.Drawing.Point(12, 34);
+            this.zX_MatchInfo1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo1.Name = "zX_MatchInfo1";
+            this.zX_MatchInfo1.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo2
+            // 
+            this.zX_MatchInfo2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo2.Location = new System.Drawing.Point(640, 34);
+            this.zX_MatchInfo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo2.Name = "zX_MatchInfo2";
+            this.zX_MatchInfo2.Size = new System.Drawing.Size(611, 290);
+
+            // 
+            // zX_MatchInfo8
+            // 
+            this.zX_MatchInfo8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo8.Location = new System.Drawing.Point(1267, 646);
+            this.zX_MatchInfo8.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo8.Name = "zX_MatchInfo8";
+            this.zX_MatchInfo8.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo7
+            // 
+            this.zX_MatchInfo7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo7.Location = new System.Drawing.Point(640, 646);
+            this.zX_MatchInfo7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo7.Name = "zX_MatchInfo7";
+            this.zX_MatchInfo7.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo6
+            // 
+            this.zX_MatchInfo6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo6.Location = new System.Drawing.Point(12, 646);
+            this.zX_MatchInfo6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo6.Name = "zX_MatchInfo6";
+            this.zX_MatchInfo6.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo5
+            // 
+            this.zX_MatchInfo5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo5.Location = new System.Drawing.Point(1267, 340);
+            this.zX_MatchInfo5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo5.Name = "zX_MatchInfo5";
+            this.zX_MatchInfo5.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo4
+            // 
+            this.zX_MatchInfo4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo4.Location = new System.Drawing.Point(12, 340);
+            this.zX_MatchInfo4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo4.Name = "zX_MatchInfo4";
+            this.zX_MatchInfo4.Size = new System.Drawing.Size(611, 290);
+            // 
+            // zX_MatchInfo3
+            // 
+            this.zX_MatchInfo3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(22)))), ((int)(((byte)(50)))));
+            this.zX_MatchInfo3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.zX_MatchInfo3.Location = new System.Drawing.Point(1267, 34);
+            this.zX_MatchInfo3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_MatchInfo3.Name = "zX_MatchInfo3";
+            this.zX_MatchInfo3.Size = new System.Drawing.Size(611, 290);
+
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo8);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo7);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo6);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo5);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo4);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo3);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo2);
+            this.mainWindow2.Controls.Add(this.zX_MatchInfo1);
+            #endregion
+            this.zX_MatchInfo8.Number = 8;
+            this.zX_MatchInfo7.Number = 7;
+            this.zX_MatchInfo6.Number = 6;
+            this.zX_MatchInfo5.Number = 5;
+            this.zX_MatchInfo4.Number = 4;
+            this.zX_MatchInfo3.Number = 3;
+            this.zX_MatchInfo2.Number = 2;
+            this.zX_MatchInfo1.Number = 1;
+        }
+
+        private void InitRobotInfo()
+        {
+            #region  构造
+
+            this.zX_RobotInfo = new RobotVT.Controller.ZX_RobotInfo();
+            // 
+            // zX_RobotInfo
+            // 
+            this.zX_RobotInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.zX_RobotInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.zX_RobotInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.zX_RobotInfo.ForeColor = System.Drawing.Color.White;
+            this.zX_RobotInfo.Location = new System.Drawing.Point(0, 0);
+            this.zX_RobotInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.zX_RobotInfo.Name = "zX_RobotInfo";
+            this.zX_RobotInfo.Size = new System.Drawing.Size(1904, 72);
+            this.zX_RobotInfo.TabIndex = 48;
+
+            this.Controls.Add(this.zX_RobotInfo);
+            #endregion
+        }
+
         private void Init()
         {
             this.Text = RobotVT.Controller.Methods.GetApplicationTitle();
@@ -45,16 +173,9 @@ namespace RobotVT
 
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
             
-            this.zX_MatchInfo8.Number = 8;
-            this.zX_MatchInfo7.Number = 7;
-            this.zX_MatchInfo6.Number = 6;
-            this.zX_MatchInfo5.Number = 5;
-            this.zX_MatchInfo4.Number = 4;
-            this.zX_MatchInfo3.Number = 3;
-            this.zX_MatchInfo2.Number = 2;
-            this.zX_MatchInfo1.Number = 1;
-            
-            mainPlayView.MouseUp = false;
+
+            //mainPlayView.MouseUp = false;
+            cloudPlayView.PlayModel = "nvr";
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
             cloudPlayView.PlayModel = "cloud";
@@ -151,37 +272,11 @@ namespace RobotVT
         #endregion
 
         #region 报警回调
-        private bool m_bRecord = false;
-        private uint iLastErr = 0;
-        private Int32 m_lUserID = -1;
-        private Int32 m_lRealHandle = -1;
-        private string str1;
-        private string str2;
-        private Int32 i = 0;
-        private Int32 m_lTree = 0;
-        private string str;
-        private uint dwAChanTotalNum = 0;
-        private uint dwDChanTotalNum = 0;
-        private Int32 m_lPort = -1;
-        private IntPtr m_ptrRealHandle;
-        private int[] iIPDevID = new int[96];
-        private int[] iChannelNum = new int[96];
-        public SK_FVision.HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
-        public SK_FVision.HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
-        public SK_FVision.HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
-        public SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
-        public SK_FVision.HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
-
-
         private void LoginAllDev()//从数据库中取出所有信息,登陆设备
         {
             List<RobotVT.Model.S_D_CameraSet> _CameraSets = new Controller.DataAccess().GetS_D_CameraSetList(0);
 
-            if (_CameraSets.Count <= 0)
-            {
-
-            }
-            else
+            if (_CameraSets.Count > 0)
             {
                 foreach (Model.S_D_CameraSet o in _CameraSets)
                 {
@@ -190,14 +285,17 @@ namespace RobotVT
                     string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
                     string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
 
+                    if (o.VT_ID.ToLower() == "nvr")
+                    {
+                        //登陆超脑
+                        mainPlayView._CameraSet = o;
+                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        mainPlayView.sdkSetAlarm();
+                    }
                     if (o.VT_ID.ToLower() == "cloud")
                     {
                         cloudPlayView._CameraSet = o;
-                        //mainPlayView.sdkLogin("192.168.6.65", 8000, "admin", "zx123456", 1, 0);
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-
-                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        cloudPlayView.sdkSetAlarm();
+                        StaticInfo.TargetFollow.Start();
                     }
                     if (o.VT_ID.ToLower() == "front")
                     {
@@ -225,20 +323,25 @@ namespace RobotVT
                     }
                 }
             }
-
-
-
         }
 
         private void LoginOutAll()
         {
             mainPlayView.sdkCloseAlarm();
-            cloudPlayView.sdkCloseAlarm();
             mainPlayView.sdkLoginOut();
+
             cloudPlayView.sdkLoginOut();
+
+            frontPlayView.sdkCloseAlarm();
             frontPlayView.sdkLoginOut();
+
+            backPlayView.sdkCloseAlarm();
             backPlayView.sdkLoginOut();
+
+            leftPlayView.sdkCloseAlarm();
             leftPlayView.sdkLoginOut();
+
+            rightPlayView.sdkCloseAlarm();
             rightPlayView.sdkLoginOut();
         }
         

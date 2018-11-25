@@ -15,27 +15,23 @@ namespace SK_FVision
         private Int32 m_lPort = -1;
         private IntPtr m_ptrRealHandle;
         private Int32 m_lAlarmHandle = -1;
+        public int pWidth = 0, pHeight = 0;
 
         private HIK_NetSDK.REALDATACALLBACK RealData = null;
         private HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
-        //private HIK_NetSDK.NET_DVR_IPPARACFG_V40 m_struIpParaCfgV40;
-        //private HIK_NetSDK.NET_DVR_STREAM_MODE m_struStreamMode;
-        //private HIK_NetSDK.NET_DVR_IPCHANINFO m_struChanInfo;
-        //private HIK_NetSDK.NET_DVR_IPCHANINFO_V40 m_struChanInfoV40;
-        //private HIK_NetSDK.NET_DVR_MATRIX_DECCHAN_CONTROL m_struMatrixDecchan;
-        //private HIK_PlayCtrl.DECCBFUN m_fDisplayFun = null;
         #endregion
-
-
+        
         public PlayView()
         {
             InitializeComponent();
             this.Load += new System.EventHandler(this.PlayView_Load);
             RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
             RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
+            RealPlayWnd.MouseMove += new MouseEventHandler(this.RealPlayWnd_MouseMove);
+        }
 
-            
-
+        public virtual void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
+        {
         }
 
         public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -44,6 +40,17 @@ namespace SK_FVision
 
         public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         { }
+
+        public void GetPictureSize()
+        {
+            //获取播放句柄 Get the port to play
+            if (!HIK_PlayCtrl.PlayM4_GetPictureSize(m_lPort, ref pWidth, ref pHeight))
+            {
+                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+                str = "PlayM4_GetPictureSize failed, error code= " + iLastErr;
+                DebugInfo(str);
+            }
+        }
 
         public virtual void PlayView_Load(object sender, EventArgs e)
         {
@@ -72,6 +79,8 @@ namespace SK_FVision
                     playScreen();
                 }
             }
+
+
             return;
         }
         private void playScreen()
@@ -88,20 +97,14 @@ namespace SK_FVision
                 return;
             }
 
-            ////handle为空则不播放
-            //if (!map.ContainsKey(index))
-            //{
-            //    return;
-            //}
-
-
-            //ViewHandle handle = map[index];
             try
             {
                 if (m_lRealHandle < 0)
                 {
                     HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+                    //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+
+                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;
                     lpPreviewInfo.lChannel = 1;//预览的设备通道 the device channel number
                     lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                     lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
@@ -121,8 +124,9 @@ namespace SK_FVision
                     //else
                     //{
                         lpPreviewInfo.hPlayWnd = IntPtr.Zero;
+                        //m_ptrRealHandle = RealPlayWnd.Handle;
                         m_ptrRealHandle = RealPlayWnd.Handle;
-                        RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
+                    RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
                         m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
                     //}
 
@@ -141,8 +145,7 @@ namespace SK_FVision
                 Console.WriteLine(e.Message);
             }
         }
-
-
+        
         public void playScreen(Int32 m_lUserID, bool m_bRecord, Int32 m_lRealHandle, Int32 m_lChannel)
         {
             if (m_lUserID < 0)
@@ -157,20 +160,14 @@ namespace SK_FVision
                 return;
             }
 
-            ////handle为空则不播放
-            //if (!map.ContainsKey(index))
-            //{
-            //    return;
-            //}
-
-
-            //ViewHandle handle = map[index];
             try
             {
                 if (m_lRealHandle < 0)
                 {
                     HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+                    //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
+
+                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;
                     lpPreviewInfo.lChannel = m_lChannel;//预览的设备通道 the device channel number
                     lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                     lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
@@ -190,7 +187,10 @@ namespace SK_FVision
                     //else
                     //{
                     lpPreviewInfo.hPlayWnd = IntPtr.Zero;
+                    //m_ptrRealHandle = RealPlayWnd.Handle;
+
                     m_ptrRealHandle = RealPlayWnd.Handle;
+
                     RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
                     m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
                     //}
@@ -210,9 +210,7 @@ namespace SK_FVision
                 Console.WriteLine(e.Message);
             }
         }
-
-
-
+        
         public void sdkLoginOut()
         {
             stopScreen();
@@ -319,8 +317,6 @@ namespace SK_FVision
                 str = "布防成功，设备SN："; //布防成功，输出设备序列号                
             }
             DebugInfo(str);
-
-            //System.Text.Encoding.UTF8.GetString(DeviceInfo.sSerialNumber);
         }
 
 

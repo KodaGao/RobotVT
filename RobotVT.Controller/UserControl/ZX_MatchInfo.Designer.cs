@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.CompareBox = new DevComponents.DotNetBar.PanelEx();
+            this.lbXDevInfo = new DevComponents.DotNetBar.LabelX();
+            this.lbXAbstime = new DevComponents.DotNetBar.LabelX();
             this.CompareTextPanel = new DevComponents.DotNetBar.PanelEx();
             this.lbXCompare = new DevComponents.DotNetBar.LabelX();
             this.pictureB = new AForge.Controls.PictureBox();
             this.pictureA = new AForge.Controls.PictureBox();
-            this.lbXAbstime = new DevComponents.DotNetBar.LabelX();
-            this.lbXDevInfo = new DevComponents.DotNetBar.LabelX();
             this.CompareBox.SuspendLayout();
             this.CompareTextPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureB)).BeginInit();
@@ -57,6 +57,38 @@
             this.CompareBox.Size = new System.Drawing.Size(611, 290);
             this.CompareBox.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(50)))), ((int)(((byte)(115)))));
             this.CompareBox.TabIndex = 4;
+            // 
+            // lbXDevInfo
+            // 
+            this.lbXDevInfo.AutoSize = true;
+            this.lbXDevInfo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbXDevInfo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbXDevInfo.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbXDevInfo.ForeColor = System.Drawing.Color.White;
+            this.lbXDevInfo.Location = new System.Drawing.Point(420, 264);
+            this.lbXDevInfo.Name = "lbXDevInfo";
+            this.lbXDevInfo.Size = new System.Drawing.Size(100, 23);
+            this.lbXDevInfo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.lbXDevInfo.TabIndex = 7;
+            // 
+            // lbXAbstime
+            // 
+            this.lbXAbstime.AutoSize = true;
+            this.lbXAbstime.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbXAbstime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbXAbstime.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbXAbstime.ForeColor = System.Drawing.Color.White;
+            this.lbXAbstime.Location = new System.Drawing.Point(65, 264);
+            this.lbXAbstime.Name = "lbXAbstime";
+            this.lbXAbstime.Size = new System.Drawing.Size(157, 23);
+            this.lbXAbstime.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.lbXAbstime.TabIndex = 6;
             // 
             // CompareTextPanel
             // 
@@ -83,7 +115,6 @@
             this.lbXCompare.Size = new System.Drawing.Size(110, 32);
             this.lbXCompare.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.lbXCompare.TabIndex = 0;
-            this.lbXCompare.Text = "相似度60%";
             // 
             // pictureB
             // 
@@ -110,40 +141,6 @@
             this.pictureA.Size = new System.Drawing.Size(273, 248);
             this.pictureA.TabIndex = 0;
             this.pictureA.TabStop = false;
-            // 
-            // lbXAbstime
-            // 
-            this.lbXAbstime.AutoSize = true;
-            this.lbXAbstime.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbXAbstime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbXAbstime.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbXAbstime.ForeColor = System.Drawing.Color.White;
-            this.lbXAbstime.Location = new System.Drawing.Point(65, 264);
-            this.lbXAbstime.Name = "lbXAbstime";
-            this.lbXAbstime.Size = new System.Drawing.Size(157, 23);
-            this.lbXAbstime.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.lbXAbstime.TabIndex = 6;
-            this.lbXAbstime.Text = "2018-09-09 23:59:59";
-            // 
-            // lbXDevInfo
-            // 
-            this.lbXDevInfo.AutoSize = true;
-            this.lbXDevInfo.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbXDevInfo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbXDevInfo.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbXDevInfo.ForeColor = System.Drawing.Color.White;
-            this.lbXDevInfo.Location = new System.Drawing.Point(420, 264);
-            this.lbXDevInfo.Name = "lbXDevInfo";
-            this.lbXDevInfo.Size = new System.Drawing.Size(100, 23);
-            this.lbXDevInfo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.lbXDevInfo.TabIndex = 7;
-            this.lbXDevInfo.Text = "192.168.1.56";
             // 
             // ZX_MatchInfo
             // 
