@@ -118,11 +118,11 @@ namespace RobotVT.Controller
         /// </summary>
         public TargetFollowEnum.TargetCommand Command { get; set; }
         /// <summary>
-        /// 俯仰坐标连续量
+        /// 俯仰坐标连续量Y
         /// </summary>
         public short PitchCoordinate { get; set; }
         /// <summary>
-        /// 方位坐标连续量
+        /// 方位坐标连续量X
         /// </summary>
         public short AzimuthCoordinate { get; set; }
 
@@ -135,6 +135,18 @@ namespace RobotVT.Controller
 
     internal class TargetFollowRecvInfo
     {
+        public TargetFollowRecvInfo(byte[] recv)
+        {
+            Framehead1 = recv[0];
+            Framehead2 = recv[1];
+            TargetStatus = recv[2];
+            PitchCoordinate = BitConverter.ToInt16(new byte[] { recv[4], recv[3] }, 0);
+            AzimuthCoordinate = BitConverter.ToInt16(new byte[] { recv[6], recv[5] }, 0);
+            Count = BitConverter.ToInt32(new byte[] { recv[8], recv[7], recv[10], recv[9] }, 0);
+
+            SumCheck = recv[11];
+
+        }
         /// <summary>
         /// 帧头1
         /// </summary>
@@ -146,7 +158,7 @@ namespace RobotVT.Controller
         /// <summary>
         /// 状态
         /// </summary>
-        public byte Status { get; set; }
+        public byte TargetStatus { get; set; }
         /// <summary>
         /// 俯仰脱靶量
         /// </summary>

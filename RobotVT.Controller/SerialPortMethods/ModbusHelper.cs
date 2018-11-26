@@ -444,8 +444,8 @@ namespace RobotVT.Controller.SerialPortMethods
                                         _ReceiveData.DataItem = new byte[_ByteLen];
                                         Array.Copy(_DataItem, 3, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
 
-                                        //ClearSendOrder();
-                                        //Event_ReceiveData?.Invoke(_ReceiveData);
+                                        Event_ReceiveData?.Invoke(_ReceiveData);
+                                        Event_SendData?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));

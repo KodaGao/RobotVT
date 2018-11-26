@@ -28,6 +28,8 @@ namespace RobotVT.Controller
         /// </summary>
         internal event SerialPortDelegate.UpdateRealTimeDataEventHandler Event_UpdateRealTimeData;
 
+        private TargetFollowRecvInfo TargetRecvInfo;
+
         public void Parameters(string[] paras)
         {
         }
@@ -43,6 +45,13 @@ namespace RobotVT.Controller
                 StaticInfo.ModbusHelper.Event_ReceiveData += ModbusHelper_Event_ReceiveData;
                 StaticInfo.ModbusHelper.Event_SendData += ModbusHelper_Event_SendData;
             }
+
+            StaticInfo.TargetFollow.Event_TargetCoordinates += TargetFollow_Event_TargetCoordinates;
+        }
+
+        private void TargetFollow_Event_TargetCoordinates(TargetFollowRecvInfo targetInfo)
+        {
+            TargetRecvInfo = targetInfo;
         }
 
         private void ModbusHelper_Event_DebugMessage(object sender, object Message)
@@ -77,6 +86,9 @@ namespace RobotVT.Controller
             RobotInfo.LaserDistance = (ushort)ValidItem[2];
             RobotInfo.RobotSpeed = ValidItem[3];
             RobotInfo.RobotStatus = ValidItem[4];
+            RobotInfo.RobotTracking = (short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.TargetStatus);
+            RobotInfo.RobotTrackingX = (short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.AzimuthCoordinate);
+            RobotInfo.RobotTrackingY = (short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.PitchCoordinate);
 
             Event_UpdateRealTimeData?.Invoke(RobotInfo);
         }
@@ -87,6 +99,20 @@ namespace RobotVT.Controller
         private void ModbusHelper_Event_SendData(ReceiveData receiveData)
         {
             List<byte> value = new List<byte>(receiveData.Quantity * 2);
+            byte[] _TempByte;
+            _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.TargetStatus));
+            Array.Reverse(_TempByte);
+            value[0] = _TempByte[0];
+            value[1] = _TempByte[1];
+            _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.AzimuthCoordinate));
+            Array.Reverse(_TempByte);
+            value[2] = _TempByte[0];
+            value[3] = _TempByte[1];
+            _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.PitchCoordinate));
+            Array.Reverse(_TempByte);
+            value[4] = _TempByte[0];
+            value[5] = _TempByte[1];
+
             ReturnOrder returnOrder = StaticInfo.ModbusHelper.CreateReturnOrder(receiveData.DeviceAddressId, receiveData.FunctionCode, receiveData.RegisterAddress, receiveData.Quantity, value);
             StaticInfo.ModbusHelper.SubmitOrder(returnOrder);
         }

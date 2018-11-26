@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace RobotVT.Controller
 {
-    public class TargetFollow
+    public class TargetFollow 
     {
         /// <summary>
         /// 目标跟踪组播数据接收
@@ -23,11 +23,22 @@ namespace RobotVT.Controller
         /// </summary>
         internal event MulticastEventHandler Event_Multicast;
 
+        /// <summary>
+        /// 目标跟踪组播数据接收
+        /// </summary>
+        /// <param name="FaceSnapAlarm"></param>
+        internal delegate void TargetCoordinatesHandler(TargetFollowRecvInfo recvInfo);
+        /// <summary>
+        /// 接收数据事件
+        /// </summary>
+        internal event TargetCoordinatesHandler Event_TargetCoordinates;
+
 
         Socket udpReceive;
         EndPoint ep;
         UdpClient client;
         TargetFollowInfo TargetFollowInfo;
+        TargetFollowRecvInfo recvInfo;
         /// <summary>
         /// 相关资源初始化
         /// </summary>
@@ -54,6 +65,17 @@ namespace RobotVT.Controller
             t.IsBackground = true;
             t.Start();
         }
+
+        /// <summary>
+        /// 接收组播数据
+        /// </summary>
+        public void Stop()
+        {
+            udpReceive.Disconnect(true);
+            udpReceive.Dispose();
+            client.Dispose();
+        }
+
 
         private unsafe void RecvThread()
         {
@@ -121,7 +143,8 @@ namespace RobotVT.Controller
 
         private void TargetRecBuf(byte[] recvBuf)
         {
-            
+            recvInfo = new TargetFollowRecvInfo(recvBuf);
+
         }
 
         private unsafe void H264(byte[] cur)
