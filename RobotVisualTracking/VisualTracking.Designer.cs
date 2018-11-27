@@ -70,9 +70,9 @@
             this.centerMain.Controls.Add(this.mainWindow2);
             this.centerMain.Controls.Add(this.mainWindow);
             this.centerMain.DisabledBackColor = System.Drawing.Color.Empty;
-            this.centerMain.Location = new System.Drawing.Point(0, 61);
+            this.centerMain.Location = new System.Drawing.Point(0, 73);
             this.centerMain.Name = "centerMain";
-            this.centerMain.Size = new System.Drawing.Size(1920, 985);
+            this.centerMain.Size = new System.Drawing.Size(1920, 973);
             this.centerMain.TabIndex = 41;
             // 
             // mainWindow2
@@ -140,7 +140,7 @@
             this.backCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.backCamera.Controls.Add(this.backPlayView);
             this.backCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.backCamera.Location = new System.Drawing.Point(1280, 642);
+            this.backCamera.Location = new System.Drawing.Point(1280, 630);
             this.backCamera.Name = "backCamera";
             this.backCamera.Size = new System.Drawing.Size(530, 294);
             this.backCamera.TabIndex = 3;
@@ -161,7 +161,7 @@
             this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.leftCamera.Controls.Add(this.rightPlayView);
             this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.leftCamera.Location = new System.Drawing.Point(663, 642);
+            this.leftCamera.Location = new System.Drawing.Point(663, 630);
             this.leftCamera.Name = "leftCamera";
             this.leftCamera.Size = new System.Drawing.Size(530, 294);
             this.leftCamera.TabIndex = 4;
@@ -182,7 +182,7 @@
             this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.rightCamera.Controls.Add(this.leftPlayView);
             this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
-            this.rightCamera.Location = new System.Drawing.Point(97, 642);
+            this.rightCamera.Location = new System.Drawing.Point(97, 630);
             this.rightCamera.Name = "rightCamera";
             this.rightCamera.Size = new System.Drawing.Size(530, 294);
             this.rightCamera.TabIndex = 3;

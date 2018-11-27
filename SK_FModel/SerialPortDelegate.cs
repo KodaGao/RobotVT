@@ -2,7 +2,9 @@
 {
     public class SerialPortDelegate
     {
-        public delegate void DataReceivedEventHandler(object DataItem);
+        //public delegate void DataReceivedEventHandler(object DataItem);
+
+        public delegate void DataReceivedEventHandler(string PortName, byte[] Order);
 
         public delegate void RunExceptionEventHandler(object ErrorInfo);
 

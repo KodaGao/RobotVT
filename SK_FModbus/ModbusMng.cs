@@ -184,7 +184,8 @@ namespace SK_FModbus
                         ReceiveDataList.AddRange(_ReadDataByte);
                     }
                     ReceiveDataTime = DateTime.Now;
-                    Event_ReceiveOrder?.Invoke(serialPortInfo.PortName, _ReadDataByte);
+
+                    Event_DataReceived?.Invoke(serialPortInfo == null ? "" : serialPortInfo.PortName, _ReadDataByte);
                 }               
             }
             catch (Exception ex)
@@ -209,18 +210,6 @@ namespace SK_FModbus
                 SendOrderListByte.Clear();
         }
 
-        private void SerialPortMng_Event_RunException(object ErrorInfo)
-        {
-            if (Event_RunException != null)
-                Event_RunException(ErrorInfo);
-        }
-
-        private void SerialPortMng_Event_SenderOrder(string PortName, byte[] Message)
-        {
-            if (Event_SenderOrder != null)
-                Event_SenderOrder(PortName, Message);
-        }
-
         /// <summary>
         /// 发送指令线程
         /// </summary>
@@ -243,8 +232,7 @@ namespace SK_FModbus
                         UpdateReceivedBytesThreshold(1);
                         SerialPortMng.Write(_OrderByte, 0, _OrderByte.Length);
                         _LastSendOrderTime = DateTime.Now;
-                        if (Event_SenderOrder != null)
-                            Event_SenderOrder(serialPortInfo.PortName, _OrderByte);
+                        Event_SenderOrder?.Invoke(serialPortInfo.PortName, _OrderByte);
                     }
                 }
                 catch (Exception ex)
@@ -449,8 +437,10 @@ namespace SK_FModbus
                 _Result = _CRC16.CheckResponse(DataItem, ref _CRCResult);
             else
                 _Result = _CRC16Table.CheckResponse(DataItem, ref _CRCResult);
-            if (_Result && Event_DataReceived != null)
-                Event_DataReceived?.Invoke(DataItem);
+            if (_Result && Event_ReceiveOrder != null)
+            {
+                Event_ReceiveOrder?.Invoke(serialPortInfo.PortName, DataItem);
+            }
             else if (!_Result && Event_RunException != null)
             {
                 ReceiveDataList.Clear();
@@ -460,23 +450,6 @@ namespace SK_FModbus
             }
 
             return true;
-        }
-
-        private void SerialPortMng_Event_DataReceived(string PortName, object DataItem)
-        {
-            try
-            {
-                byte[] _DataItem = (byte[])DataItem;
-                ReceiveDataList.AddRange(_DataItem);
-                ReceiveDataTime = DateTime.Now;
-                if (Event_ReceiveOrder != null)
-                    Event_ReceiveOrder(PortName, _DataItem);
-            }
-            catch (Exception ex)
-            {
-                if (Event_RunException != null)
-                    Event_RunException("[" + (serialPortInfo == null ? "" : serialPortInfo.PortName) + "Modbus]接收数据失败，错误信息：" + ex.Message);
-            }
         }
     }
 }

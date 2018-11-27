@@ -41,27 +41,26 @@ namespace RobotVT.Controller
                 StaticInfo.ModbusHelper = new SerialPortMethods.ModbusHelper();
                 StaticInfo.ModbusHelper.Event_RuningMessage += ModbusHelper_Event_RuningMessage;
                 StaticInfo.ModbusHelper.Event_DebugMessage += ModbusHelper_Event_DebugMessage;
+                StaticInfo.ModbusHelper.Event_DataReceived += ModbusHelper_Event_DataReceived;
                 StaticInfo.ModbusHelper.Event_UpdateRealTimeData += ModbusHelper_Event_UpdateRealTimeData;
-                StaticInfo.ModbusHelper.Event_ReceiveData += ModbusHelper_Event_ReceiveData;
-                StaticInfo.ModbusHelper.Event_SendData += ModbusHelper_Event_SendData;
+                StaticInfo.ModbusHelper.Event_SendOrder += ModbusHelper_Event_SendOrder;
+                StaticInfo.ModbusHelper.Event_ReceiveOrder += ModbusHelper_Event_ReceiveOrder;
             }
 
             StaticInfo.TargetFollow.Event_TargetCoordinates += TargetFollow_Event_TargetCoordinates;
         }
 
-        private void TargetFollow_Event_TargetCoordinates(TargetFollowRecvInfo targetInfo)
-        {
-            TargetRecvInfo = targetInfo;
-        }
-
         private void ModbusHelper_Event_DebugMessage(object sender, object Message)
         {
-            Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, Message.ToString());
-            Event_DebugMessage?.Invoke(sender, Message);
+            //Event_DebugMessage?.Invoke(sender, Message);
         }
         private void ModbusHelper_Event_RuningMessage(object sender, string MessageInfo, SK_FModel.SystemEnum.MessageType Type, params object[] paras)
         {
-            Event_RuningMessage?.Invoke(sender, MessageInfo, Type);
+            //Event_RuningMessage?.Invoke(sender, MessageInfo, Type);
+        }
+        private void ModbusHelper_Event_DataReceived(string PortName, byte[] Order)
+        {
+            Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
         }
         private void ModbusHelper_Event_UpdateRealTimeData(object sender)
         {
@@ -93,29 +92,38 @@ namespace RobotVT.Controller
 
             Event_UpdateRealTimeData?.Invoke(RobotInfo);
         }
-        private void ModbusHelper_Event_ReceiveData(ReceiveData receiveData)
+
+
+
+        private void ModbusHelper_Event_SendOrder(ReceiveData ReceiveData)
         {
-            
-        }
-        private void ModbusHelper_Event_SendData(ReceiveData receiveData)
-        {
-            List<byte> value = new List<byte>(receiveData.Quantity * 2);
+            //写入命令返回值
+            List<byte> value = new List<byte>();
             byte[] _TempByte;
             _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.TargetStatus));
             Array.Reverse(_TempByte);
-            value[0] = _TempByte[0];
-            value[1] = _TempByte[1];
+            value.AddRange(_TempByte);
             _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.AzimuthCoordinate));
             Array.Reverse(_TempByte);
-            value[2] = _TempByte[0];
-            value[3] = _TempByte[1];
+            value.AddRange(_TempByte);
             _TempByte = BitConverter.GetBytes((short)(TargetRecvInfo == null ? 0 : TargetRecvInfo.PitchCoordinate));
             Array.Reverse(_TempByte);
-            value[4] = _TempByte[0];
-            value[5] = _TempByte[1];
+            value.AddRange(_TempByte);
 
-            ReturnOrder returnOrder = StaticInfo.ModbusHelper.CreateReturnOrder(receiveData.DeviceAddressId, receiveData.FunctionCode, receiveData.RegisterAddress, receiveData.Quantity, value);
+            value.AddRange(new byte[ReceiveData.Quantity * 2 - 6]);
+
+            ReturnOrder returnOrder = StaticInfo.ModbusHelper.CreateReturnOrder(ReceiveData.DeviceAddressId, ReceiveData.FunctionCode, ReceiveData.RegisterAddress, ReceiveData.Quantity, value);
             StaticInfo.ModbusHelper.SubmitOrder(returnOrder);
+        }
+
+        private void ModbusHelper_Event_ReceiveOrder(ReceiveData ReceiveData)
+        {
+        }
+
+
+        private void TargetFollow_Event_TargetCoordinates(TargetFollowRecvInfo targetInfo)
+        {
+            TargetRecvInfo = targetInfo;
         }
 
         /// <summary>

@@ -53,10 +53,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FDBUtility.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FInterface">
+    <Reference Include="SK_FInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FInterface.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FModbus">
+    <Reference Include="SK_FModbus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FModbus.dll</HintPath>
     </Reference>
     <Reference Include="SK_FModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

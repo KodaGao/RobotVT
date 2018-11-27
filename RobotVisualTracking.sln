@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVisualTracking", "RobotVisualTracking\RobotVisualTracking.csproj", "{F1818CC8-BCC6-49D9-8D23-1C8F36B0934E}"
 EndProject
@@ -14,6 +14,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FVision", "SK_ForVision\SK_FVision.csproj", "{365184B2-8499-41CD-A4A3-9C2CC9DBA750}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FModbus", "SK_FModbus\SK_FModbus.csproj", "{44527D2B-86A6-4213-9328-7FA9A13962F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FCommon", "SK_FCommon\SK_FCommon.csproj", "{499970F7-0091-4BE7-B452-365067B41108}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FControl", "SK_FControl\SK_FControl.csproj", "{B75A9186-4F28-49CB-833F-2375D5EA42C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FDBUtility", "SK_FDBUtility\SK_FDBUtility.csproj", "{AAD08C7D-670B-491C-A57E-0E97C438A089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FInterface", "SK_FInterface\SK_FInterface.csproj", "{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FModel", "SK_FModel\SK_FModel.csproj", "{AB2CCA12-3749-413F-A7FF-D7AF7F9688AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +55,26 @@ Global
 		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{499970F7-0091-4BE7-B452-365067B41108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{499970F7-0091-4BE7-B452-365067B41108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{499970F7-0091-4BE7-B452-365067B41108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{499970F7-0091-4BE7-B452-365067B41108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75A9186-4F28-49CB-833F-2375D5EA42C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75A9186-4F28-49CB-833F-2375D5EA42C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75A9186-4F28-49CB-833F-2375D5EA42C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75A9186-4F28-49CB-833F-2375D5EA42C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD08C7D-670B-491C-A57E-0E97C438A089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD08C7D-670B-491C-A57E-0E97C438A089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD08C7D-670B-491C-A57E-0E97C438A089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD08C7D-670B-491C-A57E-0E97C438A089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8EEEDD-8CB3-47FA-BE56-66786F223DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB2CCA12-3749-413F-A7FF-D7AF7F9688AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB2CCA12-3749-413F-A7FF-D7AF7F9688AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB2CCA12-3749-413F-A7FF-D7AF7F9688AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB2CCA12-3749-413F-A7FF-D7AF7F9688AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

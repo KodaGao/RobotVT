@@ -57,13 +57,12 @@
     <Reference Include="SK_FControl">
       <HintPath>..\DLL\SK_FControl.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FDBUtility">
-      <HintPath>..\DLL\SK_FDBUtility.dll</HintPath>
-    </Reference>
-    <Reference Include="SK_FModel">
+    <Reference Include="SK_FModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FModel.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FVision">
+    <Reference Include="SK_FVision, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FVision.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -125,10 +124,6 @@
     <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SK_FModbus\SK_FModbus.csproj">
-      <Project>{44527d2b-86a6-4213-9328-7fa9a13962f1}</Project>
-      <Name>SK_FModbus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

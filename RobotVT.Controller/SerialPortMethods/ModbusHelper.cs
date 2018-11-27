@@ -30,24 +30,26 @@ namespace RobotVT.Controller.SerialPortMethods
         /// </summary>
         internal event SK_FModel.SerialPortDelegate.UpdateRealTimeDataEventHandler Event_UpdateRealTimeData;
 
+        internal event SK_FModel.SerialPortDelegate.DataReceivedEventHandler Event_DataReceived;
+
         /// <summary>
         /// 接收数据信息代理
         /// </summary>
         /// <param name="ReceiveData"></param>
-        internal delegate void ReceiveDataEventHandler(SK_FModel.ReceiveData ReceiveData);
+        internal delegate void ReceiveOrderEventHandler(SK_FModel.ReceiveData ReceiveData);
         /// <summary>
         /// 接收数据事件事件
         /// </summary>
-        internal event ReceiveDataEventHandler Event_ReceiveData;
+        internal event ReceiveOrderEventHandler Event_ReceiveOrder;
         /// <summary>
         /// 发送数据信息代理
         /// </summary>
         /// <param name="ReceiveData"></param>
-        internal delegate void SendDataEventHandler(SK_FModel.ReceiveData ReceiveData);
+        internal delegate void SendOrderEventHandler(SK_FModel.ReceiveData ReceiveData);
         /// <summary>
         /// 发送数据事件事件
         /// </summary>
-        internal event SendDataEventHandler Event_SendData;
+        internal event SendOrderEventHandler Event_SendOrder;
 
 
         private SK_FModel.SerialPortInfo serialPortInfo;
@@ -72,16 +74,16 @@ namespace RobotVT.Controller.SerialPortMethods
             ModbusMng.SenderOrderInterval = serialPortInfo.SenderOrderInterval;
     }
 
-    
+
         /// <summary>
-    ///
-    /// </summary>
-    /// <param name="DeviceAddressId">设备地址码 默认：0x01</param>
-    /// <param name="OrderType">指令类型</param>
-    /// <param name="ReadWriteType">读写类型</param>
-    /// <param name="RegisterNum">寄存器数量</param>
-    /// <param name="value">值</param>
-    /// <returns></returns>
+        ///
+        /// </summary>
+        /// <param name="DeviceAddressId">设备地址码 默认：0x01</param>
+        /// <param name="OrderType">指令类型</param>
+        /// <param name="ReadWriteType">读写类型</param>
+        /// <param name="RegisterNum">寄存器数量</param>
+        /// <param name="value">值</param>
+        /// <returns></returns>
         private byte[] CreateOrder(byte DeviceAddressId, SystemEnum.RegisterAddress RegisterAddress, SK_FModel.SerialPortEnum.ReadWriteType ReadWriteType, SK_FModel.SerialPortEnum.FunctionCode FunctionCode, short RegisterNum, byte[] value)
     {
         try
@@ -168,18 +170,15 @@ namespace RobotVT.Controller.SerialPortMethods
                         _Result[1] = (byte)(int)FunctionCode;
                         _Result[2] = (byte)(RegisterNum * 2);
 
-                        for(int i=0;i<value.Length;i++)
+                        for(int i=3;i<value.Length;i++)
                         {
-                            _TempByte = BitConverter.GetBytes(value[i]);
-                            Array.Reverse(_TempByte);
-                            _Result[(1 + i) * 2 + 1] = _TempByte[0];
-                            _Result[(2 + i) * 2] = _TempByte[1];
+                            _Result[i] = value[i - 3];
                         }
                         _TempByte = new byte[_Result.Length - 2];
                         Array.Copy(_Result, _TempByte, _TempByte.Length);
                         _CRC16.GetCRC(_TempByte, ref _CRC16Byte);
-                        _Result[6] = _CRC16Byte[0];
-                        _Result[7] = _CRC16Byte[1];
+                        _Result[_Result.Length - 2] = _CRC16Byte[0];
+                        _Result[_Result.Length - 1] = _CRC16Byte[1];
                         break;
                     case SK_FModel.SerialPortEnum.FunctionCode.Code16:
                         _Result = new byte[8];
@@ -355,18 +354,6 @@ namespace RobotVT.Controller.SerialPortMethods
                 ModbusMng.ClearSendOrder();
         }
 
-        private void ModbusMng_Event_ReceiveOrder(string PortName, byte[] Order)
-        {
-            if (Event_DebugMessage != null)
-                Event_DebugMessage(null, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
-        }
-
-        private void ModbusMng_Event_SenderOrder(string PortName, byte[] Order)
-        {
-            if (Event_DebugMessage != null)
-                Event_DebugMessage(null, "[" + PortName + "]" + "发送：" + BitConverter.ToString(Order).Replace("-", " "));
-        }
-
         /// <summary>
         /// 开始
         /// </summary>
@@ -437,14 +424,13 @@ namespace RobotVT.Controller.SerialPortMethods
                             switch (_ReceiveData.FunctionCode)
                             {
                                 case SK_FModel.SerialPortEnum.FunctionCode.Code03:
-                                    _ByteLen = _DataItem[2];
-                                    if (_DataItem.Length == _ByteLen + 5)
+                                    _ByteLen = 8;
+                                    if (_DataItem.Length == _ByteLen)
                                     {
                                         _ReceiveData.DataItem = new byte[_ByteLen];
-                                        Array.Copy(_DataItem, 3, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
+                                        Array.Copy(_DataItem, 0, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
 
-                                        Event_ReceiveData?.Invoke(_ReceiveData);
-                                        Event_SendData?.Invoke(_ReceiveData);
+                                        Event_SendOrder?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -456,9 +442,9 @@ namespace RobotVT.Controller.SerialPortMethods
                                     {
                                         _ReceiveData.DataItem = new byte[_ByteLen];
                                         Array.Copy(_DataItem, 7, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
-                                        Event_ReceiveData?.Invoke(_ReceiveData);
+
                                         Event_UpdateRealTimeData?.Invoke(_ReceiveData);
-                                        Event_SendData?.Invoke(_ReceiveData);
+                                        Event_SendOrder?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -481,11 +467,23 @@ namespace RobotVT.Controller.SerialPortMethods
             Event_RuningMessage?.Invoke(StaticInfo.ControlObject, ErrorInfo.ToString(), SK_FModel.SystemEnum.MessageType.Exception);
         }
 
-        private void ModbusMng_Event_DataReceived(object DataItem)
+        private void ModbusMng_Event_DataReceived(string PortName, byte[] Order)
+        {
+            Event_DataReceived?.Invoke(PortName,Order);
+        }
+
+
+        private void ModbusMng_Event_ReceiveOrder(string PortName, byte[] Order)
         {
             if (ReceiveOrderList == null)
                 ReceiveOrderList = new Queue<byte[]>();
-            ReceiveOrderList.Enqueue((byte[])DataItem);
+            ReceiveOrderList.Enqueue(Order);
+            //Event_DebugMessage?.Invoke(null, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
+        }
+
+        private void ModbusMng_Event_SenderOrder(string PortName, byte[] Order)
+        {
+            //Event_SendOrder?.Invoke("[" + PortName + "]" + "发送：" + BitConverter.ToString(Order).Replace("-", " "));
         }
     }
 }

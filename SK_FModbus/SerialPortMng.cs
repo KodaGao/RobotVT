@@ -239,15 +239,15 @@ namespace SK_FModbus.SerialPort
                         {
                             byte[] _ReadDataByte = new byte[_DataLen];
                             serialPort.Read(_ReadDataByte, 0, _DataLen);
-                            if (Event_DataReceived != null)
-                                Event_DataReceived(_ReadDataByte);
+                            //if (Event_DataReceived != null)
+                            //    Event_DataReceived(_ReadDataByte);
                         }
                         break;
 
                     case SK_FModel.SystemEnum.DataFormatType.String:
                         string _DataString = serialPort.ReadLine();
-                        if (Event_DataReceived != null)
-                            Event_DataReceived(_DataString);
+                        //if (Event_DataReceived != null)
+                        //    Event_DataReceived(_DataString);
                         break;
                 }
             }

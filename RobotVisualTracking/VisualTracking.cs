@@ -255,7 +255,7 @@ namespace RobotVT
             if (vtid == "cloud")
             {
                 mainPlayView.sdkCloseAlarm();
-                cloudPlayView.sdkCloseAlarm();
+                //cloudPlayView.sdkCloseAlarm();
             }
 
             mainPlayView.sdkLoginOut();
@@ -298,7 +298,7 @@ namespace RobotVT
 
                         cloudPlayView._CameraSet = o;
                         cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //frontPlayView.sdkSetAlarm();
+                        
                         StaticInfo.TargetFollow.Start();
                     }
                     if (o.VT_ID.ToLower() == "front")
@@ -347,11 +347,6 @@ namespace RobotVT
 
             rightPlayView.sdkCloseAlarm();
             rightPlayView.sdkLoginOut();
-        }
-        
-        private void LoginCloseAlarm(int m_lUserID)
-        {
-
         }
         
         /// <summary>
