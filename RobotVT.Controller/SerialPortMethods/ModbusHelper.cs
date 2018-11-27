@@ -39,7 +39,6 @@ namespace RobotVT.Controller.SerialPortMethods
         /// 接收数据事件事件
         /// </summary>
         internal event ReceiveDataEventHandler Event_ReceiveData;
-
         /// <summary>
         /// 发送数据信息代理
         /// </summary>

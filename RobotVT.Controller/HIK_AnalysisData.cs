@@ -169,16 +169,16 @@ namespace RobotVT.Controller
                 Marshal.Copy(struAlarm.pBuffer1, byFace, 0, iFaceLen);
                 SK_FCommon.DirFile.CreateFile(strnameFace, byFace, iFaceLen);
 
-                //System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
-                //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
-                //System.IO.MemoryStream msface = new System.IO.MemoryStream(byFace);
-                //iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
-                //iK_AlarmInfo.FaceScore = struAlarm.dwFaceScore;
-                //iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.dwAbsTime);
-                //iK_AlarmInfo.DevIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString();
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
+                iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                System.IO.MemoryStream msface = new System.IO.MemoryStream(byFace);
+                iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
+                iK_AlarmInfo.FaceScore = struAlarm.dwFaceScore;
+                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.dwAbsTime);
+                iK_AlarmInfo.DevIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString();
 
-                //AlarmInfoListQueue(iK_AlarmInfo);
-                //Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                AlarmInfoListQueue(iK_AlarmInfo);
+                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
             }
         }
 
@@ -209,24 +209,24 @@ namespace RobotVT.Controller
                 {
                     HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
 
-                    int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
-                    byte[] bySnap = new byte[iSnapLen];
-                    Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
-                    iK_AlarmInfo.FacePic = Image.FromStream(new System.IO.MemoryStream(bySnap)); ;
+                    //int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
+                    //byte[] bySnap = new byte[iSnapLen];
+                    //Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
+                    //iK_AlarmInfo.FacePic = Image.FromStream(new System.IO.MemoryStream(bySnap)); ;
 
-                    //int iModelLen = (int)struAlarm.dwModelDataLen;
-                    //byte[] byModel = new byte[iModelLen];
-                    //Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
-                    //System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
-                    //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                    ////int iModelLen = (int)struAlarm.dwModelDataLen;
+                    ////byte[] byModel = new byte[iModelLen];
+                    ////Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
+                    ////System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
+                    ////iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
 
-                    iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
-                    iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
-                    iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
-                    iK_AlarmInfo.FaceType = 1;
+                    //iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                    //iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
+                    //iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
+                    //iK_AlarmInfo.FaceType = 1;
 
-                    AlarmInfoListQueue(iK_AlarmInfo);
-                    Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                    //AlarmInfoListQueue(iK_AlarmInfo);
+                    //Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
                 }
             }
             catch (Exception _Ex)
@@ -245,19 +245,19 @@ namespace RobotVT.Controller
                 {
                     HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
 
-                    int iModelLen = (int)struAlarm.struBlackListInfo.dwBlackListPicLen;
-                    byte[] byModel = new byte[iModelLen];
-                    if (struAlarm.struBlackListInfo.pBuffer1 == IntPtr.Zero) return;
-                    Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, byModel, 0, iModelLen);
+                    //int iModelLen = (int)struAlarm.struBlackListInfo.dwBlackListPicLen;
+                    //byte[] byModel = new byte[iModelLen];
+                    //if (struAlarm.struBlackListInfo.pBuffer1 == IntPtr.Zero) return;
+                    //Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, byModel, 0, iModelLen);
 
-                    System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
-                    iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(ms);
-                    iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
-                    iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
-                    iK_AlarmInfo.FaceType = struAlarm.struBlackListInfo.struBlackListInfo.byType;
+                    //System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
+                    //iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(ms);
+                    //iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                    //iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
+                    //iK_AlarmInfo.FaceType = struAlarm.struBlackListInfo.struBlackListInfo.byType;
 
-                    AlarmInfoListQueue(iK_AlarmInfo);
-                    Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                    //AlarmInfoListQueue(iK_AlarmInfo);
+                    //Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
                 }
             }
             catch (Exception _Ex)

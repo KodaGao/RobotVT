@@ -16,6 +16,7 @@ namespace RobotVT.Controller
         public event SK_FModel.SystemDelegate.PlayView_SystemMouseDoubleClick Event_PlayViewMouseDoubleClick;
 
         new public bool MouseUp = true;
+        IntPtr m_ptrRealHandle;
 
         public string PlayModel { get; set; }
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
@@ -29,14 +30,15 @@ namespace RobotVT.Controller
 
         private void TargetFollow_Event_Multicast(List<byte> recvBuflist)
         {
-            if (PlayModel == null || PlayModel.ToLower() != "cloud") return;
+            if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
             MemoryStream ms = new MemoryStream(recvBuflist.ToArray());
 
             this.Invoke(new MethodInvoker(() =>
             {
                 try
                 {
-                    //RealPlayWnd.VideoSource = Image.FromStream(ms); 
+                    m_ptrRealHandle = RealPlayWnd.Handle;
+                    m_ptrRealHandle = StaticInfo.TargetFollow.H264_1(recvBuflist.ToArray());
                 }
                 catch (ArgumentException)
                 { }
@@ -50,6 +52,8 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
         {
+
+            if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
             int x = RealPlayWnd.Size.Width / 2;
             int y = RealPlayWnd.Size.Width / 2;
 

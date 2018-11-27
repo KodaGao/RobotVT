@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -50,7 +50,8 @@
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>..\..\Share_Dll\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
-    <Reference Include="SK_FCommon">
+    <Reference Include="SK_FCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FCommon.dll</HintPath>
     </Reference>
     <Reference Include="SK_FControl">
@@ -124,6 +125,10 @@
     <ProjectReference Include="..\RobotVT.Resources\RobotVT.Resources.csproj">
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SK_FModbus\SK_FModbus.csproj">
+      <Project>{44527d2b-86a6-4213-9328-7fa9a13962f1}</Project>
+      <Name>SK_FModbus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

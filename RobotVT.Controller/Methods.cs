@@ -35,6 +35,23 @@ namespace RobotVT.Controller
 
 
         /// <summary>
+        /// 保存Modbus日志
+        /// </summary>
+        /// <param name="Info"></param>
+        public static void SaveModbusLog(SK_FModel.SystemEnum.LogType LogType, string Info)
+        {
+            try
+            {
+                SK_FCommon.LogHelper.SaveLog(LogType, Info, StaticInfo.LogModbusPath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("保存Modbus失败，错误信息：" + ex.Message);
+            }
+        }
+
+
+        /// <summary>
         /// 保存异常日志
         /// </summary>
         /// <param name="Info"></param>

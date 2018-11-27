@@ -426,7 +426,6 @@ namespace SK_FModbus
                                 break;
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -451,7 +450,7 @@ namespace SK_FModbus
             else
                 _Result = _CRC16Table.CheckResponse(DataItem, ref _CRCResult);
             if (_Result && Event_DataReceived != null)
-                Event_DataReceived(DataItem);
+                Event_DataReceived?.Invoke(DataItem);
             else if (!_Result && Event_RunException != null)
             {
                 ReceiveDataList.Clear();

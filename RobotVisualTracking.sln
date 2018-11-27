@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVisualTracking", "RobotVisualTracking\RobotVisualTracking.csproj", "{F1818CC8-BCC6-49D9-8D23-1C8F36B0934E}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVT.Model", "RobotVT.Model\RobotVT.Model.csproj", "{826B742D-0210-47DC-B339-4A13350DA884}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotVT.Resources", "RobotVT.Resources\RobotVT.Resources.csproj", "{1A218A51-5ECD-47F5-BAD7-2703F16A2794}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FVision", "SK_ForVision\SK_FVision.csproj", "{365184B2-8499-41CD-A4A3-9C2CC9DBA750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SK_FModbus", "SK_FModbus\SK_FModbus.csproj", "{44527D2B-86A6-4213-9328-7FA9A13962F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A218A51-5ECD-47F5-BAD7-2703F16A2794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365184B2-8499-41CD-A4A3-9C2CC9DBA750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365184B2-8499-41CD-A4A3-9C2CC9DBA750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365184B2-8499-41CD-A4A3-9C2CC9DBA750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365184B2-8499-41CD-A4A3-9C2CC9DBA750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44527D2B-86A6-4213-9328-7FA9A13962F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

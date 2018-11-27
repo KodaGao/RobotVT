@@ -290,11 +290,15 @@ namespace RobotVT
                         //登陆超脑
                         mainPlayView._CameraSet = o;
                         mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        mainPlayView.sdkSetAlarm();
+                        //mainPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "cloud")
                     {
+                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+
                         cloudPlayView._CameraSet = o;
+                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //frontPlayView.sdkSetAlarm();
                         StaticInfo.TargetFollow.Start();
                     }
                     if (o.VT_ID.ToLower() == "front")
@@ -327,7 +331,7 @@ namespace RobotVT
 
         private void LoginOutAll()
         {
-            mainPlayView.sdkCloseAlarm();
+            //mainPlayView.sdkCloseAlarm();
             mainPlayView.sdkLoginOut();
 
             cloudPlayView.sdkLoginOut();

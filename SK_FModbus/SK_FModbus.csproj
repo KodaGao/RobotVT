@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\DLL\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -31,6 +31,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SK_FCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\SK_FCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,10 +53,6 @@
     <Compile Include="SerialPortMng.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
-      <Project>{499970f7-0091-4be7-b452-365067b41108}</Project>
-      <Name>SK_FCommon</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SK_FModel\SK_FModel.csproj">
       <Project>{ab2cca12-3749-413f-a7ff-d7af7f9688af}</Project>
       <Name>SK_FModel</Name>

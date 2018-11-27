@@ -46,6 +46,10 @@
     <Reference Include="FFmpeg.AutoGen, Version=4.1.0.1, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
       <HintPath>..\packages\FFmpeg.AutoGen.4.1.0.1\lib\net45\FFmpeg.AutoGen.dll</HintPath>
     </Reference>
+    <Reference Include="SK_FCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\SK_FCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -58,6 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FFmpeg.AutoGen\FFmpegBinariesHelper.cs" />
+    <Compile Include="FFmpeg.AutoGen\FFmpegHelper.cs" />
+    <Compile Include="FFmpeg.AutoGen\H264ParseSps.cs" />
+    <Compile Include="FFmpeg.AutoGen\H264VideoStreamEncoder.cs" />
+    <Compile Include="FFmpeg.AutoGen\HI_H264.cs" />
+    <Compile Include="FFmpeg.AutoGen\VideoConverter.cs" />
+    <Compile Include="FFmpeg.AutoGen\VideoFrameConverter.cs" />
+    <Compile Include="FFmpeg.AutoGen\VideoStreamDecoder.cs" />
     <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
@@ -100,14 +112,6 @@
   <ItemGroup>
     <None Include="Resources\webcam_128px.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SK_FCommon\SK_FCommon.csproj">
-      <Project>{499970F7-0091-4BE7-B452-365067B41108}</Project>
-      <Name>SK_FCommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FFmpeg.AutoGen\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

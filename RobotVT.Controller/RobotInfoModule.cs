@@ -56,6 +56,7 @@ namespace RobotVT.Controller
 
         private void ModbusHelper_Event_DebugMessage(object sender, object Message)
         {
+            Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, Message.ToString());
             Event_DebugMessage?.Invoke(sender, Message);
         }
         private void ModbusHelper_Event_RuningMessage(object sender, string MessageInfo, SK_FModel.SystemEnum.MessageType Type, params object[] paras)
@@ -94,7 +95,7 @@ namespace RobotVT.Controller
         }
         private void ModbusHelper_Event_ReceiveData(ReceiveData receiveData)
         {
-
+            
         }
         private void ModbusHelper_Event_SendData(ReceiveData receiveData)
         {
