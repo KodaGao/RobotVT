@@ -172,10 +172,10 @@ namespace RobotVT
             this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
 
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
-            
+
 
             //mainPlayView.MouseUp = false;
-            cloudPlayView.PlayModel = "nvr";
+            mainPlayView.PlayModel = "nvr";
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
             cloudPlayView.PlayModel = "cloud";
@@ -287,43 +287,43 @@ namespace RobotVT
 
                     if (o.VT_ID.ToLower() == "nvr")
                     {
-                        //登陆超脑
-                        mainPlayView._CameraSet = o;
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //mainPlayView.sdkSetAlarm();
+                        ////登陆超脑
+                        //mainPlayView._CameraSet = o;
+                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        ////mainPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "cloud")
                     {
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        cloudPlayView._CameraSet = o;
-                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        
+                        //cloudPlayView._CameraSet = o;
+                        //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+
                         StaticInfo.TargetFollow.Start();
                     }
                     if (o.VT_ID.ToLower() == "front")
                     {
-                        frontPlayView._CameraSet = o;
-                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        frontPlayView.sdkSetAlarm();
+                        //frontPlayView._CameraSet = o;
+                        //frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //frontPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "back")
                     {
-                        backPlayView._CameraSet = o;
-                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        backPlayView.sdkSetAlarm();
+                        //backPlayView._CameraSet = o;
+                        //backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //backPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "left")
                     {
-                        leftPlayView._CameraSet = o;
-                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        leftPlayView.sdkSetAlarm();
+                        //leftPlayView._CameraSet = o;
+                        //leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //leftPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "right")
                     {
-                        rightPlayView._CameraSet = o;
-                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        rightPlayView.sdkSetAlarm();
+                        //rightPlayView._CameraSet = o;
+                        //rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //rightPlayView.sdkSetAlarm();
                     }
                 }
             }

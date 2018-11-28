@@ -1,14 +1,12 @@
 ﻿using FFmpeg.AutoGen;
-using SK_FVision.FFmpeg.AutoGen;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace RobotVT.Controller
@@ -58,19 +56,24 @@ namespace RobotVT.Controller
             //client = new UdpClient("192.168.1.65", StaticInfo.TargetFollowPort);
             TargetFollowInfo = new TargetFollowInfo();
 
-
-            //初始化解码器
-            var decAttr = new HI_H264Dec.hiH264_DEC_ATTR_S();
-            decAttr.uPictureFormat = 0;
-            decAttr.uStreamInType = 0;
-            decAttr.uPicWidthInMB = 1024 >> 4;
-            decAttr.uPicHeightInMB = 1024 >> 4;
-            decAttr.uBufNum = 8;
-            decAttr.uWorkMode = 16;
-            _decHandle = HI_H264Dec.Hi264DecCreate(ref decAttr);
-
-
+            GetBaseNum();
         }
+
+
+        Int64 GetBaseNum()
+        {
+            //01e2ffe0
+            Int64 iTmp = Convert.ToInt64("01e2", 16);
+
+            if (iTmp >= 0x8000000)
+            {
+                iTmp = ~(iTmp - 1);
+
+            }
+
+            return iTmp;
+        }
+
 
         /// <summary>
         /// 接收组播数据
@@ -90,9 +93,6 @@ namespace RobotVT.Controller
             udpReceive.Disconnect(true);
             udpReceive.Dispose();
             client.Dispose();
-
-            //释放解码库
-            HI_H264Dec.Hi264DecDestroy(_decHandle);
         }
 
 
@@ -149,7 +149,7 @@ namespace RobotVT.Controller
                 if (retlen == recvBuflist.Count)
                 {
                     ////解析数据，并还原参数
-                    //H264_1(recvBuflist.ToArray());
+                    //H264(recvBuflist.ToArray());
                     Event_Multicast?.Invoke(recvBuflist);
                     recvBuflist.Clear();
                     retlen = 0;
@@ -159,96 +159,15 @@ namespace RobotVT.Controller
             }
         }
 
-        private void TargetRecBuf(byte[] recvBuf)
+
+        public Bitmap H264(byte[] recvbuf)
         {
-            recvInfo = new TargetFollowRecvInfo(recvBuf);
-
-        }
-
-        #region 解码器相关变量声明
-        /// <summary>
-        /// 数据的句柄
-        /// </summary>
-        /// <summary>
-        /// 这是解码器属性信息
-        /// </summary>
-        public HI_H264Dec.hiH264_DEC_ATTR_S decAttr;
-        /// <summary>
-        /// 这是解码器输出图像信息
-        /// </summary>
-        public HI_H264Dec.hiH264_DEC_FRAME_S _decodeFrame = new HI_H264Dec.hiH264_DEC_FRAME_S();
-        /// <summary>
-        /// 解码器句柄
-        /// </summary>
-        public IntPtr _decHandle;
-        static double[,] YUV2RGB_CONVERT_MATRIX = new double[3, 3] { { 1, 0, 1.4022 }, { 1, -0.3456, -0.7145 }, { 1, 1.771, 0 } };
-        #endregion
-
-        public static IntPtr BytesToIntptr(byte[] bytes)
-        {
-            int size = bytes.Length;
-            IntPtr buffer = Marshal.AllocHGlobal(size);
-            try
-            {
-                Marshal.Copy(bytes, 0, buffer, size);
-                return buffer;
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(buffer);
-            }
-        }
-
-        public unsafe void H264(byte[] recvBuf)
-        {
-            HI_H264Dec.hiH264_DEC_FRAME_S _decodeFrame = new HI_H264Dec.hiH264_DEC_FRAME_S();
-            IntPtr pData = BytesToIntptr(recvBuf);
-            uint length = (uint)pData;
-            //解码
-            //pData 为需要解码的 H264 nalu 数据，length 为该数据的长度
-            if (HI_H264Dec.Hi264DecAU(_decHandle, pData, (uint)length, 0, ref _decodeFrame, 0) == 0)
-            {
-                if (_decodeFrame.bError == 0)
-                {
-                    //计算 y u v 的长度
-                    var yLength = _decodeFrame.uHeight * _decodeFrame.uYStride;
-                    var uLength = _decodeFrame.uHeight * _decodeFrame.uUVStride / 2;
-                    var vLength = uLength;
-                    var yBytes = new byte[yLength];
-                    var uBytes = new byte[uLength];
-                    var vBytes = new byte[vLength];
-                    var decodedBytes = new byte[yLength + uLength + vLength];
-                    //_decodeFrame 是解码后的数据对象，里面包含 YUV 数据、宽度、高度等信息
-                    Marshal.Copy(_decodeFrame.pY, yBytes, 0, (int)yLength);
-                    Marshal.Copy(_decodeFrame.pU, uBytes, 0, (int)uLength);
-                    Marshal.Copy(_decodeFrame.pV, vBytes, 0, (int)vLength);
-                    //将从 _decodeFrame 中取出的 YUV 数据放入 decodedBytes 中
-                    Array.Copy(yBytes, decodedBytes, yLength);
-                    Array.Copy(uBytes, 0, decodedBytes, yLength, uLength);
-                    Array.Copy(vBytes, 0, decodedBytes, yLength + uLength, vLength);
-
-                    //decodedBytes 为yuv数据，可以将其转换为 RGB 数据后再转换为 BitMap 然后通过 PictureBox 控件即可显示
-                    
-                }
-            }
-
-            //当所有解码操作完成后需要释放解码库，可以放在 FormClosing 事件里做
-            HI_H264Dec.Hi264DecDestroy(_decHandle);
-        }
-
-        public unsafe IntPtr H264_1(byte[] recvBuf)
-        {
-
-            int size = recvBuf.Length;
-            IntPtr buffer = Marshal.AllocHGlobal(size);
-
-            #region ffmpeg.autogen
-
             AVCodecContext* pCodecCtx = null;
             AVCodecParserContext* pCodecParserCtx = null;
             AVCodec* pCodec = null;
             AVFrame* pFrame = null;             //yuv 
             AVPacket packet;                    //h264 
+            AVPacket* _packet;
             AVPicture picture;                  //储存rgb格式图片 
             SwsContext* pSwsCtx = null;
             AVCodecID codec_id = AVCodecID.AV_CODEC_ID_H264;
@@ -264,7 +183,7 @@ namespace RobotVT.Controller
             pCodecParserCtx = ffmpeg.av_parser_init((int)AVCodecID.AV_CODEC_ID_H264);
             if (null == pCodecParserCtx)
             {
-                return buffer;//终止执行
+                return null;//终止执行
             }
 
             /* we do not send complete frames,什么意思？ */
@@ -275,85 +194,93 @@ namespace RobotVT.Controller
             ret = ffmpeg.avcodec_open2(pCodecCtx, pCodec, null);
             if (ret < 0)
             {
-                return buffer;//终止执行
+                return null;//终止执行
             }
-            #endregion
             pFrame = ffmpeg.av_frame_alloc();
             ffmpeg.av_init_packet(&packet);
-            packet.size = 0;
-            packet.data = null;
+            packet.size = recvbuf.Length;//这个填入H264数据帧的大小  
+            packet.data = (byte*)BytesToIntptr(recvbuf);//这里填入一个指向完整H264数据帧的指针
 
-            const int in_buffer_size = 4096;
-            //uint in_buffer[in_buffer_size + FF_INPUT_BUFFER_PADDING_SIZE] = { 0 };
-            byte[] in_buffer = new byte[in_buffer_size];
-            byte* cur_ptr;
-            int cur_size;
+            _packet = ffmpeg.av_packet_alloc();
+
             int got;
             bool is_first_time = true;
-            
-            cur_size = recvBuf.Length;
-            //cur_ptr = in_buffer;//指针转换问题
-            cur_ptr = (byte*)ffmpeg.av_malloc(in_buffer_size);
-            Marshal.Copy(recvBuf, 0, (IntPtr)cur_ptr, cur_size);
-            while (cur_size > 0)
+
+            //下面开始真正的解码  
+            ret = ffmpeg.avcodec_decode_video2(pCodecCtx, pFrame, &got, &packet);
+            if (ret < 0)
             {
-                /* 返回解析了的字节数 */
-                int len = ffmpeg.av_parser_parse2(pCodecParserCtx, pCodecCtx,
-                    &packet.data, &packet.size, (byte*)cur_ptr, cur_size,
-                    ffmpeg.AV_NOPTS_VALUE, ffmpeg.AV_NOPTS_VALUE, ffmpeg.AV_NOPTS_VALUE);
-                cur_ptr += len;
-                cur_size -= len;
-                if (packet.size == 0)
-                    continue;
-
-                //ret = ffmpeg.avcodec_decode_video2(pCodecCtx, pFrame, &got, &packet);
-                ret = ffmpeg.avcodec_send_packet(pCodecCtx, &packet);
-                if (ret < 0)
-                {
-                    return buffer;//终止执行
-                }
-
-                got = ffmpeg.avcodec_receive_frame(pCodecCtx, pFrame);
-                if (got > 0)
-                {
-                    if (is_first_time)  //分配格式转换存储空间 
-                    {
-                        // C AV_PIX_FMT_RGB32 统一改为 AVPixelFormat.AV_PIX_FMT_RGB24
-                        pSwsCtx = ffmpeg.sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
-                            pCodecCtx->width, pCodecCtx->height, AVPixelFormat.AV_PIX_FMT_RGB24, ffmpeg.SWS_BICUBIC, null, null, null);
-
-                        ffmpeg.avpicture_alloc(&picture, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height);
-
-                        is_first_time = false;
-                    }
-                    /* YUV转RGB */
-                    ffmpeg.sws_scale(pSwsCtx, pFrame->data, pFrame->linesize,
-                        0, pCodecCtx->height,
-                        picture.data, picture.linesize);
-
-                    #region 构造图片
-                    var dstData = new byte_ptrArray4();// 声明形参
-                    var dstLinesize = new int_array4();// 声明形参
-                                                       // 目标媒体格式需要的字节长度
-                    var convertedFrameBufferSize = ffmpeg.av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
-                    // 分配目标媒体格式内存使用
-                    var convertedFrameBufferPtr = Marshal.AllocHGlobal(convertedFrameBufferSize);
-                    // 设置图像填充参数
-                    ffmpeg.av_image_fill_arrays(ref dstData, ref dstLinesize, (byte*)convertedFrameBufferPtr, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
-
-                    // 封装Bitmap图片
-                    var bitmap = new Bitmap(pCodecCtx->width, pCodecCtx->height, dstLinesize[0], PixelFormat.Format24bppRgb, convertedFrameBufferPtr);
-
-                    #endregion
-                }
+                return null;//终止执行
             }
-            ffmpeg.av_packet_unref(&packet);
+            if (got > 0)
+            {
+                if (is_first_time)  //分配格式转换存储空间 
+                {
+                    // C AV_PIX_FMT_RGB32 统一改为 AVPixelFormat.AV_PIX_FMT_RGB24
+                    pSwsCtx = ffmpeg.sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
+                        pCodecCtx->width, pCodecCtx->height, AVPixelFormat.AV_PIX_FMT_RGB24, ffmpeg.SWS_BICUBIC, null, null, null);
+
+                    ffmpeg.avpicture_alloc(&picture, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height);
+
+                    is_first_time = false;
+                }
+
+                /* YUV转RGB */
+                ffmpeg.sws_scale(pSwsCtx, pFrame->data, pFrame->linesize,
+                    0, pCodecCtx->height,
+                    picture.data, picture.linesize);
+
+                #region 构造图片
+                var dstData = new byte_ptrArray4();// 声明形参
+                var dstLinesize = new int_array4();// 声明形参
+                                                   // 目标媒体格式需要的字节长度
+                var convertedFrameBufferSize = ffmpeg.av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
+                // 分配目标媒体格式内存使用
+                var convertedFrameBufferPtr = Marshal.AllocHGlobal(convertedFrameBufferSize);
+                // 设置图像填充参数
+                ffmpeg.av_image_fill_arrays(ref dstData, ref dstLinesize, (byte*)convertedFrameBufferPtr, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
+
+                // 封装Bitmap图片
+                Bitmap bitmap = new Bitmap(pCodecCtx->width, pCodecCtx->height, dstLinesize[0], PixelFormat.Format24bppRgb, convertedFrameBufferPtr);
+                #endregion
+
+                ffmpeg.av_free_packet(&packet);
+                ffmpeg.av_frame_free(&pFrame);
+                ffmpeg.avpicture_free(&picture);
+                ffmpeg.sws_freeContext(pSwsCtx);
+                ffmpeg.avcodec_free_context(&pCodecCtx);
+                ffmpeg.av_parser_close(pCodecParserCtx);
+                return bitmap;
+            }
+            ffmpeg.av_free_packet(&packet);
             ffmpeg.av_frame_free(&pFrame);
             ffmpeg.avpicture_free(&picture);
             ffmpeg.sws_freeContext(pSwsCtx);
             ffmpeg.avcodec_free_context(&pCodecCtx);
             ffmpeg.av_parser_close(pCodecParserCtx);
-            return buffer;
+            return null;
+        }
+
+
+        private void TargetRecBuf(byte[] recvBuf)
+        {
+            recvInfo = new TargetFollowRecvInfo(recvBuf);
+
+        }
+        
+        public static IntPtr BytesToIntptr(byte[] bytes)
+        {
+            int size = bytes.Length;
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.Copy(bytes, 0, buffer, size);
+                return buffer;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
         }
 
         /// <summary>

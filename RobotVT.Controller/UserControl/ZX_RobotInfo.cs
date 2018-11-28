@@ -21,10 +21,10 @@ namespace RobotVT.Controller
         private void ZX_RobotInfo_Load(object sender, EventArgs e)
         {
             this.topMain.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.top_img;
-            this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_5;
-            this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
-            this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
-            this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
+            this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_0;
+            this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_0;
+            this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_0;
+            this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_0;
             this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp_0;
 
             SerilaPortInfoSet();
@@ -78,10 +78,35 @@ namespace RobotVT.Controller
             RobotInfo RobotInfo = (RobotInfo)sender;
             this.Invoke(new MethodInvoker(delegate
             {
-                this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_5;
-                this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
-                this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
-                this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_3;
+                this.signal.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.signal_0;
+
+                if (RobotInfo.BatteryPowerOfRemoteContorller < 20)
+                {
+                    this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_0;
+                    this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_0;
+                }
+                if (RobotInfo.BatteryPowerOfRemoteContorller >= 20 && RobotInfo.BatteryPowerOfRemoteContorller < 40)
+                {
+                    this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_1;
+                    this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_1;
+                }
+                if (RobotInfo.BatteryPowerOfRemoteContorller >= 40 && RobotInfo.BatteryPowerOfRemoteContorller < 60)
+                {
+                    this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_2;
+                    this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_2;
+                }
+                if (RobotInfo.BatteryPowerOfRemoteContorller >= 60 && RobotInfo.BatteryPowerOfRemoteContorller < 80)
+                {
+                    this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_3;
+                    this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_3;
+                }
+                if (RobotInfo.BatteryPowerOfRemoteContorller >= 80)
+                {
+                    this.power1.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power1_4;
+                    this.power2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power2_4;
+                }
+
+                this.robotPower.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.power3_0;
                 this.lamp.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.lamp_0;
 
                 time.Text = DateTime.Now.ToShortTimeString();

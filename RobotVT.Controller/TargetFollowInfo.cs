@@ -82,12 +82,15 @@ namespace RobotVT.Controller
             buf[2] = Framehead3;
             buf[3] = (byte)Command;
 
-            _TempByte = BitConverter.GetBytes(PitchCoordinate);
+            short temp = PitchCoordinate > 0 ? PitchCoordinate : (short)(~PitchCoordinate + 1);
+
+            _TempByte = BitConverter.GetBytes(temp);
             Array.Reverse(_TempByte);
             buf[4] = _TempByte[0];
             buf[5] = _TempByte[1];
 
-            _TempByte = BitConverter.GetBytes(AzimuthCoordinate);
+            temp = AzimuthCoordinate > 0 ? AzimuthCoordinate : (short)(~AzimuthCoordinate + 1);
+            _TempByte = BitConverter.GetBytes(~AzimuthCoordinate);
             Array.Reverse(_TempByte);
             buf[6] = _TempByte[0];
             buf[7] = _TempByte[1];

@@ -37,8 +37,7 @@ namespace RobotVT.Controller
             {
                 try
                 {
-                    m_ptrRealHandle = RealPlayWnd.Handle;
-                    m_ptrRealHandle = StaticInfo.TargetFollow.H264_1(recvBuflist.ToArray());
+                    RealPlayWnd.BackgroundImage = StaticInfo.TargetFollow.H264(recvBuflist.ToArray());
                 }
                 catch (ArgumentException)
                 { }
@@ -54,11 +53,9 @@ namespace RobotVT.Controller
         {
 
             if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
-            int x = RealPlayWnd.Size.Width / 2;
-            int y = RealPlayWnd.Size.Width / 2;
-
             base.GetPictureSize();
             Point _mousePoint = e.Location;
+            _mousePoint = new Point(pWidth/2, pHeight/2);
             StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
         }
 
@@ -111,6 +108,5 @@ namespace RobotVT.Controller
 
             base.RealPlayWnd_MouseDoubleClick(sender, e);
         }
-
     }
 }

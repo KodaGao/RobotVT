@@ -60,7 +60,7 @@ namespace RobotVT.Controller
         }
         private void ModbusHelper_Event_DataReceived(string PortName, byte[] Order)
         {
-            Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
+            //Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
         }
         private void ModbusHelper_Event_UpdateRealTimeData(object sender)
         {
