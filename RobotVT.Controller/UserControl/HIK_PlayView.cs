@@ -37,7 +37,6 @@ namespace RobotVT.Controller
             {
                 try
                 {
-                    RealPlayWnd.BackgroundImage = StaticInfo.TargetFollow.H264(recvBuflist.ToArray());
                 }
                 catch (ArgumentException)
                 { }

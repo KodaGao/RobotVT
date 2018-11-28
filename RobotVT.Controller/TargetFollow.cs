@@ -158,108 +158,34 @@ namespace RobotVT.Controller
 
             }
         }
-
-
-        public Bitmap H264(byte[] recvbuf)
+        public void ConvertVideo()
         {
-            AVCodecContext* pCodecCtx = null;
-            AVCodecParserContext* pCodecParserCtx = null;
-            AVCodec* pCodec = null;
-            AVFrame* pFrame = null;             //yuv 
-            AVPacket packet;                    //h264 
-            AVPacket* _packet;
-            AVPicture picture;                  //储存rgb格式图片 
-            SwsContext* pSwsCtx = null;
-            AVCodecID codec_id = AVCodecID.AV_CODEC_ID_H264;
-
-            int ret;
-            /* 初始化AVCodec */
-            pCodec = ffmpeg.avcodec_find_decoder(codec_id);
-
-            /* 初始化AVCodecContext,只是分配，还没打开 */
-            pCodecCtx = ffmpeg.avcodec_alloc_context3(pCodec);
-
-            /* 初始化AVCodecParserContext */
-            pCodecParserCtx = ffmpeg.av_parser_init((int)AVCodecID.AV_CODEC_ID_H264);
-            if (null == pCodecParserCtx)
-            {
-                return null;//终止执行
-            }
-
-            /* we do not send complete frames,什么意思？ */
-            if (pCodec->capabilities > 0 && ffmpeg.AV_CODEC_CAP_TRUNCATED > 0)
-                pCodecCtx->flags |= ffmpeg.AV_CODEC_FLAG_TRUNCATED;
-
-            /* 打开解码器 */
-            ret = ffmpeg.avcodec_open2(pCodecCtx, pCodec, null);
-            if (ret < 0)
-            {
-                return null;//终止执行
-            }
-            pFrame = ffmpeg.av_frame_alloc();
-            ffmpeg.av_init_packet(&packet);
-            packet.size = recvbuf.Length;//这个填入H264数据帧的大小  
-            packet.data = (byte*)BytesToIntptr(recvbuf);//这里填入一个指向完整H264数据帧的指针
-
-            _packet = ffmpeg.av_packet_alloc();
-
-            int got;
-            bool is_first_time = true;
-
-            //下面开始真正的解码  
-            ret = ffmpeg.avcodec_decode_video2(pCodecCtx, pFrame, &got, &packet);
-            if (ret < 0)
-            {
-                return null;//终止执行
-            }
-            if (got > 0)
-            {
-                if (is_first_time)  //分配格式转换存储空间 
-                {
-                    // C AV_PIX_FMT_RGB32 统一改为 AVPixelFormat.AV_PIX_FMT_RGB24
-                    pSwsCtx = ffmpeg.sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
-                        pCodecCtx->width, pCodecCtx->height, AVPixelFormat.AV_PIX_FMT_RGB24, ffmpeg.SWS_BICUBIC, null, null, null);
-
-                    ffmpeg.avpicture_alloc(&picture, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height);
-
-                    is_first_time = false;
-                }
-
-                /* YUV转RGB */
-                ffmpeg.sws_scale(pSwsCtx, pFrame->data, pFrame->linesize,
-                    0, pCodecCtx->height,
-                    picture.data, picture.linesize);
-
-                #region 构造图片
-                var dstData = new byte_ptrArray4();// 声明形参
-                var dstLinesize = new int_array4();// 声明形参
-                                                   // 目标媒体格式需要的字节长度
-                var convertedFrameBufferSize = ffmpeg.av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
-                // 分配目标媒体格式内存使用
-                var convertedFrameBufferPtr = Marshal.AllocHGlobal(convertedFrameBufferSize);
-                // 设置图像填充参数
-                ffmpeg.av_image_fill_arrays(ref dstData, ref dstLinesize, (byte*)convertedFrameBufferPtr, AVPixelFormat.AV_PIX_FMT_RGB24, pCodecCtx->width, pCodecCtx->height, 1);
-
-                // 封装Bitmap图片
-                Bitmap bitmap = new Bitmap(pCodecCtx->width, pCodecCtx->height, dstLinesize[0], PixelFormat.Format24bppRgb, convertedFrameBufferPtr);
-                #endregion
-
-                ffmpeg.av_free_packet(&packet);
-                ffmpeg.av_frame_free(&pFrame);
-                ffmpeg.avpicture_free(&picture);
-                ffmpeg.sws_freeContext(pSwsCtx);
-                ffmpeg.avcodec_free_context(&pCodecCtx);
-                ffmpeg.av_parser_close(pCodecParserCtx);
-                return bitmap;
-            }
-            ffmpeg.av_free_packet(&packet);
-            ffmpeg.av_frame_free(&pFrame);
-            ffmpeg.avpicture_free(&picture);
-            ffmpeg.sws_freeContext(pSwsCtx);
-            ffmpeg.avcodec_free_context(&pCodecCtx);
-            ffmpeg.av_parser_close(pCodecParserCtx);
-            return null;
+            Process p = new Process();//建立外部调用线程
+            p.StartInfo.FileName = @"c:\ffmpeg.exe";//要调用外部程序的绝对路径
+            p.StartInfo.Arguments = "-i XXXXXXXXXXXXXX";//参数(这里就是FFMPEG的参数了)
+            p.StartInfo.UseShellExecute = false;//不使用操作系统外壳程序启动线程(一定为FALSE,详细的请看MSDN)
+            p.StartInfo.RedirectStandardError =true;
+            //把外部程序错误输出写到StandardError流中(这个一定要注意,FFMPEG的所有输出信息,都为错误输出流,用
+            //StandardOutput是捕获不到任何消息的...这是我耗费了2个多月得出来的经验...mencoder就是用standardOutput来捕获的)
+            p.StartInfo.CreateNoWindow = true;//不创建进程窗口
+            p.ErrorDataReceived += new DataReceivedEventHandler(Output);//外部程序(这里是FFMPEG)输出流时候产生的事件,这里是把流的处理过程转移到下面的方法中,详细请查阅MSDN
+            p.Start();//启动线程
+            p.BeginErrorReadLine();//开始异步读取
+            //p.WaitForExit();//阻塞等待进程结束
+            //p.Close();//关闭进程
+            //p.Dispose();//释放资源
         }
+
+        private void Output(object sendProcess, DataReceivedEventArgs output)
+        {
+            if (!String.IsNullOrEmpty(output.Data))
+            {
+
+                //处理方法... 
+
+            }
+        }
+
 
 
         private void TargetRecBuf(byte[] recvBuf)
