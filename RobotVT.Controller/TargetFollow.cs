@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -56,30 +57,15 @@ namespace RobotVT.Controller
             //client = new UdpClient("192.168.1.65", StaticInfo.TargetFollowPort);
             TargetFollowInfo = new TargetFollowInfo();
 
-            GetBaseNum();
+            InitDecoder(codec_id);
         }
-
-
-        Int64 GetBaseNum()
-        {
-            //01e2ffe0
-            Int64 iTmp = Convert.ToInt64("01e2", 16);
-
-            if (iTmp >= 0x8000000)
-            {
-                iTmp = ~(iTmp - 1);
-
-            }
-
-            return iTmp;
-        }
-
 
         /// <summary>
         /// 接收组播数据
         /// </summary>
         public void Start()
         {
+
             System.Threading.Thread t = new Thread(new ThreadStart(RecvThread));
             t.IsBackground = true;
             t.Start();
@@ -93,6 +79,11 @@ namespace RobotVT.Controller
             udpReceive.Disconnect(true);
             udpReceive.Dispose();
             client.Dispose();
+
+            //ffmpeg.av_packet_free(&packet);
+            //ffmpeg.av_frame_free(&pFrame);
+            //ffmpeg.avcodec_free_context(&pCodecCtx);
+            ffmpeg.av_parser_close(pCodecParserCtx);
         }
 
 
@@ -149,7 +140,7 @@ namespace RobotVT.Controller
                 if (retlen == recvBuflist.Count)
                 {
                     ////解析数据，并还原参数
-                    //H264(recvBuflist.ToArray());
+                    //DecodeFrame(recvBuflist.ToArray());
                     Event_Multicast?.Invoke(recvBuflist);
                     recvBuflist.Clear();
                     retlen = 0;
@@ -158,55 +149,115 @@ namespace RobotVT.Controller
 
             }
         }
-        public void ConvertVideo()
-        {
-            Process p = new Process();//建立外部调用线程
-            p.StartInfo.FileName = @"c:\ffmpeg.exe";//要调用外部程序的绝对路径
-            p.StartInfo.Arguments = "-i XXXXXXXXXXXXXX";//参数(这里就是FFMPEG的参数了)
-            p.StartInfo.UseShellExecute = false;//不使用操作系统外壳程序启动线程(一定为FALSE,详细的请看MSDN)
-            p.StartInfo.RedirectStandardError =true;
-            //把外部程序错误输出写到StandardError流中(这个一定要注意,FFMPEG的所有输出信息,都为错误输出流,用
-            //StandardOutput是捕获不到任何消息的...这是我耗费了2个多月得出来的经验...mencoder就是用standardOutput来捕获的)
-            p.StartInfo.CreateNoWindow = true;//不创建进程窗口
-            p.ErrorDataReceived += new DataReceivedEventHandler(Output);//外部程序(这里是FFMPEG)输出流时候产生的事件,这里是把流的处理过程转移到下面的方法中,详细请查阅MSDN
-            p.Start();//启动线程
-            p.BeginErrorReadLine();//开始异步读取
-            //p.WaitForExit();//阻塞等待进程结束
-            //p.Close();//关闭进程
-            //p.Dispose();//释放资源
-        }
 
-        private void Output(object sendProcess, DataReceivedEventArgs output)
+        private AVCodecContext* pCodecCtx = null;
+        private AVCodecParserContext* pCodecParserCtx = null;
+        private AVCodec* pCodec = null;
+        private AVFrame* pFrame = null;             //yuv 
+        private AVPacket packet;                    //h264 
+        private AVPacket* pPacket;
+        readonly AVCodecID codec_id = AVCodecID.AV_CODEC_ID_H264;
+        static bool codecInited = false;
+
+        private int InitDecoder(AVCodecID codec_id)
         {
-            if (!String.IsNullOrEmpty(output.Data))
+            if (codecInited != false)
             {
-
-                //处理方法... 
-
+                return -1;
             }
+
+            int ret;
+
+            pFrame = ffmpeg.av_frame_alloc();
+            pPacket = ffmpeg.av_packet_alloc();
+            /* 初始化AVCodec */
+            pCodec = ffmpeg.avcodec_find_decoder(codec_id);
+            /* 初始化AVCodecParserContext */
+            pCodecParserCtx = ffmpeg.av_parser_init((int)codec_id);
+            if (null == pCodecParserCtx)
+            {
+                return -1;//终止执行
+            }
+
+            /* 初始化AVCodecContext,只是分配，还没打开 */
+            pCodecCtx = ffmpeg.avcodec_alloc_context3(pCodec);
+
+            /* 打开解码器 */
+            ret = ffmpeg.avcodec_open2(pCodecCtx, pCodec, null);
+            if (ret < 0)
+            {
+                return -1;//终止执行
+            }
+
+            ffmpeg.av_init_packet(pPacket);
+
+            codecInited = true;
+            return 0;
         }
 
-
-
-        private void TargetRecBuf(byte[] recvBuf)
+        public System.IO.MemoryStream DecodeFrame(byte[] recv)
         {
-            recvInfo = new TargetFollowRecvInfo(recvBuf);
-
-        }
-        
-        public static IntPtr BytesToIntptr(byte[] bytes)
-        {
-            int size = bytes.Length;
-            IntPtr buffer = Marshal.AllocHGlobal(size);
+            System.IO.MemoryStream _stream = new System.IO.MemoryStream();
+            IntPtr buffer = Marshal.AllocHGlobal(recv.Length);
             try
             {
-                Marshal.Copy(bytes, 0, buffer, size);
-                return buffer;
+                Marshal.Copy(recv, 0, buffer, recv.Length);
+                while (recv.Length > 0)
+                {
+                    int ret = ffmpeg.av_parser_parse2(pCodecParserCtx, pCodecCtx, (byte**)(pPacket->data), (int*)(pPacket->size),
+                    (byte*)buffer, recv.Length, ffmpeg.AV_NOPTS_VALUE, ffmpeg.AV_NOPTS_VALUE, 0);
+                    if (ret < 0)
+                    {
+                        return _stream;
+                    }
+
+                    if (pPacket->size == 0)
+                        continue;
+
+                    _stream = Decode(pCodecCtx, pFrame, pPacket);
+                }
+                _stream = Decode(pCodecCtx, pFrame, pPacket);
             }
             finally
             {
                 Marshal.FreeHGlobal(buffer);
             }
+            return _stream;
+        }
+
+         private System.IO.MemoryStream Decode(AVCodecContext* dec_ctx, AVFrame* frame, AVPacket* pkt)
+        {
+            System.IO.MemoryStream _stream = new System.IO.MemoryStream();
+            //var pPacket = ffmpeg.av_packet_alloc();
+            try
+            {
+                int ret;
+                ret = ffmpeg.avcodec_send_packet(pCodecCtx, pPacket);
+                if (ret < 0)
+                {
+                    return _stream;
+                }
+                while (ret >= 0)
+                {
+                    ret = ffmpeg.avcodec_receive_frame(pCodecCtx, pFrame);
+                    if (ret == ffmpeg.AVERROR(ffmpeg.EAGAIN) || ret == ffmpeg.AVERROR_EOF)
+                        return _stream ;
+                    else if (ret < 0)
+                        break;
+                }
+                using (var packetStream = new UnmanagedMemoryStream((byte*)pFrame, pPacket->size)) packetStream.CopyTo(_stream);
+            }
+            finally
+            {
+                //ffmpeg.av_packet_unref(pPacket);
+            }
+            return _stream;
+        }
+        
+        private void TargetRecBuf(byte[] recvBuf)
+        {
+            recvInfo = new TargetFollowRecvInfo(recvBuf);
+
         }
 
         /// <summary>

@@ -16,6 +16,7 @@ namespace RobotVT.Controller
         public static string LogFileHomePath = SystemStartPath + "\\SysLog\\";
         public static string LogModbusPath = SystemStartPath + "\\ModbusLog\\";
         public static string CapturePath = SystemStartPath + "\\CaptureImage\\"+ DateTime.Today.ToString("yyyyMMdd") + "\\";
+        public static string FFmpegPath = SystemStartPath + @"\\ffmpeg\\ffmpeg.exe";
         public static string CameraSetFormTitle = "设备信息";
         public static string ControlObject = "控制器";
 
