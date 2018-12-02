@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace SK_FCommon
@@ -391,6 +392,22 @@ namespace SK_FCommon
         {
             return BitConverter.ToDouble(data, 0);
         }
+
+        public virtual IntPtr GetIntptr(byte[] data)
+        {
+            int size = data.Length;
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try
+            {
+                Marshal.Copy(data, 0, buffer, size);
+                return buffer;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+
         #endregion
     }
 

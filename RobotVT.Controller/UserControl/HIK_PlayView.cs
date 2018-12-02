@@ -37,6 +37,7 @@ namespace RobotVT.Controller
             {
                 try
                 {
+                    this.playScreen(recvBuflist.ToArray());
                 }
                 catch (ArgumentException)
                 { }
@@ -46,16 +47,16 @@ namespace RobotVT.Controller
         public override void PlayView_Load(object sender, EventArgs e)
         {
             base.PlayView_Load(sender, e);
+
+            SK_FVision.HIK_PlayCtrl.PlayM4_Play(0, RealPlayWnd.Handle);
         }
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
         {
-
-            if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
-            base.GetPictureSize();
-            Point _mousePoint = e.Location;
-            _mousePoint = new Point(pWidth/2, pHeight/2);
-            StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+            //if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
+            //base.GetPictureSize();
+            //Point _mousePoint = e.Location;
+            //StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
         }
 
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
@@ -77,7 +78,12 @@ namespace RobotVT.Controller
             if (e.Button == MouseButtons.Left)
             {
                 Point _mousePoint = e.Location;
-                StaticInfo.TargetFollow.SendingCoordinates(0, 0, _mousePoint);
+                base.GetPictureSize();
+                _mousePoint = new Point(0, pHeight / 2);
+                StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+
+                _mousePoint = new Point(pWidth / 2, pHeight / 2);
+                StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
             }
 
             base.RealPlayWnd_MouseUp(sender, e);

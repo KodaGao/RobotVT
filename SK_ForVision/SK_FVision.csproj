@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\DLL\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="HIKVISION\HIK_NetSDK.cs" />
     <Compile Include="HIKVISION\HIK_PlayCtrl.cs" />
+    <Compile Include="HIKVISION\HI_H264DEC.cs" />
     <Compile Include="PlayView.cs">
       <SubType>UserControl</SubType>
     </Compile>

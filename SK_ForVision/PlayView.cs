@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace SK_FVision
 {
+    [System.Security.SecuritySafeCritical]
     public partial class PlayView : UserControl
     {
         #region 预览参数
@@ -20,7 +21,26 @@ namespace SK_FVision
         private HIK_NetSDK.REALDATACALLBACK RealData = null;
         private HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
         #endregion
-        
+
+        #region 解码器相关变量声明
+        /// <summary>
+        /// 数据的句柄
+        /// </summary>
+        /// <summary>
+        /// 这是解码器属性信息
+        /// </summary>
+        public HI_H264DEC.hiH264_DEC_ATTR_S decAttr;
+        /// <summary>
+        /// 这是解码器输出图像信息
+        /// </summary>
+        public HI_H264DEC.hiH264_DEC_FRAME_S _decodeFrame = new HI_H264DEC.hiH264_DEC_FRAME_S();
+        /// <summary>
+        /// 解码器句柄
+        /// </summary>
+        public IntPtr _decHandle;
+        static double[,] YUV2RGB_CONVERT_MATRIX = new double[3, 3] { { 1, 0, 1.4022 }, { 1, -0.3456, -0.7145 }, { 1, 1.771, 0 } };
+        #endregion
+
         public PlayView()
         {
             InitializeComponent();
@@ -54,6 +74,15 @@ namespace SK_FVision
 
         public virtual void PlayView_Load(object sender, EventArgs e)
         {
+            decAttr = new HI_H264DEC.hiH264_DEC_ATTR_S();
+            decAttr.uPictureFormat = 0;
+            decAttr.uStreamInType = 0;
+            decAttr.uPicWidthInMB = (uint)596;
+            decAttr.uPicHeightInMB = (uint)762;
+            decAttr.uBufNum = 8;
+            decAttr.uWorkMode = 16;
+            //创建、初始化解码器句柄
+            _decHandle = HI_H264DEC.Hi264DecCreate(ref decAttr);
         }
 
         public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
@@ -79,10 +108,63 @@ namespace SK_FVision
                     playScreen();
                 }
             }
-
-
             return;
         }
+
+        public void playScreen(byte[] in_buffer)
+        {
+            try
+            {
+                IntPtr pData = IntPtr.Zero;
+                pData = SK_FCommon.ValueHelper.Instance.GetIntptr(in_buffer);
+                //解码
+                //pData 为需要解码的 H264 nalu 数据，length 为该数据的长度
+                if (HI_H264DEC.Hi264DecAU(_decHandle, pData, (uint)in_buffer.Length, 0, ref _decodeFrame, 0) == 0)
+                {
+                    if (_decodeFrame.bError == 0)
+                    {
+                        //计算 y u v 的长度
+                        var yLength = _decodeFrame.uHeight * _decodeFrame.uYStride;
+                        var uLength = _decodeFrame.uHeight * _decodeFrame.uUVStride / 2;
+                        var vLength = uLength;
+                        var yBytes = new byte[yLength];
+                        var uBytes = new byte[uLength];
+                        var vBytes = new byte[vLength];
+                        var decodedBytes = new byte[yLength + uLength + vLength];
+                        //_decodeFrame 是解码后的数据对象，里面包含 YUV 数据、宽度、高度等信息
+                        Marshal.Copy(_decodeFrame.pY, yBytes, 0, (int)yLength);
+                        Marshal.Copy(_decodeFrame.pU, uBytes, 0, (int)uLength);
+                        Marshal.Copy(_decodeFrame.pV, vBytes, 0, (int)vLength);
+                        //将从 _decodeFrame 中取出的 YUV 数据放入 decodedBytes 中
+                        Array.Copy(yBytes, decodedBytes, yLength);
+                        Array.Copy(uBytes, 0, decodedBytes, yLength, uLength);
+                        Array.Copy(vBytes, 0, decodedBytes, yLength + uLength, vLength);
+
+                        //decodedBytes 为yuv数据，可以将其转换为 RGB 数据后再转换为 BitMap 然后通过 PictureBox 控件即可显示
+                        //这类代码网上比较常见，我就不贴了
+                    }
+                }
+
+                //当所有解码操作完成后需要释放解码库，可以放在 FormClosing 事件里做
+                //HI_H264DEC.Hi264DecDestroy(_decHandle);
+                //IntPtr pUser = IntPtr.Zero;
+
+                //lpPreviewInfo.hPlayWnd = IntPtr.Zero;
+                //m_ptrRealHandle = RealPlayWnd.Handle;
+                //m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(0, ref lpPreviewInfo, RealData, pUser);
+                //if (m_lRealHandle < 0)
+                //{
+                //    iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
+                //    str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr;
+                //    return;
+                //}
+                //RealPlayWnd.Invalidate();
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
         private void playScreen()
         {
             if (m_lUserID < 0)
@@ -271,7 +353,6 @@ namespace SK_FVision
             RealPlayWnd.Invalidate();//刷新窗口 refresh the window
         }
 
-
         public virtual void sdkSetAlarm()
         {
             HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
@@ -296,7 +377,6 @@ namespace SK_FVision
             //System.Text.Encoding.UTF8.GetString(DeviceInfo.sSerialNumber);
         }
 
-
         public void SetAlarm(int m_lUserID)
         {
             HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
@@ -318,7 +398,6 @@ namespace SK_FVision
             }
             DebugInfo(str);
         }
-
 
         public virtual void sdkCloseAlarm()
         {

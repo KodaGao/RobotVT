@@ -240,7 +240,7 @@ namespace SK_FModbus
                     if (Event_RunException != null)
                         Event_RunException("发送指令失败，错误信息：" + ex.Message);
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
         }
 
