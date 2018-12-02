@@ -287,10 +287,10 @@ namespace RobotVT
 
                     if (o.VT_ID.ToLower() == "nvr")
                     {
-                        ////登陆超脑
-                        //mainPlayView._CameraSet = o;
-                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        ////mainPlayView.sdkSetAlarm();
+                        //登陆超脑
+                        mainPlayView._CameraSet = o;
+                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //mainPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "cloud")
                     {
@@ -303,27 +303,27 @@ namespace RobotVT
                     }
                     if (o.VT_ID.ToLower() == "front")
                     {
-                        //frontPlayView._CameraSet = o;
-                        //frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //frontPlayView.sdkSetAlarm();
+                        frontPlayView._CameraSet = o;
+                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        frontPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "back")
                     {
-                        //backPlayView._CameraSet = o;
-                        //backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //backPlayView.sdkSetAlarm();
+                        backPlayView._CameraSet = o;
+                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        backPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "left")
                     {
-                        //leftPlayView._CameraSet = o;
-                        //leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //leftPlayView.sdkSetAlarm();
+                        leftPlayView._CameraSet = o;
+                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        leftPlayView.sdkSetAlarm();
                     }
                     if (o.VT_ID.ToLower() == "right")
                     {
-                        //rightPlayView._CameraSet = o;
-                        //rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //rightPlayView.sdkSetAlarm();
+                        rightPlayView._CameraSet = o;
+                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        rightPlayView.sdkSetAlarm();
                     }
                 }
             }
@@ -334,7 +334,7 @@ namespace RobotVT
             //mainPlayView.sdkCloseAlarm();
             mainPlayView.sdkLoginOut();
 
-            cloudPlayView.sdkLoginOut();
+            //cloudPlayView.sdkLoginOut();
 
             frontPlayView.sdkCloseAlarm();
             frontPlayView.sdkLoginOut();

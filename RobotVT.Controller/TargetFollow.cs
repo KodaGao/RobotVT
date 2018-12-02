@@ -4,7 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
+
 
 namespace RobotVT.Controller
 {
@@ -59,6 +61,8 @@ namespace RobotVT.Controller
         /// </summary>
         public void Start()
         {
+            int ret = newH264Decoder(0);
+            ret = InitNewDecoder(0);
             System.Threading.Thread t = new Thread(new ThreadStart(RecvThread));
             t.IsBackground = true;
             t.Start();
@@ -86,7 +90,6 @@ namespace RobotVT.Controller
                 {
                     byte[] in_buffer = new byte[1400];
                     int in_buffer_size = udpReceive.ReceiveFrom(in_buffer, ref ep);
-                    //cur_size = udpReceive.Receive(in_buffer, in_buffer_size, SocketFlags.None);
                     if (in_buffer[0] == 0xEB && in_buffer[1] == 0x90 && in_buffer[2] == 0xFF)
                     {
                         PicRecBuf(in_buffer, ref retlen, ref recvBuflist);
@@ -105,10 +108,25 @@ namespace RobotVT.Controller
             }
         }
 
+        // int channel,//之前创建的解码器通道号
+        // unsigned char* m_bufferYUV,//传入接收解码的yuv数据的内存首地址
+        //int* got_picture_ptr,//是否得到解码数据，0---没有获取，1---获取
+        //unsigned char* h264_buf,//传入udp接收一帧h264数据的首地址
+        // int h264_buf_size//udp接收到的本帧数据的长度
 
+        [DllImport("h264Decode.dll",  CallingConvention = CallingConvention.Cdecl)]
+        //[DllImport("h264Decode.dll", CallingConvention = CallingConvention.StdCall)]
+        extern static int newH264Decoder(int Channel);
 
+        [DllImport("h264Decode.dll", CallingConvention = CallingConvention.Cdecl)]
+        //[DllImport("h264Decode.dll", CallingConvention = CallingConvention.StdCall)]
+        extern static int InitNewDecoder(int Channel);
 
-        FileStream fsWrite = new FileStream(StaticInfo.LogModbusPath + "test.avi", FileMode.OpenOrCreate, FileAccess.Write);
+        [DllImport("h264Decode.dll", CallingConvention = CallingConvention.Cdecl)]
+        //[DllImport("h264Decode.dll", CallingConvention = CallingConvention.StdCall)]
+        extern static int ProcessByNewDecoder(out IntPtr m_bufferYUV, ref int got_picture_ptr, byte[] h264_buf, int h264_buf_size);
+
+        //FileStream fsWrite = new FileStream(StaticInfo.LogModbusPath + "test.avi", FileMode.OpenOrCreate, FileAccess.Write);
 
         private void PicRecBuf(byte[] recvBuf, ref int retlen, ref List<byte> recvBuflist)
         {
@@ -135,6 +153,9 @@ namespace RobotVT.Controller
 
                 if (retlen == recvBuflist.Count)
                 {
+                    IntPtr m_bufferYUV = IntPtr.Zero;
+                    int got_picture_ptr = 0;
+                    ProcessByNewDecoder(out m_bufferYUV, ref got_picture_ptr, recvBuflist.ToArray(), recvBuflist.Count);
                     //Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[H264]" + "接收：" + BitConverter.ToString(recvBuflist.ToArray()).Replace("-", " "));
 
                     //try
@@ -146,8 +167,6 @@ namespace RobotVT.Controller
                     //    throw ex;
                     //}
 
-                    //cur_size = recvBuflist.Count;
-                    //cur_ptr = (byte*)ffmpeg.av_malloc((ulong)cur_size + in_buffer_size);
                     //////解析数据，并还原参数
                     //DecodeFrame(recvBuflist.ToArray());
                     Event_Multicast?.Invoke(recvBuflist);
