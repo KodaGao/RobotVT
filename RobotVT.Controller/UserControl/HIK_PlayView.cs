@@ -16,7 +16,6 @@ namespace RobotVT.Controller
         public event SK_FModel.SystemDelegate.PlayView_SystemMouseDoubleClick Event_PlayViewMouseDoubleClick;
 
         new public bool MouseUp = true;
-        IntPtr m_ptrRealHandle;
 
         public string PlayModel { get; set; }
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
@@ -47,8 +46,6 @@ namespace RobotVT.Controller
         public override void PlayView_Load(object sender, EventArgs e)
         {
             base.PlayView_Load(sender, e);
-
-            SK_FVision.HIK_PlayCtrl.PlayM4_Play(0, RealPlayWnd.Handle);
         }
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)

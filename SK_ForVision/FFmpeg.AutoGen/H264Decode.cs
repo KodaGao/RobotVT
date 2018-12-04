@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace FFmpegDemo
+namespace SK_FVision.FFmpeg
 {
     public unsafe class H264Decode
     {
