@@ -175,22 +175,22 @@ namespace RobotVT
 
 
             //mainPlayView.MouseUp = false;
-            mainPlayView.PlayModel = "nvr";
+            mainPlayView.PlayModel = StaticInfo.MainView;
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
-            cloudPlayView.PlayModel = "cloud";
+            cloudPlayView.PlayModel = StaticInfo.CloudView;
             cloudPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
-            frontPlayView.PlayModel = "front";
+            frontPlayView.PlayModel = StaticInfo.FrontView;
             frontPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
-            backPlayView.PlayModel = "back";
+            backPlayView.PlayModel = StaticInfo.BackView;
             backPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
-            leftPlayView.PlayModel = "left";
+            leftPlayView.PlayModel = StaticInfo.LeftView;
             leftPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
-            rightPlayView.PlayModel = "right";
+            rightPlayView.PlayModel = StaticInfo.RightView;
             rightPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
         }
@@ -252,7 +252,7 @@ namespace RobotVT
 
         private void Event_PlayViewMouseDoubleClick(string vtid)
         {
-            if (vtid == "cloud")
+            if (vtid == StaticInfo.CloudView)
             {
                 mainPlayView.sdkCloseAlarm();
                 //cloudPlayView.sdkCloseAlarm();
@@ -287,45 +287,45 @@ namespace RobotVT
                     string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
                     string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
 
-                    if (o.VT_ID.ToLower() == "nvr")
+                    if (o.VT_ID.ToLower() == StaticInfo.MainView)
                     {
-                        //登陆超脑
-                        mainPlayView._CameraSet = o;
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        mainPlayView.sdkSetAlarm();
+                        ////登陆超脑
+                        //mainPlayView._CameraSet = o;
+                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //mainPlayView.sdkSetAlarm();
                     }
-                    if (o.VT_ID.ToLower() == "cloud")
+                    if (o.VT_ID.ToLower() == StaticInfo.CloudView)
                     {
-                        mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        cloudPlayView._CameraSet = o;
-                        cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //cloudPlayView._CameraSet = o;
+                        //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        //StaticInfo.TargetFollow.Start();
+                        StaticInfo.TargetFollow.Start();
                     }
-                    if (o.VT_ID.ToLower() == "front")
+                    if (o.VT_ID.ToLower() == StaticInfo.FrontView)
                     {
-                        frontPlayView._CameraSet = o;
-                        frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        frontPlayView.sdkSetAlarm();
+                        //frontPlayView._CameraSet = o;
+                        //frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //frontPlayView.sdkSetAlarm();
                     }
-                    if (o.VT_ID.ToLower() == "back")
+                    if (o.VT_ID.ToLower() == StaticInfo.BackView)
                     {
-                        backPlayView._CameraSet = o;
-                        backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        backPlayView.sdkSetAlarm();
+                        //backPlayView._CameraSet = o;
+                        //backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //backPlayView.sdkSetAlarm();
                     }
-                    if (o.VT_ID.ToLower() == "left")
+                    if (o.VT_ID.ToLower() == StaticInfo.LeftView)
                     {
-                        leftPlayView._CameraSet = o;
-                        leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        leftPlayView.sdkSetAlarm();
+                        //leftPlayView._CameraSet = o;
+                        //leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //leftPlayView.sdkSetAlarm();
                     }
-                    if (o.VT_ID.ToLower() == "right")
+                    if (o.VT_ID.ToLower() == StaticInfo.RightView)
                     {
-                        rightPlayView._CameraSet = o;
-                        rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        rightPlayView.sdkSetAlarm();
+                        //rightPlayView._CameraSet = o;
+                        //rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        //rightPlayView.sdkSetAlarm();
                     }
                 }
             }

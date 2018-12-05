@@ -95,7 +95,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="VideoDecodeInfo.cs" />
-    <Compile Include="VideoFileRead.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CameraSet.resx">

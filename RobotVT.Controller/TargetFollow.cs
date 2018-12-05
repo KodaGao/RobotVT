@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-
+using System.Text;
 
 namespace RobotVT.Controller
 {
@@ -60,8 +60,6 @@ namespace RobotVT.Controller
         /// </summary>
         public void Start()
         {
-            List<byte> recvBuflist = new List<byte>();
-            Event_Multicast?.Invoke(recvBuflist);
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(RecvThread));
             t.IsBackground = true;
             t.Start();
@@ -76,8 +74,7 @@ namespace RobotVT.Controller
             udpReceive.Dispose();
             client.Dispose();
         }
-
-
+    
         private void RecvThread()
         {
             try
@@ -97,6 +94,7 @@ namespace RobotVT.Controller
                     {
                         TargetRecBuf(in_buffer);
                     }
+                    System.Threading.Thread.Sleep(1);
                 }
             }
             catch (Exception _Ex)
@@ -105,7 +103,6 @@ namespace RobotVT.Controller
                 throw new Exception("组播数据解析失败，错误信息：" + _Ex.Message);
             }
         }
-        //FileStream fsWrite = new FileStream(StaticInfo.LogModbusPath + "test.avi", FileMode.OpenOrCreate, FileAccess.Write);
 
         private void PicRecBuf(byte[] recvBuf, ref int retlen, ref List<byte> recvBuflist)
         {
@@ -132,23 +129,9 @@ namespace RobotVT.Controller
 
                 if (retlen == recvBuflist.Count)
                 {
-                    //Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[H264]" + "接收：" + BitConverter.ToString(recvBuflist.ToArray()).Replace("-", " "));
-
-                    //try
-                    //{
-                    //    fsWrite.Write(recvBuflist.ToArray(), 0, retlen);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    throw ex;
-                    //}
-
-                    //////解析数据，并还原参数
-                    //DecodeFrame(recvBuflist.ToArray());
                     Event_Multicast?.Invoke(recvBuflist);
                     recvBuflist.Clear();
                     retlen = 0;
-                    System.Threading.Thread.Sleep(1);
                 }
             }
         }

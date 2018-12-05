@@ -29,18 +29,9 @@ namespace RobotVT.Controller
 
         private void TargetFollow_Event_Multicast(List<byte> recvBuflist)
         {
-            if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
-            MemoryStream ms = new MemoryStream(recvBuflist.ToArray());
+            if (PlayModel == null || !(PlayModel.ToLower() == StaticInfo.MainView || PlayModel.ToLower() == StaticInfo.CloudView)) return;
 
-            this.Invoke(new MethodInvoker(() =>
-            {
-                try
-                {
-                    this.playScreen(recvBuflist.ToArray());
-                }
-                catch (ArgumentException)
-                { }
-            }));
+            this.playScreen(recvBuflist.ToArray());
         }
 
         public override void PlayView_Load(object sender, EventArgs e)
@@ -50,7 +41,7 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
         {
-            //if (PlayModel == null || PlayModel.ToLower() != "nvr") return;
+            //if (PlayModel == null || PlayModel.ToLower() != StaticInfo.MainView) return;
             //base.GetPictureSize();
             //Point _mousePoint = e.Location;
             //StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
@@ -72,7 +63,7 @@ namespace RobotVT.Controller
                 hIK_CameraSet.ShowDialog();
             }
 
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left&& this.PlayModel.ToLower() == StaticInfo.MainView)
             {
                 Point _mousePoint = e.Location;
                 base.GetPictureSize();

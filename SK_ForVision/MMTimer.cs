@@ -112,8 +112,8 @@ namespace SK_FVision
         /// <param name="repeat">If true sets a repetitive event, otherwise sets a one-shot</param>
         public void Start(uint ms, bool repeat)
         {
-            //Kill any existing timer
-            Stop();
+            ////Kill any existing timer
+            //Stop();
 
             //Set the timer type flags
             fuEvent f = fuEvent.TIME_CALLBACK_FUNCTION | (repeat ? fuEvent.TIME_PERIODIC : fuEvent.TIME_ONESHOT);

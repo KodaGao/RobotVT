@@ -33,7 +33,6 @@ namespace SK_FVision
         public bool CanPlay { set; get; } = false;
 
         Queue<Image> _listImage = new Queue<Image>();
-        int _initCount = 0;
         #endregion
 
         public PlayView()
@@ -56,118 +55,48 @@ namespace SK_FVision
 
             }
         }
+
         ~PlayView()
         {
             _timerVideoPlayer.Dispose();
         }
 
         public virtual void PlayView_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                _initCount++;
-                if (_initCount == 1)
-                {
-                    _timerVideoPlayer.Timer += _timerVideoPlayer_Timer;
-                    _timerVideoPlayer.Start(1, true);
-                }
-
-                //FFmpegDLL目录查找和设置
-                FFmpegBinariesHelper.RegisterFFmpegBinaries();
-                _fileRead.OnDecodeVideo -= _memoryRead_OnDecodeVideo;
-                _fileRead.OnDecodeVideo += _memoryRead_OnDecodeVideo;
-            }
-            catch (Exception ex)
-            {
-
-            }
+        {    
         }
 
 
         #region 解码
         VideoDecodeInfo _decode = new VideoDecodeInfo();
-        int fileSaveIndex = 0;
-        VideoFileRead _fileRead = new VideoFileRead();
-
-        private void _timerVideoPlayer_Timer(object sender, EventArgs e)
-        {
-            this.BeginInvoke((Action)(() =>
-            {
-                TryPlayerVideo();
-            }));
-        }
-        DateTime _lastPutImageTime = DateTime.MinValue;
-        private void TryPlayerVideo()
-        {
-            if (!CanPlay)
-                return;
-
-            if ((DateTime.Now - _lastPutImageTime).TotalMilliseconds >= ImagePlaySpan)
-            {
-                Image image = GetImage();
-                if (image != null)
-                    PlayNewImage(image);
-            }
-        }
-        private void PlayNewImage(Image image)
-        {
-            if (RealPlayWnd.Image != null)
-            {
-                RealPlayWnd.Image.Dispose();
-            }
-
-            _lastPutImageTime = DateTime.Now;
-            RealPlayWnd.Image = image;
-        }
-        private void AddImage(Image image)
-        {
-            lock (_listImage)
-            {
-                _listImage.Enqueue(image);
-            }
-        }
-        private int ImagePoolCoount
-        {
-            get
-            {
-                lock (_listImage)
-                {
-                    return _listImage.Count;
-                }
-            }
-        }
-        Image GetImage()
-        {
-            lock (_listImage)
-            {
-                if (_listImage.Count == 0)
-                    return null;
-
-                Image result = _listImage.Dequeue();
-                return result;
-            }
-        }
         public void playScreen(byte[] in_buffer)
         {
             try
             {
-                _fileRead.PutToDecode(in_buffer);
-
-                /*RealPlayWnd.Invalidate();*/
+                _decode.PutToDecode(in_buffer);
+                Bitmap bitmap = _decode.GetNextBitmapNew();
+                if (bitmap != null)
+                {
+                    RealPlayWnd.Image = bitmap;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        private void _memoryRead_OnDecodeVideo(VideoFileRead sender, Bitmap bitmap)
+
+        public void GetPictureSize()
         {
-            //防止读取到内存的数据太多
-            while (ImagePoolCoount > 200)
-            {
-                Thread.Sleep(10);
-            }
-            AddImage(bitmap);
+            pWidth = _decode._videoWidthRgb;
+            pHeight = _decode._videoHeightRgb;
+
+            ////海康获取播放句柄 Get the port to play
+            //if (!HIK_PlayCtrl.PlayM4_GetPictureSize(m_lPort, ref pWidth, ref pHeight))
+            //{
+            //    iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+            //    str = "PlayM4_GetPictureSize failed, error code= " + iLastErr;
+            //    DebugInfo(str);
+            //}
         }
         #endregion
 
@@ -237,16 +166,6 @@ namespace SK_FVision
         public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         { }
 
-        public void GetPictureSize()
-        {
-            //获取播放句柄 Get the port to play
-            if (!HIK_PlayCtrl.PlayM4_GetPictureSize(m_lPort, ref pWidth, ref pHeight))
-            {
-                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
-                str = "PlayM4_GetPictureSize failed, error code= " + iLastErr;
-                DebugInfo(str);
-            }
-        }
 
 
         public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
@@ -318,7 +237,7 @@ namespace SK_FVision
                         lpPreviewInfo.hPlayWnd = IntPtr.Zero;
                         //m_ptrRealHandle = RealPlayWnd.Handle;
                         m_ptrRealHandle = RealPlayWnd.Handle;
-                    RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
+                        RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
                         m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
                     //}
 

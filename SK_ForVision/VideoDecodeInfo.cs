@@ -1,4 +1,5 @@
 ﻿using SK_FVision.FFmpegWarper;
+using System;
 using System.Drawing;
 using static SK_FVision.FFmpegWarper.H264DecodeWrapper;
 
@@ -6,7 +7,8 @@ namespace SK_FVision
 {
     class VideoDecodeInfo
     {
-        public const int Decode_Result_OK = 0;
+        public delegate void ShowBitmap(Bitmap bitmap);
+        public int Decode_Result_OK = 0;
 
         int _videoWidthOrg;
         int _videoHeightOrg;
@@ -15,8 +17,8 @@ namespace SK_FVision
 
         public int _frameSizeYuv = 0;
 
-        int _videoWidthRgb;
-        int _videoHeightRgb;
+        public int _videoWidthRgb;
+        public int _videoHeightRgb;
         public int _frameSizeRgb = 0;
         byte[] _yuvFrame = null;
         byte[] _rgbFrame = null;
@@ -24,6 +26,15 @@ namespace SK_FVision
         H264Decode _decode = new H264Decode();
 
         public bool Dispose { get; set; } = false;
+
+        public void StartDecode(byte[] h264Frame)
+        {
+            if(h264Frame!=null)
+            {
+                PutToDecode(h264Frame);
+                Bitmap bitmap = GetNextBitmapNew();
+            }
+        }
 
 
         public VideoDecodeInfo()
@@ -55,7 +66,7 @@ namespace SK_FVision
         }
 
 
-         byte[] CreateVideoFrame_Rgb()
+        byte[] CreateVideoFrame_Rgb()
         {
             if (_videoWidthOrg == 0)
             {
@@ -142,8 +153,7 @@ namespace SK_FVision
             Bitmap result = ImageConvert.RgbToBitmap(rgb, _videoWidthRgb, _videoHeightRgb);
             return result;
         }
-
-
+        
         internal void Close()
         {
             _decode.Close();

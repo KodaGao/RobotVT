@@ -19,6 +19,12 @@ namespace RobotVT.Controller
         public static string FFmpegPath = SystemStartPath + @"\\ffmpeg\\ffmpeg.exe";
         public static string CameraSetFormTitle = "设备信息";
         public static string ControlObject = "控制器";
+        public static string MainView = "nvr";
+        public static string CloudView = "cloud";
+        public static string FrontView = "front";
+        public static string BackView = "back";
+        public static string LeftView = "left";
+        public static string RightView = "right";
 
         public static string WirelessController = "VTWire";
 
