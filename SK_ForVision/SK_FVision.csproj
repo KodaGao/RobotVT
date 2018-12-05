@@ -48,6 +48,8 @@
     <Reference Include="FFmpeg.AutoGen, Version=4.1.0.1, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
       <HintPath>..\packages\FFmpeg.AutoGen.4.1.0.1\lib\net45\FFmpeg.AutoGen.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="SK_FCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FCommon.dll</HintPath>
@@ -66,6 +68,9 @@
   <ItemGroup>
     <Compile Include="FFmpeg.AutoGen\FFmpegBinariesHelper.cs" />
     <Compile Include="FFmpeg.AutoGen\H264Decode.cs" />
+    <Compile Include="FFmpeg\AVVideoFormate.cs" />
+    <Compile Include="FFmpeg\H264Decode.cs" />
+    <Compile Include="FFmpeg\ImageConvert.cs" />
     <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
@@ -76,6 +81,7 @@
     </Compile>
     <Compile Include="HIKVISION\HIK_NetSDK.cs" />
     <Compile Include="HIKVISION\HIK_PlayCtrl.cs" />
+    <Compile Include="MMTimer.cs" />
     <Compile Include="PlayView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -88,6 +94,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="VideoDecodeInfo.cs" />
+    <Compile Include="VideoFileRead.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CameraSet.resx">

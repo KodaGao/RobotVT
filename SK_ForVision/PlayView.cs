@@ -1,5 +1,6 @@
 ﻿using SK_FVision.FFmpeg;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -24,71 +25,156 @@ namespace SK_FVision
         private HIK_NetSDK.REALDATACALLBACK RealData = null;
         private HIK_NetSDK.NET_DVR_DEVICEINFO_V30 DeviceInfo;
         #endregion
-        
+
+        #region 自动播放
+        MMTimer _timerVideoPlayer = new MMTimer();
+        public int ImagePlaySpan { get; set; } = 40; //图片播放间隔 毫秒 每秒25帧
+
+        public bool CanPlay { set; get; } = false;
+
+        Queue<Image> _listImage = new Queue<Image>();
+        int _initCount = 0;
+        #endregion
+
         public PlayView()
         {
-            InitializeComponent();
-            this.Load += new System.EventHandler(this.PlayView_Load);
-            RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
-            RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
-            RealPlayWnd.MouseMove += new MouseEventHandler(this.RealPlayWnd_MouseMove);
-        }
-
-        public virtual void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-
-        public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-        }
-
-        public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
-        { }
-
-        public void GetPictureSize()
-        {
-            //获取播放句柄 Get the port to play
-            if (!HIK_PlayCtrl.PlayM4_GetPictureSize(m_lPort, ref pWidth, ref pHeight))
+            try
             {
-                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
-                str = "PlayM4_GetPictureSize failed, error code= " + iLastErr;
-                DebugInfo(str);
+                this.SetStyle(ControlStyles.AllPaintingInWmPaint | //不擦除背景 ,减少闪烁
+                 ControlStyles.OptimizedDoubleBuffer | //双缓冲
+                 ControlStyles.UserPaint, //使用自定义的重绘事件,减少闪烁
+                 true);
+
+                InitializeComponent();
+                this.Load += new System.EventHandler(this.PlayView_Load);
+                RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
+                RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
+                RealPlayWnd.MouseMove += new MouseEventHandler(this.RealPlayWnd_MouseMove);
             }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        ~PlayView()
+        {
+            _timerVideoPlayer.Dispose();
         }
 
         public virtual void PlayView_Load(object sender, EventArgs e)
         {
+            try
+            {
+                _initCount++;
+                if (_initCount == 1)
+                {
+                    _timerVideoPlayer.Timer += _timerVideoPlayer_Timer;
+                    _timerVideoPlayer.Start(1, true);
+                }
+
+                //FFmpegDLL目录查找和设置
+                FFmpegBinariesHelper.RegisterFFmpegBinaries();
+                _fileRead.OnDecodeVideo -= _memoryRead_OnDecodeVideo;
+                _fileRead.OnDecodeVideo += _memoryRead_OnDecodeVideo;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
-        public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
-        {
-            //登录设备 Login the device
-            int userID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
 
-            if (m_lUserID < 0)
+        #region 解码
+        VideoDecodeInfo _decode = new VideoDecodeInfo();
+        int fileSaveIndex = 0;
+        VideoFileRead _fileRead = new VideoFileRead();
+
+        private void _timerVideoPlayer_Timer(object sender, EventArgs e)
+        {
+            this.BeginInvoke((Action)(() =>
             {
-                //登录设备 Login the device
-                m_lUserID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
-                if (m_lUserID < 0)
+                TryPlayerVideo();
+            }));
+        }
+        DateTime _lastPutImageTime = DateTime.MinValue;
+        private void TryPlayerVideo()
+        {
+            if (!CanPlay)
+                return;
+
+            if ((DateTime.Now - _lastPutImageTime).TotalMilliseconds >= ImagePlaySpan)
+            {
+                Image image = GetImage();
+                if (image != null)
+                    PlayNewImage(image);
+            }
+        }
+        private void PlayNewImage(Image image)
+        {
+            if (RealPlayWnd.Image != null)
+            {
+                RealPlayWnd.Image.Dispose();
+            }
+
+            _lastPutImageTime = DateTime.Now;
+            RealPlayWnd.Image = image;
+        }
+        private void AddImage(Image image)
+        {
+            lock (_listImage)
+            {
+                _listImage.Enqueue(image);
+            }
+        }
+        private int ImagePoolCoount
+        {
+            get
+            {
+                lock (_listImage)
                 {
-                    iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
-                    str = "NET_DVR_Login_V30 failed, error code= " + iLastErr; //登录失败，输出错误号 Failed to login and output the error code;
-                    DebugInfo(str);
-                    return;
-                }
-                else
-                {
-                    //登录成功
-                    DebugInfo("NET_DVR_Login_V30 succ!");
-                    playScreen();
+                    return _listImage.Count;
                 }
             }
-            return;
         }
+        Image GetImage()
+        {
+            lock (_listImage)
+            {
+                if (_listImage.Count == 0)
+                    return null;
 
-        H264Decode rtmp = new H264Decode();
-        Thread thPlayer;
+                Image result = _listImage.Dequeue();
+                return result;
+            }
+        }
+        public void playScreen(byte[] in_buffer)
+        {
+            try
+            {
+                _fileRead.PutToDecode(in_buffer);
 
+                /*RealPlayWnd.Invalidate();*/
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        private void _memoryRead_OnDecodeVideo(VideoFileRead sender, Bitmap bitmap)
+        {
+            //防止读取到内存的数据太多
+            while (ImagePoolCoount > 200)
+            {
+                Thread.Sleep(10);
+            }
+            AddImage(bitmap);
+        }
+        #endregion
+
+        #region FFmpeg.AutoGen解码
+        /*
+        //H264Decode rtmp = new H264Decode();
+        //Thread thPlayer;
         //string filename = @"C:\Users\KODA\Desktop\test\1.h264";
         public void playScreen(byte[] in_buffer)
         {
@@ -125,7 +211,7 @@ namespace SK_FVision
                         oldBmp = bmp;
                     }));
                 };
-                //rtmp.Start(show, filename);
+                rtmp.Start(show, filename);
 
             }
             catch (Exception ex)
@@ -136,6 +222,57 @@ namespace SK_FVision
             {
                 RealPlayWnd.Invalidate();
             }
+        }
+        */
+        #endregion
+
+        public virtual void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
+        {
+        }
+
+        public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
+        { }
+
+        public void GetPictureSize()
+        {
+            //获取播放句柄 Get the port to play
+            if (!HIK_PlayCtrl.PlayM4_GetPictureSize(m_lPort, ref pWidth, ref pHeight))
+            {
+                iLastErr = HIK_PlayCtrl.PlayM4_GetLastError(m_lPort);
+                str = "PlayM4_GetPictureSize failed, error code= " + iLastErr;
+                DebugInfo(str);
+            }
+        }
+
+
+        public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
+        {
+            //登录设备 Login the device
+            int userID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
+
+            if (m_lUserID < 0)
+            {
+                //登录设备 Login the device
+                m_lUserID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
+                if (m_lUserID < 0)
+                {
+                    iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
+                    str = "NET_DVR_Login_V30 failed, error code= " + iLastErr; //登录失败，输出错误号 Failed to login and output the error code;
+                    DebugInfo(str);
+                    return;
+                }
+                else
+                {
+                    //登录成功
+                    DebugInfo("NET_DVR_Login_V30 succ!");
+                    playScreen();
+                }
+            }
+            return;
         }
 
         private void playScreen()
@@ -200,72 +337,7 @@ namespace SK_FVision
                 Console.WriteLine(e.Message);
             }
         }
-        
-        public void playScreen(Int32 m_lUserID, bool m_bRecord, Int32 m_lRealHandle, Int32 m_lChannel)
-        {
-            if (m_lUserID < 0)
-            {
-                MessageBox.Show("Please login the device firstly!");
-                return;
-            }
 
-            if (m_bRecord)
-            {
-                MessageBox.Show("Please stop recording firstly!");
-                return;
-            }
-
-            try
-            {
-                if (m_lRealHandle < 0)
-                {
-                    HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                    //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
-
-                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;
-                    lpPreviewInfo.lChannel = m_lChannel;//预览的设备通道 the device channel number
-                    lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
-                    lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
-                    lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
-                    lpPreviewInfo.byPreviewMode = 0;
-                    lpPreviewInfo.byProtoType = 0;
-                    lpPreviewInfo.dwDisplayBufNum = 3; //播放库显示缓冲区最大帧数
-
-                    IntPtr pUser = IntPtr.Zero;
-                    //int user_ID = handle.m_userID;
-
-                    //if (playModel == "0")
-                    //{
-
-                    //    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, null, pUser);
-                    //}
-                    //else
-                    //{
-                    lpPreviewInfo.hPlayWnd = IntPtr.Zero;
-                    //m_ptrRealHandle = RealPlayWnd.Handle;
-
-                    m_ptrRealHandle = RealPlayWnd.Handle;
-
-                    RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
-                    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
-                    //}
-
-                    if (m_lRealHandle < 0)
-                    {
-                        iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
-                        str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr;
-                        return;
-                    }
-                    //map.Add(index,handle);
-                    RealPlayWnd.Invalidate();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-        
         public void sdkLoginOut()
         {
             stopScreen();

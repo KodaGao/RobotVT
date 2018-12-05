@@ -115,7 +115,6 @@ namespace SK_FVision.FFmpeg
             // 目标像素格式
             var destinationPixFmt = AVPixelFormat.AV_PIX_FMT_BGR24;
 
-
             // 某些264格式codecContext.pix_fmt获取到的格式是AV_PIX_FMT_NONE 统一都认为是YUV420P
             if (sourcePixFmt == AVPixelFormat.AV_PIX_FMT_NONE && codecId == AVCodecID.AV_CODEC_ID_H264)
             {

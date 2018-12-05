@@ -257,17 +257,19 @@ namespace RobotVT
                 mainPlayView.sdkCloseAlarm();
                 //cloudPlayView.sdkCloseAlarm();
             }
+            else
+            {
+                mainPlayView.sdkLoginOut();
+                Thread.Sleep(10);
+                Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
 
-            mainPlayView.sdkLoginOut();
-            Thread.Sleep(10);
-            Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
+                string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
+                Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
+                string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
+                string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
 
-            string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
-            Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
-            string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
-            string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
-
-            mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            }
         }
         #endregion
 
