@@ -168,9 +168,10 @@ namespace RobotVT.Controller
                 byte[] buf = BuildTargetFollowInfo(tracking,PitchCoordinate, AzimuthCoordinate);
                 client.Send(buf, buf.Length);
 
-                //aa:55:00:00:00:00:fe:00:00:60:00:70:cd
                 //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
                 //aa 55 00 25 00 00 fe 00 00 60 00 70 f2
+                //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
+                //aa 55 00 00 00 00 fe 00 00 00 00 00 00
                 //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
 
             }

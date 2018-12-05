@@ -85,21 +85,27 @@ namespace RobotVT.Controller
             
             ushort temp = Convert.ToUInt16(Convert.ToString(PitchCoordinate, 2), 2);
             _TempByte = BitConverter.GetBytes(temp);
+            Array.Reverse(_TempByte);
             buf[4] = _TempByte[0];
             buf[5] = _TempByte[1];
 
             temp = Convert.ToUInt16(Convert.ToString(AzimuthCoordinate, 2), 2);
             _TempByte = BitConverter.GetBytes(temp);
-
+            Array.Reverse(_TempByte);
             buf[6] = _TempByte[0];
             buf[7] = _TempByte[1];
 
-            buf[8] = res1;
-            buf[9] = res2;
-            buf[10] = res3;
-            buf[11] = res4;
-            buf[12] = res5;
+            //buf[8] = res1;
+            //buf[9] = res2;
+            //buf[10] = res3;
+            //buf[11] = res4;
+            //buf[12] = res5;
 
+            buf[8] = 0x00;
+            buf[9] = 0x60;
+            buf[10] = 0x00;
+            buf[11] = 0x70;
+            buf[12] = 0xcd;
             return buf;
         }
 
