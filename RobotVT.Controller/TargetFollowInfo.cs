@@ -63,6 +63,7 @@ namespace RobotVT.Controller
             Framehead2 = 0x55;
             Framehead3 = 0x00;
             Command = TargetFollowEnum.TargetCommand.P1080;
+            //Command = 0x00;
 
             res1 = 0x00;
             res2 = 0x00;

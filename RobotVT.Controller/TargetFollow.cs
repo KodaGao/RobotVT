@@ -145,7 +145,7 @@ namespace RobotVT.Controller
         /// <summary>
         /// 发送坐标数据
         /// </summary>
-        public void SendingCoordinates(int imageWidth, int imageHeight, Point MouseLocation)
+        public void SendingCoordinates(int tracking,int imageWidth, int imageHeight, Point MouseLocation)
         {
             short PitchCoordinate;
             short AzimuthCoordinate;
@@ -165,9 +165,14 @@ namespace RobotVT.Controller
                     PitchCoordinate = (short)((float)(centerY  - MouseLocation.Y) / imageHeight * 1024);
                 }
 
-                byte[] buf = BuildTargetFollowInfo(PitchCoordinate, AzimuthCoordinate);
+                byte[] buf = BuildTargetFollowInfo(tracking,PitchCoordinate, AzimuthCoordinate);
                 client.Send(buf, buf.Length);
+
                 //aa:55:00:00:00:00:fe:00:00:60:00:70:cd
+                //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
+                //aa 55 00 25 00 00 fe 00 00 60 00 70 f2
+                //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
+
             }
             catch (SocketException _Ex)
             {
@@ -181,10 +186,23 @@ namespace RobotVT.Controller
             }
         }
         
-        private byte[] BuildTargetFollowInfo(short PitchCoordinate, short AzimuthCoordinate)
+        private byte[] BuildTargetFollowInfo(int tracking, short PitchCoordinate, short AzimuthCoordinate)
         {
             TargetFollowInfo.PitchCoordinate = PitchCoordinate;
             TargetFollowInfo.AzimuthCoordinate = AzimuthCoordinate;
+            switch(tracking)
+            {
+                case 0:
+                    TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.Check;
+                    break;
+                case 1:
+                    TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.Cancel;
+                    break;
+                default:
+                    TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.Check;
+                    break;         
+            }
+
             return TargetFollowInfo.TargetFollowMessage();
         }
 

@@ -49,7 +49,7 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Middle)
             {
                 if (!MouseUp && this.PlayModel == null) return;
 
@@ -68,12 +68,17 @@ namespace RobotVT.Controller
                 Point _mousePoint = e.Location;
                 base.GetPictureSize();
                 _mousePoint = new Point(0, pHeight / 2);
-                StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+                StaticInfo.TargetFollow.SendingCoordinates(0, pWidth, pHeight, _mousePoint);
 
-                _mousePoint = new Point(pWidth / 2, pHeight / 2);
-                StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+                //_mousePoint = new Point(pWidth / 2, pHeight / 2);
+                //StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
             }
-
+            if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() == StaticInfo.MainView)
+            {
+                Point _mousePoint = e.Location;
+                base.GetPictureSize();
+                StaticInfo.TargetFollow.SendingCoordinates(1,pWidth, pHeight, _mousePoint);
+            }
             base.RealPlayWnd_MouseUp(sender, e);
         }
 
