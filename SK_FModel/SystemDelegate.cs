@@ -11,7 +11,5 @@
         public delegate void del_SystemLoadFinish();
 
         public delegate void del_SystemSetFinish();
-        
-        public delegate void PlayView_SystemMouseDoubleClick(string vtID);
     }
 }
