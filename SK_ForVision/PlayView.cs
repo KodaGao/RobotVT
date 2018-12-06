@@ -27,13 +27,12 @@ namespace SK_FVision
         #endregion
 
         #region 自动播放
-        MMTimer _timerVideoPlayer = new MMTimer();
-        public int ImagePlaySpan { get; set; } = 40; //图片播放间隔 毫秒 每秒25帧
+        //MMTimer _timerVideoPlayer = new MMTimer();
+        //public int ImagePlaySpan { get; set; } = 40; //图片播放间隔 毫秒 每秒25帧
 
-        public bool CanPlay { set; get; } = false;
+        //public bool CanPlay { set; get; } = false;
 
-        Queue<Image> _listImage = new Queue<Image>();
-        #endregion
+        //Queue<Image> _listImage = new Queue<Image>();
 
         public PlayView()
         {
@@ -58,8 +57,9 @@ namespace SK_FVision
 
         ~PlayView()
         {
-            _timerVideoPlayer.Dispose();
+            //_timerVideoPlayer.Dispose();
         }
+        #endregion
 
         public virtual void PlayView_Load(object sender, EventArgs e)
         {    
@@ -68,7 +68,7 @@ namespace SK_FVision
 
         #region 解码
         VideoDecodeInfo _decode = new VideoDecodeInfo();
-        public void playScreen(byte[] in_buffer)
+        private void TargetplayScreen(byte[] in_buffer)
         {
             try
             {
@@ -78,6 +78,7 @@ namespace SK_FVision
                 {
                     RealPlayWnd.Image = bitmap;
                 }
+                RealPlayWnd.Invalidate();
             }
             catch (Exception e)
             {
@@ -156,19 +157,25 @@ namespace SK_FVision
         #endregion
 
         public virtual void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
+        { }
 
         public virtual void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-        }
+        { }
 
         public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         { }
 
+        public virtual void PlayRealScreen(Int32 m_lUserID, byte[] h264frame)
+        {
 
+            if (m_lUserID != -1 && h264frame == null)
+                HikplayScreen();
 
-        public virtual void sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
+            if (m_lUserID == -1 && h264frame != null && h264frame.Length > 0)
+                TargetplayScreen(h264frame);
+        }
+        
+        public virtual Int32 sdkLogin(string ip, Int16 port, string userName, string password, int channel, uint dwstreamType)
         {
             //登录设备 Login the device
             int userID = HIK_NetSDK.NET_DVR_Login_V30(ip, port, userName, password, ref DeviceInfo);
@@ -182,19 +189,19 @@ namespace SK_FVision
                     iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
                     str = "NET_DVR_Login_V30 failed, error code= " + iLastErr; //登录失败，输出错误号 Failed to login and output the error code;
                     DebugInfo(str);
-                    return;
+                    return -1;
                 }
                 else
                 {
                     //登录成功
                     DebugInfo("NET_DVR_Login_V30 succ!");
-                    playScreen();
+                    //playScreen();
                 }
             }
-            return;
+            return m_lUserID;
         }
 
-        private void playScreen()
+        private void HikplayScreen()
         {
             if (m_lUserID < 0)
             {
@@ -213,9 +220,7 @@ namespace SK_FVision
                 if (m_lRealHandle < 0)
                 {
                     HIK_NetSDK.NET_DVR_PREVIEWINFO lpPreviewInfo = new HIK_NetSDK.NET_DVR_PREVIEWINFO();
-                    //lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
-
-                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;
+                    lpPreviewInfo.hPlayWnd = RealPlayWnd.Handle;//预览窗口 live view window
                     lpPreviewInfo.lChannel = 1;//预览的设备通道 the device channel number
                     lpPreviewInfo.dwStreamType = 1;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                     lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
@@ -225,21 +230,10 @@ namespace SK_FVision
                     lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
 
                     IntPtr pUser = IntPtr.Zero;
-                    //int user_ID = handle.m_userID;
-
-                    //if (playModel == "0")
-                    //{
-
-                    //    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, null, pUser);
-                    //}
-                    //else
-                    //{
-                        lpPreviewInfo.hPlayWnd = IntPtr.Zero;
-                        //m_ptrRealHandle = RealPlayWnd.Handle;
-                        m_ptrRealHandle = RealPlayWnd.Handle;
-                        RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
-                        m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
-                    //}
+                    lpPreviewInfo.hPlayWnd = IntPtr.Zero;
+                    m_ptrRealHandle = RealPlayWnd.Handle;
+                    RealData = new HIK_NetSDK.REALDATACALLBACK(RealDataCallBack);
+                    m_lRealHandle = HIK_NetSDK.NET_DVR_RealPlay_V40(m_lUserID, ref lpPreviewInfo, RealData, pUser);
 
                     if (m_lRealHandle < 0)
                     {
@@ -247,7 +241,6 @@ namespace SK_FVision
                         str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr;
                         return;
                     }
-                    //map.Add(index,handle);
                     RealPlayWnd.Invalidate();
                 }
             }

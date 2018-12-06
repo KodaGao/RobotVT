@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace RobotVT.Controller
 {
     public partial class HIK_PlayView : SK_FVision.PlayView
-    {
-        public event SK_FModel.SystemDelegate.PlayView_SystemMouseDoubleClick Event_PlayViewMouseDoubleClick;
+    { 
+        public delegate void PlayView_SystemMouseDoubleClick(string vtID,Int32 userID);
+        public event PlayView_SystemMouseDoubleClick Event_PlayViewMouseDoubleClick;
+        public Int32 m_lUserID = -1;
 
-        new public bool MouseUp = true;
+        private HIK_CameraSet hIK_CameraSet;
+        private bool ShowTarget = false;
+
 
         public string PlayModel { get; set; }
         public RobotVT.Model.S_D_CameraSet _CameraSet { get; set; }
@@ -30,31 +28,33 @@ namespace RobotVT.Controller
         private void TargetFollow_Event_Multicast(List<byte> recvBuflist)
         {
             if (PlayModel == null || !(PlayModel.ToLower() == StaticInfo.MainView || PlayModel.ToLower() == StaticInfo.CloudView)) return;
-
-            this.playScreen(recvBuflist.ToArray());
+            if (!ShowTarget)
+                PlayRealScreen(-1, recvBuflist.ToArray());
         }
 
         public override void PlayView_Load(object sender, EventArgs e)
         {
             base.PlayView_Load(sender, e);
+
+            hIK_CameraSet = new HIK_CameraSet();
+            hIK_CameraSet.Event_SetFinish += HIK_CameraSet_Event_SetFinish;
         }
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
         {
-            //if (PlayModel == null || PlayModel.ToLower() != StaticInfo.MainView) return;
-            //base.GetPictureSize();
-            //Point _mousePoint = e.Location;
-            //StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
+            if (PlayModel == null || PlayModel.ToLower() != StaticInfo.MainView) return;
+            base.GetPictureSize();
+            Point _mousePoint = e.Location;
+            StaticInfo.TargetFollow.SendingCoordinates(2, pWidth, pHeight, _mousePoint);
         }
 
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Middle)
+            //右键进行设备登陆设置
+            if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() != StaticInfo.CloudView)
             {
-                if (!MouseUp && this.PlayModel == null) return;
-
-                HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
-                hIK_CameraSet.Event_SetFinish += HIK_CameraSet_Event_SetFinish;
+                //HIK_CameraSet hIK_CameraSet = new HIK_CameraSet();
+                //hIK_CameraSet.Event_SetFinish += HIK_CameraSet_Event_SetFinish;
                 if (_CameraSet != null)
                 {
                     hIK_CameraSet._CameraSet = _CameraSet;
@@ -63,25 +63,16 @@ namespace RobotVT.Controller
                 hIK_CameraSet.ShowDialog();
             }
 
-            if (e.Button == MouseButtons.Left&& this.PlayModel.ToLower() == StaticInfo.MainView)
+            //主窗口左键单击目标跟踪
+            if (e.Button == MouseButtons.Left && this.PlayModel.ToLower() == StaticInfo.MainView)
             {
                 Point _mousePoint = e.Location;
                 base.GetPictureSize();
-                _mousePoint = new Point(0, pHeight / 2);
                 StaticInfo.TargetFollow.SendingCoordinates(0, pWidth, pHeight, _mousePoint);
-
-                //_mousePoint = new Point(pWidth / 2, pHeight / 2);
-                //StaticInfo.TargetFollow.SendingCoordinates(pWidth, pHeight, _mousePoint);
-            }
-            if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() == StaticInfo.MainView)
-            {
-                Point _mousePoint = e.Location;
-                base.GetPictureSize();
-                StaticInfo.TargetFollow.SendingCoordinates(1,pWidth, pHeight, _mousePoint);
             }
             base.RealPlayWnd_MouseUp(sender, e);
         }
-
+        
         private void HIK_CameraSet_Event_SetFinish()
         {
             sdkLoginOut();
@@ -93,7 +84,7 @@ namespace RobotVT.Controller
             string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
             string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
 
-            sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            m_lUserID = sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
             _CameraSet = _cameraSetNew;
 
         }
@@ -102,8 +93,22 @@ namespace RobotVT.Controller
         {
             if (_CameraSet == null) return;
 
-            Event_PlayViewMouseDoubleClick?.Invoke(_CameraSet.VT_ID);
-
+            //双击取消目标跟踪
+            if (this.PlayModel.ToLower() == StaticInfo.MainView)
+            {
+                Point _mousePoint = e.Location;
+                base.GetPictureSize();
+                StaticInfo.TargetFollow.SendingCoordinates(1, pWidth, pHeight, _mousePoint);
+            }
+            else if(this.PlayModel.ToLower() == StaticInfo.CloudView)
+            {
+                ShowTarget = true;
+            }
+            else
+            {
+                ShowTarget = false;
+                Event_PlayViewMouseDoubleClick?.Invoke(_CameraSet.VT_ID, m_lUserID);
+            }
             base.RealPlayWnd_MouseDoubleClick(sender, e);
         }
     }

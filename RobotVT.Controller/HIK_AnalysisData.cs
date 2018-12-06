@@ -6,6 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
+using SK_FCommon;
+using System.Threading;
+using System.Net;
+using System.IO;
 
 namespace RobotVT.Controller
 {
@@ -51,23 +55,7 @@ namespace RobotVT.Controller
 
             AlarmInfoList.Enqueue(iK_AlarmInfo);
         }
-
-        public void NdrSetAlarm(Int32 m_lUserID)
-        {
-            SK_FVision.HIK_NetSDK.NET_DVR_SETUPALARM_PARAM struAlarmParam = new SK_FVision.HIK_NetSDK.NET_DVR_SETUPALARM_PARAM();
-            struAlarmParam.dwSize = (uint)Marshal.SizeOf(struAlarmParam);
-            //struAlarmParam.byLevel = 0; //0- 一级布防,1- 二级布防
-            //struAlarmParam.byAlarmInfoType = 1;
-            struAlarmParam.byFaceAlarmDetection = 0;
-
-            Int32 m_lAlarmHandle = SK_FVision.HIK_NetSDK.NET_DVR_SetupAlarmChan_V41(m_lUserID, ref struAlarmParam);
-            if (m_lAlarmHandle < 0)
-            {
-                uint iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
-            }
-        }
-
-
+        
         /// <summary>
         /// 视频数据处理
         /// </summary>
@@ -92,8 +80,7 @@ namespace RobotVT.Controller
                     break;
             }
         }
-
-
+        
         private void ProcessCommAlarm_FaceDetect(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
 
@@ -185,6 +172,11 @@ namespace RobotVT.Controller
 
         private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
+            //回调函数中获取的报警类型(lCommand)为COMM_SNAP_MATCH_ALARM，
+            //报警信息(pAlarmInfo)对应结构体：NET_VCA_FACESNAP_MATCH_ALARM。
+            //fSimilarity相似度大于0表示人脸比对成功，可以获取人脸库相关数据；
+            //fSimilarity相似度为0，需要通过NET_VCA_BLACKLIST_INFO结构体里面的byType类型判断，
+            //值为1表示陌生人模式，值为2表示人脸比对失败。
             SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struFaceMatchAlarm = new SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM();
 
             struFaceMatchAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
@@ -193,10 +185,16 @@ namespace RobotVT.Controller
             {
                 Facesnap_MathchAsync(struFaceMatchAlarm);
             }
-            //保存黑名单人脸图片
-            if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.dwBlackListPicLen > 0 && struFaceMatchAlarm.struBlackListInfo.pBuffer1 != null)
+
+            if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.struBlackListInfo.byType == 1)
             {
-                Facesnap_MathchBlack(struFaceMatchAlarm);
+                ////陌生人
+                //Facesnap_MathchAsync(struFaceMatchAlarm);
+            }
+            if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.struBlackListInfo.byType == 1)
+            {
+                ////人脸比对失败
+                //Facesnap_MathchAsync(struFaceMatchAlarm);
             }
         }
 
@@ -266,5 +264,176 @@ namespace RobotVT.Controller
                 throw new Exception("黑名单图片转换失败，错误信息：" + _Ex.Message);
             }
         }
+
+        private void PostISAPI()
+        {
+            ////POST / ISAPI / Intelligent / analysisImage / face
+            //string strURL = "http://localhost/WinformSubmit.php";
+            //System.Net.HttpWebRequest request;
+            //request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(strURL);
+            ////Post请求方式
+            //request.Method = "POST";
+            //// 内容类型
+            //request.ContentType = "application/x-www-form-urlencoded";
+
+            //byte[] payload;
+
+            ////设置请求的 ContentLength 
+            //request.ContentLength = payload.Length;
+            ////获得请 求流
+            //System.IO.Stream writer = request.GetRequestStream();
+            ////将请求参数写入流
+            //writer.Write(payload, 0, payload.Length);
+            //// 关闭请求流
+            //writer.Close();
+            //System.Net.HttpWebResponse response;
+            //// 获得响应流
+            //response = (System.Net.HttpWebResponse)request.GetResponse();
+            //System.IO.StreamReader myreader = new System.IO.StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            //string responseText = myreader.ReadToEnd();
+            //myreader.Close();
+
+        }
+
+
+        private uint m_dwAbilityType = 0;
+        private string xmlInput;
+        private uint iLastErr = 0;
+        public Int32 m_lUserID = -1;
+        private void GetDeviceAbility()
+        {
+            IntPtr pInBuf;
+            Int32 nSize;
+            if (xmlInput == null)
+            {
+                pInBuf = IntPtr.Zero;
+                nSize = 0;
+            }
+            else
+            {
+                nSize = xmlInput.Length;
+                pInBuf = Marshal.AllocHGlobal(nSize);
+                pInBuf = Marshal.StringToHGlobalAnsi(xmlInput);
+            }
+            DeviceAbility(12);
+
+            int XML_ABILITY_OUT_LEN = 3 * 1024 * 1024;
+            IntPtr pOutBuf = Marshal.AllocHGlobal(XML_ABILITY_OUT_LEN);
+
+            if (!SK_FVision.HIK_NetSDK.NET_DVR_GetDeviceAbility(m_lUserID, m_dwAbilityType, pInBuf, (uint)nSize, pOutBuf, (uint)XML_ABILITY_OUT_LEN))
+            {
+                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
+                string strErr = "NET_DVR_GetDeviceAbility failed, error code= " + iLastErr + "\r\n" + GetErrorDescription(iLastErr);
+                //获取设备能力集失败，输出错误号 Failed to get the capability set and output the error code
+                //textBoxCapability.Text = strErr;
+            }
+            else
+            {
+                string strOutBuf = Marshal.PtrToStringAnsi(pOutBuf, XML_ABILITY_OUT_LEN);
+                strOutBuf = strOutBuf.Replace(">\n<", ">\r\n<");
+                //textBoxCapability.Text = strOutBuf;
+            }
+            Marshal.FreeHGlobal(pInBuf);
+            Marshal.FreeHGlobal(pOutBuf);
+
+        }
+        private string GetErrorDescription(uint iErrCode)
+        {
+            string strDescription = "";
+            switch (iErrCode)
+            {
+                case 1000:
+                    strDescription = "设备不支持该能力节点的获取";
+                    break;
+                case 1001:
+                    strDescription = "输出内存不足";
+                    break;
+                case 1002:
+                    strDescription = "无法找到对应的本地xml";
+                    break;
+                case 1003:
+                    strDescription = "加载本地xml出错";
+                    break;
+                case 1004:
+                    strDescription = "设备能力数据格式错误";
+                    break;
+                case 1005:
+                    strDescription = "能力集类型错误";
+                    break;
+                case 1006:
+                    strDescription = "XML能力节点格式错误";
+                    break;
+                case 1007:
+                    strDescription = "输入的能力XML节点值错误";
+                    break;
+                case 1008:
+                    strDescription = "XML版本不匹配";
+                    break;
+                default:
+                    break;
+            }
+            return strDescription;
+        }
+
+        private void DeviceAbility(int index)
+        {
+            switch (index)
+            {
+                case 0:	//软硬件能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_SOFTHARDWARE_ABILITY;
+                    break;
+                case 1:	//Wifi能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_NETWORK_ABILITY;
+                    break;
+                case 2: //编码能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ENCODE_ALL_ABILITY_V20;
+                    xmlInput = "<AudioVideoCompressInfo><AudioChannelNumber>1</AudioChannelNumber><VoiceTalkChannelNumber>1</VoiceTalkChannelNumber><VideoChannelNumber>1</VideoChannelNumber></AudioVideoCompressInfo>";
+                    break;
+                case 3:	//设备前端参数能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.IPC_FRONT_PARAMETER_V20;
+                    xmlInput = "<CAMERAPARA><ChannelNumber>1</ChannelNumber></CAMERAPARA>";
+                    break;
+                case 4:	//Raid能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_RAID_ABILITY;
+                    break;
+                case 5:	//设备报警能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ALARM_ABILITY;
+                    xmlInput = "<AlarmAbility version='2.0'><channelID>1</channelID></AlarmAbility>";
+                    break;
+                case 6:	//设备数字通道能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_DYNCHAN_ABILITY;
+                    xmlInput = "<DynChannelAbility version='2.0'><channelNO>1</channelNO></DynChannelAbility>";
+                    break;
+                case 7: //设备用户管理参数能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_USER_ABILITY;
+                    xmlInput = "<UserAbility version='2.0'/>";
+                    break;
+                case 8: //设备网络应用参数能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_NETAPP_ABILITY;
+                    xmlInput = "<NetAppAbility version='2.0'></NetAppAbility>";
+                    break;
+                case 9: //设备图像参数能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_VIDEOPIC_ABILITY;
+                    xmlInput = "<VideoPicAbility version='2.0'><channelNO>1</channelNO></VideoPicAbility>";
+                    break;
+                case 10: //设备JPEG抓图能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_JPEG_CAP_ABILITY;
+                    xmlInput = "<JpegCaptureAbility version='2.0'><channelNO>1</channelNO></JpegCaptureAbility>";
+                    break;
+                case 11: //设备RS232和RS485串口能力
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_SERIAL_ABILITY;
+                    xmlInput = "<SerialAbility version='2.0'/>";
+                    break;
+                case 12: //报警事件处理能力集
+                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ABILITY_INFO;
+                    xmlInput = "<EventAbility version='2.0'><channelNO>1</channelNO></EventAbility>";
+                    break;
+                default:
+                    m_dwAbilityType = 0;
+                    break;
+            }
+           // 能力集类型：DEVICE_ABILITY_INFO，能力集：EventAbility，节点：< FaceDetection >）
+        }
+
     }
 }

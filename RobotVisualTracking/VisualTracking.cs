@@ -174,7 +174,6 @@ namespace RobotVT
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
 
 
-            //mainPlayView.MouseUp = false;
             mainPlayView.PlayModel = StaticInfo.MainView;
             mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
 
@@ -250,25 +249,34 @@ namespace RobotVT
             return false;
         }
 
-        private void Event_PlayViewMouseDoubleClick(string vtid)
+        private void Event_PlayViewMouseDoubleClick(string vtid,Int32 userId)
         {
-            if (vtid == StaticInfo.CloudView)
+            switch(vtid)
             {
-                mainPlayView.sdkCloseAlarm();
-                //cloudPlayView.sdkCloseAlarm();
-            }
-            else
-            {
-                mainPlayView.sdkLoginOut();
-                Thread.Sleep(10);
-                Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
+                case StaticInfo.MainView:
+                    break;
+                case StaticInfo.CloudView:
 
-                string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
-                Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
-                string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
-                string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
+                    break;
+                case StaticInfo.FrontView:
+                case StaticInfo.BackView:
+                case StaticInfo.LeftView:
+                case StaticInfo.RightView:
 
-                mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    mainPlayView.PlayRealScreen(userId, null);
+
+                    //mainPlayView.sdkLoginOut();
+                    //Thread.Sleep(10);
+                    //Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
+
+                    //string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
+                    //Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
+                    //string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
+                    //string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
+
+                    //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    break;
+
             }
         }
         #endregion
@@ -287,45 +295,49 @@ namespace RobotVT
                     string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
                     string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
 
-                    if (o.VT_ID.ToLower() == StaticInfo.MainView)
+                    o.VT_ID = StaticInfo.CloudView;
+                    Int32 luserid = -1;
+                    switch (o.VT_ID.ToLower())
                     {
-                        ////登陆超脑
-                        //mainPlayView._CameraSet = o;
-                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //mainPlayView.sdkSetAlarm();
-                    }
-                    if (o.VT_ID.ToLower() == StaticInfo.CloudView)
-                    {
-                        //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                        case StaticInfo.MainView:
+                            //登陆超脑
+                            mainPlayView._CameraSet = o;
+                            mainPlayView.m_lUserID = mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            mainPlayView.sdkSetAlarm();
+                            break;
+                        case StaticInfo.CloudView:
+                            //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        //cloudPlayView._CameraSet = o;
-                        //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            //cloudPlayView._CameraSet = o;
+                            //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
-                        StaticInfo.TargetFollow.Start();
-                    }
-                    if (o.VT_ID.ToLower() == StaticInfo.FrontView)
-                    {
-                        //frontPlayView._CameraSet = o;
-                        //frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //frontPlayView.sdkSetAlarm();
-                    }
-                    if (o.VT_ID.ToLower() == StaticInfo.BackView)
-                    {
-                        //backPlayView._CameraSet = o;
-                        //backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //backPlayView.sdkSetAlarm();
-                    }
-                    if (o.VT_ID.ToLower() == StaticInfo.LeftView)
-                    {
-                        //leftPlayView._CameraSet = o;
-                        //leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //leftPlayView.sdkSetAlarm();
-                    }
-                    if (o.VT_ID.ToLower() == StaticInfo.RightView)
-                    {
-                        //rightPlayView._CameraSet = o;
-                        //rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                        //rightPlayView.sdkSetAlarm();
+                            if (!StaticInfo.TargetFollow.MulticastThreadingIsRun)
+                                StaticInfo.TargetFollow.Start();
+                            break;
+                        case StaticInfo.FrontView:
+                            frontPlayView._CameraSet = o;
+                            frontPlayView.m_lUserID = frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            frontPlayView.sdkSetAlarm();
+                            frontPlayView.PlayRealScreen(frontPlayView.m_lUserID, null);
+                            break;
+                        case StaticInfo.BackView:
+                            backPlayView._CameraSet = o;
+                            backPlayView.m_lUserID = backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            backPlayView.sdkSetAlarm();
+                            backPlayView.PlayRealScreen(backPlayView.m_lUserID, null);
+                            break;
+                        case StaticInfo.LeftView:
+                            leftPlayView._CameraSet = o;
+                            leftPlayView.m_lUserID = leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            leftPlayView.sdkSetAlarm();
+                            leftPlayView.PlayRealScreen(leftPlayView.m_lUserID, null);
+                            break;
+                        case StaticInfo.RightView:
+                            rightPlayView._CameraSet = o;
+                            rightPlayView.m_lUserID = rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            rightPlayView.sdkSetAlarm();
+                            rightPlayView.PlayRealScreen(rightPlayView.m_lUserID, null);
+                            break;
                     }
                 }
             }

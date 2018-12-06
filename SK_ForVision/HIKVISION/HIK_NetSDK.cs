@@ -1009,6 +1009,22 @@ namespace SK_FVision
         public const int DS91XX_HD_S = 92; /*91XXHD-S(MD)*/
         /**********************设备类型 end***********************/
 
+        /**********************能力集类型 begin***********************/
+        public const int DEVICE_SOFTHARDWARE_ABILITY = 0x001;
+        public const int DEVICE_NETWORK_ABILITY = 0x002;
+        public const int DEVICE_ENCODE_ALL_ABILITY_V20 = 0x008;
+        public const int IPC_FRONT_PARAMETER_V20 = 0x009;
+        public const int DEVICE_RAID_ABILITY = 0x007;
+        public const int DEVICE_ALARM_ABILITY = 0x00a;
+        public const int DEVICE_DYNCHAN_ABILITY = 0x00b;
+        public const int DEVICE_USER_ABILITY = 0x00c;
+        public const int DEVICE_NETAPP_ABILITY = 0x00d;
+        public const int DEVICE_VIDEOPIC_ABILITY = 0x00e;
+        public const int DEVICE_JPEG_CAP_ABILITY = 0x00f;
+        public const int DEVICE_SERIAL_ABILITY = 0x010;
+        public const int DEVICE_ABILITY_INFO = 0x011;
+        /**********************能力集类型 end***********************/
+
         /*************************************************
         参数配置结构、参数(其中_V30为9000新增)
         **************************************************/
