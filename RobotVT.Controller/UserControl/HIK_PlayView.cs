@@ -12,7 +12,7 @@ namespace RobotVT.Controller
         public Int32 m_lUserID = -1;
 
         private HIK_CameraSet hIK_CameraSet;
-        private bool ShowTarget = false;
+        public bool ShowTarget = false;
 
 
         public string PlayModel { get; set; }
@@ -28,8 +28,8 @@ namespace RobotVT.Controller
         private void TargetFollow_Event_Multicast(List<byte> recvBuflist)
         {
             if (PlayModel == null || !(PlayModel.ToLower() == StaticInfo.MainView || PlayModel.ToLower() == StaticInfo.CloudView)) return;
-            if (!ShowTarget)
-                PlayRealScreen(-1, recvBuflist.ToArray());
+            if (!ShowTarget) return;
+            PlayRealScreen(-1, recvBuflist.ToArray());
         }
 
         public override void PlayView_Load(object sender, EventArgs e)
@@ -42,10 +42,10 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
         {
-            if (PlayModel == null || PlayModel.ToLower() != StaticInfo.MainView) return;
-            base.GetPictureSize();
-            Point _mousePoint = e.Location;
-            StaticInfo.TargetFollow.SendingCoordinates(2, pWidth, pHeight, _mousePoint);
+            ////if (PlayModel == null || PlayModel.ToLower() != StaticInfo.MainView) return;
+            ////base.GetPictureSize();
+            ////Point _mousePoint = e.Location;
+            ////StaticInfo.TargetFollow.SendingCoordinates(2, pWidth, pHeight, _mousePoint);
         }
 
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
@@ -91,6 +91,10 @@ namespace RobotVT.Controller
 
         public override void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (this.PlayModel.ToLower() == StaticInfo.CloudView)
+            {
+                Event_PlayViewMouseDoubleClick?.Invoke(StaticInfo.CloudView, m_lUserID);
+            }
             if (_CameraSet == null) return;
 
             //双击取消目标跟踪
@@ -100,13 +104,8 @@ namespace RobotVT.Controller
                 base.GetPictureSize();
                 StaticInfo.TargetFollow.SendingCoordinates(1, pWidth, pHeight, _mousePoint);
             }
-            else if(this.PlayModel.ToLower() == StaticInfo.CloudView)
-            {
-                ShowTarget = true;
-            }
             else
             {
-                ShowTarget = false;
                 Event_PlayViewMouseDoubleClick?.Invoke(_CameraSet.VT_ID, m_lUserID);
             }
             base.RealPlayWnd_MouseDoubleClick(sender, e);

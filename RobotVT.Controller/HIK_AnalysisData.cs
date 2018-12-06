@@ -147,14 +147,14 @@ namespace RobotVT.Controller
                 int iBackgroudLen = (int)struAlarm.dwBackgroundPicLen;
                 byte[] byBackgroud = new byte[iBackgroudLen];
                 Marshal.Copy(struAlarm.pBuffer2, byBackgroud, 0, iBackgroudLen);
-                SK_FCommon.DirFile.CreateFile(strname, byBackgroud, iBackgroudLen);
+                //SK_FCommon.DirFile.CreateFile(strname, byBackgroud, iBackgroudLen);
 
                 string strFace = devIP + "@" + time + "@face.jpg";
                 string strnameFace = StaticInfo.CapturePath + strFace;
                 int iFaceLen = (int)struAlarm.dwFacePicLen;
                 byte[] byFace = new byte[iFaceLen];
                 Marshal.Copy(struAlarm.pBuffer1, byFace, 0, iFaceLen);
-                SK_FCommon.DirFile.CreateFile(strnameFace, byFace, iFaceLen);
+                //SK_FCommon.DirFile.CreateFile(strnameFace, byFace, iFaceLen);
 
                 System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
                 iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
@@ -205,26 +205,26 @@ namespace RobotVT.Controller
                 //人脸抓拍
                 if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
                 {
-                    HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
+                //    HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
 
-                    int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
-                    byte[] bySnap = new byte[iSnapLen];
-                    Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
-                    iK_AlarmInfo.FacePic = Image.FromStream(new System.IO.MemoryStream(bySnap)); ;
+                //    int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
+                //    byte[] bySnap = new byte[iSnapLen];
+                //    Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
+                //    iK_AlarmInfo.FacePic = Image.FromStream(new System.IO.MemoryStream(bySnap)); ;
 
-                    //int iModelLen = (int)struAlarm.dwModelDataLen;
-                    //byte[] byModel = new byte[iModelLen];
-                    //Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
-                    //System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
-                    //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                //    //int iModelLen = (int)struAlarm.dwModelDataLen;
+                //    //byte[] byModel = new byte[iModelLen];
+                //    //Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
+                //    //System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
+                //    //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
 
-                    iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
-                    iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
-                    iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
-                    iK_AlarmInfo.FaceType = 1;
+                //    iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                //    iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
+                //    iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
+                //    iK_AlarmInfo.FaceType = 1;
 
-                    AlarmInfoListQueue(iK_AlarmInfo);
-                    Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                //    AlarmInfoListQueue(iK_AlarmInfo);
+                //    Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
                 }
             }
             catch (Exception _Ex)

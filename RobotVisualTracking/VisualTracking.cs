@@ -251,30 +251,34 @@ namespace RobotVT
 
         private void Event_PlayViewMouseDoubleClick(string vtid,Int32 userId)
         {
-            switch(vtid)
+            switch(vtid.ToLower())
             {
                 case StaticInfo.MainView:
                     break;
                 case StaticInfo.CloudView:
-
+                    mainPlayView.ShowTarget = true;
+                    mainPlayView.sdkLoginOut();
+                    Thread.Sleep(10);
                     break;
                 case StaticInfo.FrontView:
                 case StaticInfo.BackView:
                 case StaticInfo.LeftView:
                 case StaticInfo.RightView:
 
-                    mainPlayView.PlayRealScreen(userId, null);
+                    //mainPlayView.PlayRealScreen(userId, null);
 
-                    //mainPlayView.sdkLoginOut();
-                    //Thread.Sleep(10);
-                    //Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
+                    mainPlayView.ShowTarget = false;
+                    mainPlayView.sdkLoginOut();
+                    Thread.Sleep(10);
+                    Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
 
-                    //string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
-                    //Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
-                    //string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
-                    //string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
+                    string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
+                    Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
+                    string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
+                    string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
 
-                    //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    mainPlayView.m_lUserID = mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                    mainPlayView.PlayRealScreen(mainPlayView.m_lUserID, null);
                     break;
 
             }
@@ -295,8 +299,7 @@ namespace RobotVT
                     string DVRUserName = o.VT_NAME;//设备登录用户名 User name to login
                     string DVRPassword = o.VT_PASSWORD;//设备登录密码 Password to login
 
-                    o.VT_ID = StaticInfo.CloudView;
-                    Int32 luserid = -1;
+
                     switch (o.VT_ID.ToLower())
                     {
                         case StaticInfo.MainView:
@@ -304,13 +307,15 @@ namespace RobotVT
                             mainPlayView._CameraSet = o;
                             mainPlayView.m_lUserID = mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
                             mainPlayView.sdkSetAlarm();
+
+                            mainPlayView.ShowTarget = true;
                             break;
                         case StaticInfo.CloudView:
                             //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
 
                             //cloudPlayView._CameraSet = o;
                             //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-
+                            cloudPlayView.ShowTarget = true;
                             if (!StaticInfo.TargetFollow.MulticastThreadingIsRun)
                                 StaticInfo.TargetFollow.Start();
                             break;

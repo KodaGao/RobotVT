@@ -350,3 +350,8 @@ ASALocalRun/
 /SK_ForVision/FFmpeg.AutoGen
 /ffmpeg-4.1-win32-shared.zip
 /ffmpeg-20181126-90ac0e5-win32-static.zip
+/DLL/HCDll/PlayCtrl.lib
+/DLL/HCDll/LocalXml.zip
+/DLL/HCDll/HCNetSDK.lib
+/DLL/HCDll/HCCore.lib
+/DLL/HCDll/GdiPlus.lib

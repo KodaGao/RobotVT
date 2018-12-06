@@ -78,7 +78,7 @@ namespace SK_FVision
                 {
                     RealPlayWnd.Image = bitmap;
                 }
-                RealPlayWnd.Invalidate();
+                //RealPlayWnd.Invalidate();
             }
             catch (Exception e)
             {
