@@ -31,6 +31,7 @@ namespace RobotVT.Controller
         /// </summary>
         internal event TargetCoordinatesHandler Event_TargetCoordinates;
 
+        public bool MulticastThreadingIsRun = false;
 
         Socket udpReceive;
         EndPoint ep;
@@ -63,6 +64,7 @@ namespace RobotVT.Controller
             System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(RecvThread));
             t.IsBackground = true;
             t.Start();
+            MulticastThreadingIsRun = true;
         }
 
         /// <summary>
@@ -73,6 +75,7 @@ namespace RobotVT.Controller
             udpReceive.Disconnect(true);
             udpReceive.Dispose();
             client.Dispose();
+            MulticastThreadingIsRun = false;
         }
     
         private void RecvThread()

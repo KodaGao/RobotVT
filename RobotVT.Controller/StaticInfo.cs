@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RobotVT.Controller
 {
-    public class StaticInfo
+    public static class StaticInfo
     {
         public static string ApplicationTitle = "地面站视觉跟踪管理";
         public static string AppPlatformTitle = ApplicationTitle + "（终端）";
@@ -19,12 +19,12 @@ namespace RobotVT.Controller
         public static string FFmpegPath = SystemStartPath + @"\\ffmpeg\\ffmpeg.exe";
         public static string CameraSetFormTitle = "设备信息";
         public static string ControlObject = "控制器";
-        public static string MainView = "nvr";
-        public static string CloudView = "cloud";
-        public static string FrontView = "front";
-        public static string BackView = "back";
-        public static string LeftView = "left";
-        public static string RightView = "right";
+        public const  string MainView = "nvr";
+        public const  string CloudView = "cloud";
+        public const  string FrontView = "front";
+        public const  string BackView = "back";
+        public const  string LeftView = "left";
+        public const  string RightView = "right";
 
         public static string WirelessController = "VTWire";
 

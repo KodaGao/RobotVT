@@ -95,6 +95,8 @@ namespace RobotVT.Controller
             buf[6] = _TempByte[0];
             buf[7] = _TempByte[1];
 
+            //buf[6] = 0xfe;
+            //buf[7] = 0x00;
             //buf[8] = res1;
             //buf[9] = res2;
             //buf[10] = res3;
@@ -105,10 +107,25 @@ namespace RobotVT.Controller
             buf[9] = 0x60;
             buf[10] = 0x00;
             buf[11] = 0x70;
-            buf[12] = 0xcd;
+
+            byte Checksum = 0x00;
+            GetChecksum(buf, ref Checksum);
+
+            buf[12] = Checksum;
             return buf;
         }
 
+        private void GetChecksum(byte[] message, ref byte Checksum)
+        {
+            Int32 sum = 0;
+
+            for (int i = 0; i < (message.Length) - 1; i++)
+            {
+                sum = sum + message[i];
+            }
+            //string checksum = sum.ToString("X2");
+            Checksum = (byte)(sum & 0xff);
+        }
         /// <summary>
         /// 帧头1
         /// </summary>
