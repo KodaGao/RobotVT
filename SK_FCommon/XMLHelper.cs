@@ -37,15 +37,15 @@ namespace SK_FCommon
             XmlDeclaration dec = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
             doc.AppendChild(dec);
 
-            XmlElement root = doc.CreateElement("SmartKoda"); // 创建根节点SerialModbus
-            doc.AppendChild(root);    //  加入到xml document
-            ComputerHelper computertool=new ComputerHelper();
-            XmlElement ComputerSN = doc.CreateElement("ComputerSN");
-            ComputerSN.InnerText = computertool.CpuID;
-            root.AppendChild(ComputerSN);
-            XmlElement Language = doc.CreateElement("Language");
-            Language.InnerText = "zh-CHS";
-            root.AppendChild(Language);
+            //XmlElement root = doc.CreateElement("SmartKoda"); // 创建根节点SerialModbus
+            //doc.AppendChild(root);    //  加入到xml document
+            //ComputerHelper computertool=new ComputerHelper();
+            //XmlElement ComputerSN = doc.CreateElement("ComputerSN");
+            //ComputerSN.InnerText = computertool.CpuID;
+            //root.AppendChild(ComputerSN);
+            //XmlElement Language = doc.CreateElement("Language");
+            //Language.InnerText = "zh-CHS";
+            //root.AppendChild(Language);
 
             string xmlString = doc.OuterXml;
             doc.Save(XmlFile);
