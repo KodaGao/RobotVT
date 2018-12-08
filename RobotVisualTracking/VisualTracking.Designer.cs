@@ -35,18 +35,19 @@
             this.label4 = new DevComponents.DotNetBar.LabelX();
             this.label3 = new DevComponents.DotNetBar.LabelX();
             this.mainWindow = new DevComponents.DotNetBar.PanelEx();
+            this.hiK_CloudControl = new SK_FVision.HIK_CloudControl();
             this.backCamera = new DevComponents.DotNetBar.PanelEx();
-            this.backPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_BackView = new RobotVT.Controller.HIK_PlayView_New();
             this.leftCamera = new DevComponents.DotNetBar.PanelEx();
-            this.rightPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_LeftView = new RobotVT.Controller.HIK_PlayView_New();
             this.rightCamera = new DevComponents.DotNetBar.PanelEx();
-            this.leftPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_RightView = new RobotVT.Controller.HIK_PlayView_New();
             this.frontCamera = new DevComponents.DotNetBar.PanelEx();
-            this.frontPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_FrontView = new RobotVT.Controller.HIK_PlayView_New();
             this.cloudCamera = new DevComponents.DotNetBar.PanelEx();
-            this.cloudPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_CloudView = new RobotVT.Controller.HIK_PlayView_New();
             this.mainCamera = new DevComponents.DotNetBar.PanelEx();
-            this.mainPlayView = new RobotVT.Controller.HIK_PlayView();
+            this.hiK_MainView = new RobotVT.Controller.HIK_PlayView_New();
             this.centerMain.SuspendLayout();
             this.mainWindow2.SuspendLayout();
             this.mainWindow.SuspendLayout();
@@ -123,6 +124,7 @@
             // mainWindow
             // 
             this.mainWindow.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.mainWindow.Controls.Add(this.hiK_CloudControl);
             this.mainWindow.Controls.Add(this.backCamera);
             this.mainWindow.Controls.Add(this.leftCamera);
             this.mainWindow.Controls.Add(this.rightCamera);
@@ -135,131 +137,157 @@
             this.mainWindow.Size = new System.Drawing.Size(1904, 964);
             this.mainWindow.TabIndex = 1;
             // 
+            // hiK_CloudControl
+            // 
+            this.hiK_CloudControl.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_CloudControl.Location = new System.Drawing.Point(1168, 36);
+            this.hiK_CloudControl.Name = "hiK_CloudControl";
+            this.hiK_CloudControl.Size = new System.Drawing.Size(128, 128);
+            this.hiK_CloudControl.TabIndex = 22;
+            // 
             // backCamera
             // 
             this.backCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.backCamera.Controls.Add(this.backPlayView);
+            this.backCamera.Controls.Add(this.hiK_BackView);
             this.backCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.backCamera.Location = new System.Drawing.Point(1280, 630);
             this.backCamera.Name = "backCamera";
             this.backCamera.Size = new System.Drawing.Size(530, 294);
             this.backCamera.TabIndex = 3;
             // 
-            // backPlayView
+            // hiK_BackView
             // 
-            this.backPlayView._CameraSet = null;
-            this.backPlayView.ForeColor = System.Drawing.Color.White;
-            this.backPlayView.Location = new System.Drawing.Point(20, 30);
-            this.backPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.backPlayView.Name = "backPlayView";
-            this.backPlayView.PlayModel = null;
-            this.backPlayView.Size = new System.Drawing.Size(489, 246);
-            this.backPlayView.TabIndex = 0;
+            this.hiK_BackView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_BackView.CanPlay = false;
+            this.hiK_BackView.ForeColor = System.Drawing.Color.White;
+            this.hiK_BackView.ImagePlaySpan = 25;
+            this.hiK_BackView.Location = new System.Drawing.Point(20, 30);
+            this.hiK_BackView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.hiK_BackView.Name = "hiK_BackView";
+            this.hiK_BackView.PlayModel = null;
+            this.hiK_BackView.ShowTarget = false;
+            this.hiK_BackView.Size = new System.Drawing.Size(489, 246);
+            this.hiK_BackView.TabIndex = 1;
             // 
             // leftCamera
             // 
             this.leftCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.leftCamera.Controls.Add(this.rightPlayView);
+            this.leftCamera.Controls.Add(this.hiK_LeftView);
             this.leftCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.leftCamera.Location = new System.Drawing.Point(663, 630);
             this.leftCamera.Name = "leftCamera";
             this.leftCamera.Size = new System.Drawing.Size(530, 294);
             this.leftCamera.TabIndex = 4;
             // 
-            // rightPlayView
+            // hiK_LeftView
             // 
-            this.rightPlayView._CameraSet = null;
-            this.rightPlayView.ForeColor = System.Drawing.Color.White;
-            this.rightPlayView.Location = new System.Drawing.Point(20, 30);
-            this.rightPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.rightPlayView.Name = "rightPlayView";
-            this.rightPlayView.PlayModel = null;
-            this.rightPlayView.Size = new System.Drawing.Size(489, 246);
-            this.rightPlayView.TabIndex = 0;
+            this.hiK_LeftView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_LeftView.CanPlay = false;
+            this.hiK_LeftView.ForeColor = System.Drawing.Color.White;
+            this.hiK_LeftView.ImagePlaySpan = 25;
+            this.hiK_LeftView.Location = new System.Drawing.Point(20, 30);
+            this.hiK_LeftView.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+            this.hiK_LeftView.Name = "hiK_LeftView";
+            this.hiK_LeftView.PlayModel = null;
+            this.hiK_LeftView.ShowTarget = false;
+            this.hiK_LeftView.Size = new System.Drawing.Size(489, 246);
+            this.hiK_LeftView.TabIndex = 2;
             // 
             // rightCamera
             // 
             this.rightCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.rightCamera.Controls.Add(this.leftPlayView);
+            this.rightCamera.Controls.Add(this.hiK_RightView);
             this.rightCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.rightCamera.Location = new System.Drawing.Point(97, 630);
             this.rightCamera.Name = "rightCamera";
             this.rightCamera.Size = new System.Drawing.Size(530, 294);
             this.rightCamera.TabIndex = 3;
             // 
-            // leftPlayView
+            // hiK_RightView
             // 
-            this.leftPlayView._CameraSet = null;
-            this.leftPlayView.ForeColor = System.Drawing.Color.White;
-            this.leftPlayView.Location = new System.Drawing.Point(20, 30);
-            this.leftPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.leftPlayView.Name = "leftPlayView";
-            this.leftPlayView.PlayModel = null;
-            this.leftPlayView.Size = new System.Drawing.Size(489, 246);
-            this.leftPlayView.TabIndex = 0;
+            this.hiK_RightView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_RightView.CanPlay = false;
+            this.hiK_RightView.ForeColor = System.Drawing.Color.White;
+            this.hiK_RightView.ImagePlaySpan = 25;
+            this.hiK_RightView.Location = new System.Drawing.Point(20, 30);
+            this.hiK_RightView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.hiK_RightView.Name = "hiK_RightView";
+            this.hiK_RightView.PlayModel = null;
+            this.hiK_RightView.ShowTarget = false;
+            this.hiK_RightView.Size = new System.Drawing.Size(489, 246);
+            this.hiK_RightView.TabIndex = 3;
             // 
             // frontCamera
             // 
             this.frontCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.frontCamera.Controls.Add(this.frontPlayView);
+            this.frontCamera.Controls.Add(this.hiK_FrontView);
             this.frontCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.frontCamera.Location = new System.Drawing.Point(1280, 319);
             this.frontCamera.Name = "frontCamera";
             this.frontCamera.Size = new System.Drawing.Size(530, 294);
             this.frontCamera.TabIndex = 2;
             // 
-            // frontPlayView
+            // hiK_FrontView
             // 
-            this.frontPlayView._CameraSet = null;
-            this.frontPlayView.ForeColor = System.Drawing.Color.White;
-            this.frontPlayView.Location = new System.Drawing.Point(20, 30);
-            this.frontPlayView.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.frontPlayView.Name = "frontPlayView";
-            this.frontPlayView.PlayModel = null;
-            this.frontPlayView.Size = new System.Drawing.Size(489, 246);
-            this.frontPlayView.TabIndex = 1;
+            this.hiK_FrontView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_FrontView.CanPlay = false;
+            this.hiK_FrontView.ForeColor = System.Drawing.Color.White;
+            this.hiK_FrontView.ImagePlaySpan = 25;
+            this.hiK_FrontView.Location = new System.Drawing.Point(20, 30);
+            this.hiK_FrontView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.hiK_FrontView.Name = "hiK_FrontView";
+            this.hiK_FrontView.PlayModel = null;
+            this.hiK_FrontView.ShowTarget = false;
+            this.hiK_FrontView.Size = new System.Drawing.Size(489, 246);
+            this.hiK_FrontView.TabIndex = 0;
             // 
             // cloudCamera
             // 
             this.cloudCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.cloudCamera.Controls.Add(this.cloudPlayView);
+            this.cloudCamera.Controls.Add(this.hiK_CloudView);
             this.cloudCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.cloudCamera.Location = new System.Drawing.Point(1280, 0);
             this.cloudCamera.Name = "cloudCamera";
             this.cloudCamera.Size = new System.Drawing.Size(530, 294);
             this.cloudCamera.TabIndex = 1;
             // 
-            // cloudPlayView
+            // hiK_CloudView
             // 
-            this.cloudPlayView._CameraSet = null;
-            this.cloudPlayView.ForeColor = System.Drawing.Color.White;
-            this.cloudPlayView.Location = new System.Drawing.Point(20, 30);
-            this.cloudPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cloudPlayView.Name = "cloudPlayView";
-            this.cloudPlayView.PlayModel = null;
-            this.cloudPlayView.Size = new System.Drawing.Size(489, 246);
-            this.cloudPlayView.TabIndex = 0;
+            this.hiK_CloudView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_CloudView.CanPlay = false;
+            this.hiK_CloudView.ForeColor = System.Drawing.Color.White;
+            this.hiK_CloudView.ImagePlaySpan = 25;
+            this.hiK_CloudView.Location = new System.Drawing.Point(20, 30);
+            this.hiK_CloudView.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+            this.hiK_CloudView.Name = "hiK_CloudView";
+            this.hiK_CloudView.PlayModel = null;
+            this.hiK_CloudView.ShowTarget = false;
+            this.hiK_CloudView.Size = new System.Drawing.Size(489, 246);
+            this.hiK_CloudView.TabIndex = 1;
             // 
             // mainCamera
             // 
             this.mainCamera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.mainCamera.Controls.Add(this.mainPlayView);
+            this.mainCamera.Controls.Add(this.hiK_MainView);
             this.mainCamera.DisabledBackColor = System.Drawing.Color.Empty;
             this.mainCamera.Location = new System.Drawing.Point(97, 0);
             this.mainCamera.Name = "mainCamera";
             this.mainCamera.Size = new System.Drawing.Size(1096, 613);
             this.mainCamera.TabIndex = 0;
             // 
-            // mainPlayView
+            // hiK_MainView
             // 
-            this.mainPlayView._CameraSet = null;
-            this.mainPlayView.ForeColor = System.Drawing.Color.White;
-            this.mainPlayView.Location = new System.Drawing.Point(19, 30);
-            this.mainPlayView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.mainPlayView.Name = "mainPlayView";
-            this.mainPlayView.PlayModel = null;
-            this.mainPlayView.Size = new System.Drawing.Size(1056, 565);
-            this.mainPlayView.TabIndex = 0;
+            this.hiK_MainView.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_MainView.CanPlay = false;
+            this.hiK_MainView.ForeColor = System.Drawing.Color.White;
+            this.hiK_MainView.ImagePlaySpan = 25;
+            this.hiK_MainView.Location = new System.Drawing.Point(19, 36);
+            this.hiK_MainView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.hiK_MainView.Name = "hiK_MainView";
+            this.hiK_MainView.PlayModel = null;
+            this.hiK_MainView.ShowTarget = false;
+            this.hiK_MainView.Size = new System.Drawing.Size(1056, 565);
+            this.hiK_MainView.TabIndex = 0;
             // 
             // VisualTracking
             // 
@@ -270,7 +298,6 @@
             this.Controls.Add(this.centerMain);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "VisualTracking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -292,7 +319,7 @@
         #endregion
         private DevComponents.DotNetBar.StyleManager styleManager;
         private DevComponents.DotNetBar.PanelEx centerMain;
-        private DevComponents.DotNetBar.PanelEx mainWindow2;
+        private Controller.ZX_RobotInfo zX_RobotInfo;
         private DevComponents.DotNetBar.LabelX label4;
         private DevComponents.DotNetBar.LabelX label3;
         private DevComponents.DotNetBar.PanelEx mainWindow;
@@ -302,13 +329,7 @@
         private DevComponents.DotNetBar.PanelEx frontCamera;
         private DevComponents.DotNetBar.PanelEx cloudCamera;
         private DevComponents.DotNetBar.PanelEx mainCamera;
-        private Controller.HIK_PlayView mainPlayView;
-        private Controller.HIK_PlayView cloudPlayView;
-        private Controller.HIK_PlayView frontPlayView;
-        private Controller.HIK_PlayView backPlayView;
-        private Controller.HIK_PlayView leftPlayView;
-        private Controller.HIK_PlayView rightPlayView;
-        private Controller.ZX_RobotInfo zX_RobotInfo;
+        private DevComponents.DotNetBar.PanelEx mainWindow2;
         private Controller.ZX_MatchInfo zX_MatchInfo1;
         private Controller.ZX_MatchInfo zX_MatchInfo8;
         private Controller.ZX_MatchInfo zX_MatchInfo7;
@@ -317,6 +338,13 @@
         private Controller.ZX_MatchInfo zX_MatchInfo4;
         private Controller.ZX_MatchInfo zX_MatchInfo3;
         private Controller.ZX_MatchInfo zX_MatchInfo2;
+        private Controller.HIK_PlayView_New hiK_MainView;
+        private Controller.HIK_PlayView_New hiK_FrontView;
+        private Controller.HIK_PlayView_New hiK_BackView;
+        private Controller.HIK_PlayView_New hiK_LeftView;
+        private Controller.HIK_PlayView_New hiK_RightView;
+        private Controller.HIK_PlayView_New hiK_CloudView;
+        private SK_FVision.HIK_CloudControl hiK_CloudControl;
     }
 }
 

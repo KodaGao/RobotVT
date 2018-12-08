@@ -18,18 +18,43 @@ namespace RobotVT
         public VisualTracking()
         {
             InitializeComponent();
-            InitMatchInfo(); InitRobotInfo();
+            InitMatchInfo(); InitRobotInfo(); InitHIKCarmera();
+
             this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
             this.FormClosing += new FormClosingEventHandler(this.VisualTracking_FormClosing);
             this.FormClosed += new FormClosedEventHandler(VisualTracking_FormClosed);
+            this.Shown += new EventHandler(this.VisualTracking_Shown);
 
-            Init();
-            X = this.Width;//赋值初始窗体宽度
-            Y = this.Height;//赋值初始窗体高度
-            setTag(this);
+            this.Text = RobotVT.Controller.Methods.GetApplicationTitle();
+            this.Icon = Properties.Resources.ZX32x32;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.WindowState = FormWindowState.Normal;
+            
+            //X = this.Width;//赋值初始窗体宽度
+            //Y = this.Height;//赋值初始窗体高度
+            //setTag(this);
         }
 
         #region 窗体事件
+        private void VisualTracking_Load(object sender, EventArgs e)
+        {
+            RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
+            RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
+            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
+            thread.IsBackground = true;
+            thread.Start();
+            Event_SystemLoadFinish?.Invoke();
+        }
+
+        private void VisualTracking_Shown(object sender, EventArgs e)
+        {
+            //设置报警回调函数
+            m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
+            SK_FVision.HIK_NetSDK.NET_DVR_SetDVRMessageCallBack_V30(m_falarmData, IntPtr.Zero);
+
+            LoginAllDev();
+        }
+
         private void InitMatchInfo()
         {
             #region  构造
@@ -157,59 +182,50 @@ namespace RobotVT
             #endregion
         }
 
-        private void Init()
+        private void InitHIKCarmera()
         {
-            this.Text = RobotVT.Controller.Methods.GetApplicationTitle();
-            this.Icon = Properties.Resources.ZX32x32;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.WindowState = FormWindowState.Normal;
-            
-            this.mainCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainCarmer;
-            this.cloudCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudCarmer;
-            this.frontCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.frontCamer;
-            this.backCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.backCarmer;
-            this.leftCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.leftCamer;
-            this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
-
             this.mainWindow2.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainWindow2;
 
+            this.mainCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.mainCarmer;
+            #region  mainPlayView
+            hiK_MainView.PlayModel = StaticInfo.MainView;
+            hiK_MainView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
-            mainPlayView.PlayModel = StaticInfo.MainView;
-            mainPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            this.cloudCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudCarmer;
+            #region  cloudPlayView
+            hiK_CloudView.PlayModel = StaticInfo.CloudView;
+            hiK_CloudView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
-            cloudPlayView.PlayModel = StaticInfo.CloudView;
-            cloudPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            this.frontCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.frontCamer;
+            #region  frontPlayView
 
-            frontPlayView.PlayModel = StaticInfo.FrontView;
-            frontPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            hiK_FrontView.PlayModel = StaticInfo.FrontView;
+            hiK_FrontView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
-            backPlayView.PlayModel = StaticInfo.BackView;
-            backPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            this.backCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.backCarmer;
+            #region  backPlayView
+            hiK_BackView.PlayModel = StaticInfo.BackView;
+            hiK_BackView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
-            leftPlayView.PlayModel = StaticInfo.LeftView;
-            leftPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            this.leftCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.leftCamer;
+            #region  rightPlayView
+            hiK_LeftView.PlayModel = StaticInfo.LeftView;
+            hiK_LeftView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
-            rightPlayView.PlayModel = StaticInfo.RightView;
-            rightPlayView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            this.rightCamera.Style.BackgroundImage = RobotVT.Resources.Properties.Resources.rightCamer;
+            #region  leftPlayView
+            hiK_RightView.PlayModel = StaticInfo.RightView;
+            hiK_RightView.Event_PlayViewMouseDoubleClick += Event_PlayViewMouseDoubleClick;
+            #endregion
 
+            hiK_CloudControl.BackgroundImage = RobotVT.Resources.Properties.Resources.CloudControl;
         }
-
-        private void VisualTracking_Load(object sender, EventArgs e)
-        {
-            RobotVT.Controller.StaticInfo.QueueMessageInfo = new Queue<SK_FModel.SystemMessageInfo>();
-            RobotVT.Controller.StaticInfo.IsSaveLogInfo = true;
-            System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(Thread_SaveLogInfo));
-            thread.IsBackground = true;
-            thread.Start();
-
-            //设置报警回调函数
-            m_falarmData = new SK_FVision.HIK_NetSDK.MSGCallBack(MsgCallback);
-            SK_FVision.HIK_NetSDK.NET_DVR_SetDVRMessageCallBack_V30(m_falarmData, IntPtr.Zero);
-            
-            Event_SystemLoadFinish?.Invoke();
-            LoginAllDev();
-        }
-
+              
         private void VisualTracking_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult result = MessageBox.Show("是否退出系统", "提示信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
@@ -249,40 +265,43 @@ namespace RobotVT
             return false;
         }
 
-        private void Event_PlayViewMouseDoubleClick(string vtid,Int32 userId)
+        private void Event_PlayViewMouseDoubleClick(string vtid,Int32 userId,Int32 realhandle)
         {
-            switch(vtid.ToLower())
+            switch (vtid.ToLower())
             {
                 case StaticInfo.MainView:
+
                     break;
                 case StaticInfo.CloudView:
-                    mainPlayView.ShowTarget = true;
-                    mainPlayView.sdkLoginOut();
-                    Thread.Sleep(10);
+                    hiK_MainView.StopHIKScreen();
+                    Thread.Sleep(1);
+                    hiK_MainView.ShowTarget = true;
+                    hiK_MainView.InitH264Decode();
                     break;
                 case StaticInfo.FrontView:
                 case StaticInfo.BackView:
                 case StaticInfo.LeftView:
                 case StaticInfo.RightView:
-
-                    //mainPlayView.PlayRealScreen(userId, null);
-
-                    mainPlayView.ShowTarget = false;
-                    mainPlayView.sdkLoginOut();
-                    Thread.Sleep(10);
-                    Model.S_D_CameraSet _cameraSetNew = new Controller.DataAccess().GetCameraSet(vtid);
-
-                    string DVRIPAddress = _cameraSetNew.VT_IP; //设备IP地址或者域名 Device IP
-                    Int16 DVRPortNumber = Int16.Parse(_cameraSetNew.VT_PORT);//设备服务端口号 Device Port
-                    string DVRUserName = _cameraSetNew.VT_NAME;//设备登录用户名 User name to login
-                    string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
-
-                    mainPlayView.m_lUserID = mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                    mainPlayView.PlayRealScreen(mainPlayView.m_lUserID, null);
+                    CameraSet(userId, realhandle);
                     break;
-
             }
         }
+
+        private void CameraSet(int userId, int handle)
+        {
+            hiK_MainView.ShowTarget = false;
+            hiK_MainView.StopH264Thread();
+
+            hiK_MainView.StopHIKScreen();
+            Thread.Sleep(1);
+            hiK_MainView.PlayHIKScreen(userId);
+
+
+            hiK_CloudControl.m_lUserID = userId;
+            hiK_CloudControl.m_lChannel = 1;
+            hiK_CloudControl.m_lRealHandle = handle;
+        }
+
         #endregion
 
         #region 报警回调
@@ -303,45 +322,50 @@ namespace RobotVT
                     switch (o.VT_ID.ToLower())
                     {
                         case StaticInfo.MainView:
-                            //登陆超脑
-                            mainPlayView._CameraSet = o;
-                            mainPlayView.m_lUserID = mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            mainPlayView.sdkSetAlarm();
+                            hiK_MainView.InitHIKCamera();
+                            hiK_MainView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            //hiK_MainView.PlayHIKScreen();
 
-                            mainPlayView.ShowTarget = true;
+                            hiK_MainView.ShowTarget = true;
+                            hiK_MainView.InitH264Decode();
                             break;
                         case StaticInfo.CloudView:
-                            //mainPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+                            hiK_CloudView.InitHIKCamera();
+                            hiK_CloudView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_CloudView.ShowTarget = true;
+                            hiK_CloudView.InitH264Decode();
 
-                            //cloudPlayView._CameraSet = o;
-                            //cloudPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            cloudPlayView.ShowTarget = true;
+                            hiK_CloudControl.m_lUserID = hiK_CloudView.UserID;
+                            hiK_CloudControl.m_lChannel = 1;
+                            hiK_CloudControl.m_lRealHandle = hiK_CloudView.RealHandle;
+
+
                             if (!StaticInfo.TargetFollow.MulticastThreadingIsRun)
                                 StaticInfo.TargetFollow.Start();
                             break;
                         case StaticInfo.FrontView:
-                            frontPlayView._CameraSet = o;
-                            frontPlayView.m_lUserID = frontPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            frontPlayView.sdkSetAlarm();
-                            frontPlayView.PlayRealScreen(frontPlayView.m_lUserID, null);
+                            hiK_FrontView.InitHIKCamera();
+                            hiK_FrontView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_FrontView.PlayHIKScreen();
+                            hiK_FrontView.SetHIKAlarm();
                             break;
                         case StaticInfo.BackView:
-                            backPlayView._CameraSet = o;
-                            backPlayView.m_lUserID = backPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            backPlayView.sdkSetAlarm();
-                            backPlayView.PlayRealScreen(backPlayView.m_lUserID, null);
+                            hiK_BackView.InitHIKCamera();
+                            hiK_BackView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_BackView.PlayHIKScreen();
+                            hiK_BackView.SetHIKAlarm();
                             break;
                         case StaticInfo.LeftView:
-                            leftPlayView._CameraSet = o;
-                            leftPlayView.m_lUserID = leftPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            leftPlayView.sdkSetAlarm();
-                            leftPlayView.PlayRealScreen(leftPlayView.m_lUserID, null);
+                            hiK_LeftView.InitHIKCamera();
+                            hiK_LeftView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_LeftView.PlayHIKScreen();
+                            hiK_LeftView.SetHIKAlarm();
                             break;
                         case StaticInfo.RightView:
-                            rightPlayView._CameraSet = o;
-                            rightPlayView.m_lUserID = rightPlayView.sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
-                            rightPlayView.sdkSetAlarm();
-                            rightPlayView.PlayRealScreen(rightPlayView.m_lUserID, null);
+                            hiK_RightView.InitHIKCamera();
+                            hiK_RightView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_RightView.PlayHIKScreen();
+                            hiK_RightView.SetHIKAlarm();
                             break;
                     }
                 }
@@ -350,22 +374,6 @@ namespace RobotVT
 
         private void LoginOutAll()
         {
-            mainPlayView.sdkCloseAlarm();
-            mainPlayView.sdkLoginOut();
-
-            cloudPlayView.sdkLoginOut();
-
-            frontPlayView.sdkCloseAlarm();
-            frontPlayView.sdkLoginOut();
-
-            backPlayView.sdkCloseAlarm();
-            backPlayView.sdkLoginOut();
-
-            leftPlayView.sdkCloseAlarm();
-            leftPlayView.sdkLoginOut();
-
-            rightPlayView.sdkCloseAlarm();
-            rightPlayView.sdkLoginOut();
         }
         
         /// <summary>

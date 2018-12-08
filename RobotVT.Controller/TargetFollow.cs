@@ -97,7 +97,7 @@ namespace RobotVT.Controller
                     {
                         TargetRecBuf(in_buffer);
                     }
-                    System.Threading.Thread.Sleep(1);
+                    //System.Threading.Thread.Sleep(1);
                 }
             }
             catch (Exception _Ex)
@@ -164,8 +164,8 @@ namespace RobotVT.Controller
                     int centerX = imageWidth / 2;
                     int centerY = imageHeight / 2;
 
-                    AzimuthCoordinate = (short)((float)(MouseLocation.X  - centerX) / imageWidth * 1024);
-                    PitchCoordinate = (short)((float)(centerY  - MouseLocation.Y) / imageHeight * 1024);
+                    AzimuthCoordinate = (short)((float)(MouseLocation.X  - centerX) / imageWidth * 1024 - 240);
+                    PitchCoordinate = (short)((float)(centerY - MouseLocation.Y) / imageHeight * 1024 - 20);
                 }
 
                 byte[] buf = BuildTargetFollowInfo(tracking,PitchCoordinate, AzimuthCoordinate);

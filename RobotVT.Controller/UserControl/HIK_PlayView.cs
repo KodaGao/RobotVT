@@ -85,6 +85,7 @@ namespace RobotVT.Controller
             string DVRPassword = _cameraSetNew.VT_PASSWORD;//设备登录密码 Password to login
 
             m_lUserID = sdkLogin(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword, 1, 0);
+            this.PlayRealScreen(m_lUserID, null);
             _CameraSet = _cameraSetNew;
 
         }

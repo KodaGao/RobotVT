@@ -78,6 +78,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\SK_FModel.dll</HintPath>
     </Reference>
+    <Reference Include="SK_FVision, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\SK_FVision.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -118,15 +122,21 @@
     <Compile Include="UserControl\HIK_FaceSnap.Designer.cs">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControl\HIK_PlayView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControl\HIK_PlayView.Designer.cs">
-      <DependentUpon>HIK_PlayView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticInfo.cs" />
+    <Compile Include="UserControl\HIK_Cloud.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControl\HIK_Cloud.Designer.cs">
+      <DependentUpon>HIK_Cloud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl\HIK_PlayView_New.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControl\HIK_PlayView_New.Designer.cs">
+      <DependentUpon>HIK_PlayView_New.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControl\ZX_MatchInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -149,10 +159,6 @@
       <Project>{1a218a51-5ecd-47f5-bad7-2703f16a2794}</Project>
       <Name>RobotVT.Resources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SK_ForVision\SK_FVision.csproj">
-      <Project>{365184b2-8499-41cd-a4a3-9c2cc9dba750}</Project>
-      <Name>SK_FVision</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\HIK_CameraSet.resx">
@@ -160,6 +166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\HIK_SPortSet.resx">
       <DependentUpon>HIK_SPortSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControl\HIK_Cloud.resx">
+      <DependentUpon>HIK_Cloud.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControl\HIK_FaceSnap.resx">
       <DependentUpon>HIK_FaceSnap.cs</DependentUpon>
