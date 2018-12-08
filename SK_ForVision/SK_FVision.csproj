@@ -71,6 +71,7 @@
     <Compile Include="FFmpeg\AVVideoFormate.cs" />
     <Compile Include="FFmpeg\H264Decode.cs" />
     <Compile Include="FFmpeg\ImageConvert.cs" />
+    <Compile Include="HIKVISION\HIK_CameraMng.cs" />
     <Compile Include="HIKVISION\HIK_Methods.cs" />
     <Compile Include="HIKVISION\HIK_StaticInfo.cs" />
     <Compile Include="CameraSet.cs">
@@ -81,6 +82,9 @@
     </Compile>
     <Compile Include="HIKVISION\HIK_NetSDK.cs" />
     <Compile Include="HIKVISION\HIK_PlayCtrl.cs" />
+    <Compile Include="HIK_CloudControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="MMTimer.cs" />
     <Compile Include="PlayView.cs">
       <SubType>UserControl</SubType>
@@ -95,10 +99,19 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="VideoDecodeInfo.cs" />
+    <Compile Include="ViedoPlayer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViedoPlayer.designer.cs">
+      <DependentUpon>ViedoPlayer.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CameraSet.resx">
       <DependentUpon>CameraSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HIK_CloudControl.resx">
+      <DependentUpon>HIK_CloudControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PlayView.resx">
       <DependentUpon>PlayView.cs</DependentUpon>
@@ -106,6 +119,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViedoPlayer.resx">
+      <DependentUpon>ViedoPlayer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

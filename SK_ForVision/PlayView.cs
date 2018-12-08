@@ -1,9 +1,6 @@
-﻿using SK_FVision.FFmpeg;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace SK_FVision
@@ -15,7 +12,7 @@ namespace SK_FVision
         private bool m_bRecord = false;
         private uint iLastErr = 0;
         private Int32 m_lUserID = -1;
-        private Int32 m_lRealHandle = -1;
+        public Int32 m_lRealHandle = -1;
         private string str;
         private Int32 m_lPort = -1;
         private IntPtr m_ptrRealHandle;
@@ -48,11 +45,17 @@ namespace SK_FVision
                 RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
                 RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
                 RealPlayWnd.MouseMove += new MouseEventHandler(this.RealPlayWnd_MouseMove);
+                RealPlayWnd.MouseWheel += RealPlayWnd_MouseWheel;
             }
             catch (Exception ex)
             {
 
             }
+        }
+
+        public virtual void RealPlayWnd_MouseWheel(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         ~PlayView()
@@ -64,8 +67,7 @@ namespace SK_FVision
         public virtual void PlayView_Load(object sender, EventArgs e)
         {    
         }
-
-
+        
         #region 解码
         VideoDecodeInfo _decode = new VideoDecodeInfo();
         private void TargetplayScreen(byte[] in_buffer)
@@ -167,7 +169,6 @@ namespace SK_FVision
 
         public virtual void PlayRealScreen(Int32 m_lUserID, byte[] h264frame)
         {
-
             if (m_lUserID != -1 && h264frame == null)
                 HikplayScreen();
 
@@ -195,24 +196,23 @@ namespace SK_FVision
                 {
                     //登录成功
                     DebugInfo("NET_DVR_Login_V30 succ!");
-                    //playScreen();
                 }
             }
             return m_lUserID;
         }
 
-        private void HikplayScreen()
+        private Int32 HikplayScreen()
         {
             if (m_lUserID < 0)
             {
                 MessageBox.Show("Please login the device firstly!");
-                return;
+                return -1;
             }
 
             if (m_bRecord)
             {
                 MessageBox.Show("Please stop recording firstly!");
-                return;
+                return -1;
             }
 
             try
@@ -239,7 +239,7 @@ namespace SK_FVision
                     {
                         iLastErr = HIK_NetSDK.NET_DVR_GetLastError();
                         str = "NET_DVR_RealPlay_V40 failed, error code= " + iLastErr;
-                        return;
+                        return -1;
                     }
                     RealPlayWnd.Invalidate();
                 }
@@ -248,6 +248,7 @@ namespace SK_FVision
             {
                 Console.WriteLine(e.Message);
             }
+            return m_lRealHandle;
         }
 
         public void sdkLoginOut()
@@ -382,7 +383,7 @@ namespace SK_FVision
         {
             if (str.Length > 0)
             {
-                //Exception_LabeX.Text = str;
+
             }
         }
 

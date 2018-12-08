@@ -5,7 +5,7 @@ using static SK_FVision.FFmpegWarper.H264DecodeWrapper;
 
 namespace SK_FVision
 {
-    class VideoDecodeInfo
+    public class VideoDecodeInfo
     {
         public delegate void ShowBitmap(Bitmap bitmap);
         public int Decode_Result_OK = 0;
