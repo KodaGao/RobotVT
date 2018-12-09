@@ -33,12 +33,15 @@ namespace RobotVT.Controller
 
         public bool MulticastThreadingIsRun = false;
 
-        Socket udpReceive;
-        EndPoint ep;
-        UdpClient client;
+        Socket udpReceiveViedo;
+        Socket udpReceiveInfo;
+        EndPoint epViedo;
+        EndPoint epInfo;
+        EndPoint epTargetSend;
+
         TargetFollowInfo TargetFollowInfo;
         TargetFollowRecvInfo recvInfo;
-                
+
         /// <summary>
         /// 相关资源初始化
         /// </summary>
@@ -46,12 +49,21 @@ namespace RobotVT.Controller
         {
             string localip = GetIPAddress();
             IPEndPoint ipe = new IPEndPoint(IPAddress.Parse(localip), StaticInfo.MulticastGroupPort);
-            udpReceive = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            ep = (EndPoint)ipe;
-            udpReceive.Bind(ipe);
-            udpReceive.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(StaticInfo.MulticastGroupIP)));
+            udpReceiveViedo = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            epViedo = (EndPoint)ipe;
+            udpReceiveViedo.Bind(ipe);
+            udpReceiveViedo.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(StaticInfo.MulticastGroupIP)));
 
-            client = new UdpClient(StaticInfo.TargetFollowIP, StaticInfo.TargetFollowPort);
+
+            IPEndPoint ipe2 = new IPEndPoint(IPAddress.Parse(localip), StaticInfo.TargetFollowPort);
+            udpReceiveInfo = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            epInfo = (EndPoint)ipe2;
+            udpReceiveInfo.Bind(ipe2);
+            udpReceiveInfo.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(StaticInfo.MulticastGroupIP)));
+
+
+            epTargetSend = new IPEndPoint(IPAddress.Parse(StaticInfo.TargetFollowIP), StaticInfo.TargetFollowPort);
+
             TargetFollowInfo = new TargetFollowInfo();
 
         }
@@ -61,10 +73,15 @@ namespace RobotVT.Controller
         /// </summary>
         public void Start()
         {
-            System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(RecvThread));
-            t.IsBackground = true;
-            t.Start();
+            System.Threading.Thread tmultcast = new System.Threading.Thread(new System.Threading.ThreadStart(RecvThread));
+            tmultcast.IsBackground = true;
+            tmultcast.Start();
             MulticastThreadingIsRun = true;
+
+
+            System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(RecvThread2));
+            t.IsBackground = true;
+            t.Start();;
         }
 
         /// <summary>
@@ -72,9 +89,12 @@ namespace RobotVT.Controller
         /// </summary>
         public void Stop()
         {
-            udpReceive.Disconnect(true);
-            udpReceive.Dispose();
-            client.Dispose();
+            udpReceiveViedo.Disconnect(true);
+            udpReceiveViedo.Dispose();
+
+            udpReceiveInfo.Disconnect(true);
+            udpReceiveInfo.Dispose();
+
             MulticastThreadingIsRun = false;
         }
     
@@ -87,15 +107,11 @@ namespace RobotVT.Controller
 
                 while (true)
                 {
-                    byte[] in_buffer = new byte[1400];
-                    int in_buffer_size = udpReceive.ReceiveFrom(in_buffer, ref ep);
+                    byte[] in_buffer=new byte[1400];
+                    int in_buffer_size = udpReceiveViedo.ReceiveFrom(in_buffer, ref epViedo);
                     if (in_buffer[0] == 0xEB && in_buffer[1] == 0x90 && in_buffer[2] == 0xFF)
                     {
                         PicRecBuf(in_buffer, ref retlen, ref recvBuflist);
-                    }
-                    if (in_buffer[0] == 0xaa && in_buffer[1] == 0x0e)
-                    {
-                        TargetRecBuf(in_buffer);
                     }
                     //System.Threading.Thread.Sleep(1);
                 }
@@ -106,6 +122,29 @@ namespace RobotVT.Controller
                 throw new Exception("组播数据解析失败，错误信息：" + _Ex.Message);
             }
         }
+        private void RecvThread2()
+        {
+            try
+            {
+                EndPoint epTargetRevice = new IPEndPoint(IPAddress.Parse(StaticInfo.TargetFollowIP), 0);
+                while (true)
+                {
+                    byte[] in_buffer = new byte[12];
+                    int in_buffer_size = udpReceiveInfo.ReceiveFrom(in_buffer, ref epTargetRevice);
+                    if (in_buffer[0] == 0xaa && in_buffer[1] == 0x55)
+                    {
+                        TargetRecBuf(in_buffer);
+                    }
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
+            catch (Exception _Ex)
+            {
+                RobotVT.Controller.Methods.SaveExceptionLog(SK_FModel.SystemEnum.LogType.Exception, "组播数据解析异常：" + _Ex.Message + "\r\n" + _Ex.StackTrace);
+                throw new Exception("组播数据解析失败，错误信息：" + _Ex.Message);
+            }
+        }
+
 
         private void PicRecBuf(byte[] recvBuf, ref int retlen, ref List<byte> recvBuflist)
         {
@@ -142,7 +181,7 @@ namespace RobotVT.Controller
         private void TargetRecBuf(byte[] recvBuf)
         {
             recvInfo = new TargetFollowRecvInfo(recvBuf);
-
+            Event_TargetCoordinates?.Invoke(recvInfo);
         }
 
         /// <summary>
@@ -169,7 +208,8 @@ namespace RobotVT.Controller
                 }
 
                 byte[] buf = BuildTargetFollowInfo(tracking,PitchCoordinate, AzimuthCoordinate);
-                client.Send(buf, buf.Length);
+
+                udpReceiveInfo.SendTo(buf, epTargetSend);
 
                 //aa 55 00 00 00 00 fe 00 00 60 00 70 cd
                 //aa 55 00 25 00 00 fe 00 00 60 00 70 f2

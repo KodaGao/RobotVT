@@ -119,7 +119,7 @@ namespace SK_FVision.FFmpegWarper
 
     public class H264DecodeWrapper
     {
-        private const string DLLName = "LibFfmpegWrapper.dll";
+        private const string DLLName = @"ffmpeg\bin\x64\LibFfmpegWrapper.dll";
 
         [DllImport(DLLName, EntryPoint = "H264_CreateHandle", CallingConvention = CallingConvention.Cdecl)]
         private static extern long H264_CreateHandle();
