@@ -113,7 +113,7 @@ namespace RobotVT.Controller
                     {
                         PicRecBuf(in_buffer, ref retlen, ref recvBuflist);
                     }
-                    //System.Threading.Thread.Sleep(1);
+                    System.Threading.Thread.Sleep(1);
                 }
             }
             catch (Exception _Ex)
