@@ -277,6 +277,10 @@ namespace RobotVT
                     Thread.Sleep(1);
                     hiK_MainView.ShowTarget = true;
                     hiK_MainView.InitH264Decode();
+
+                    hiK_CloudControl.m_lUserID = userId;
+                    hiK_CloudControl.m_lChannel = 1;
+                    hiK_CloudControl.m_lRealHandle = realhandle;
                     break;
                 case StaticInfo.FrontView:
                 case StaticInfo.BackView:
@@ -324,6 +328,7 @@ namespace RobotVT
                         case StaticInfo.MainView:
                             hiK_MainView.InitHIKCamera();
                             hiK_MainView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
+                            hiK_MainView.SetHIKAlarm();
                             //hiK_MainView.PlayHIKScreen();
 
                             hiK_MainView.ShowTarget = true;
@@ -334,6 +339,9 @@ namespace RobotVT
                             hiK_CloudView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
                             hiK_CloudView.ShowTarget = true;
                             hiK_CloudView.InitH264Decode();
+
+                            //hiK_CloudView.PlayHIKScreen();
+                            //hiK_MainView.PlayHIKScreen(hiK_CloudView.UserID);
 
                             hiK_CloudControl.m_lUserID = hiK_CloudView.UserID;
                             hiK_CloudControl.m_lChannel = 1;

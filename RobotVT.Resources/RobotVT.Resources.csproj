@@ -63,6 +63,7 @@
     <Content Include="comparebg.png" />
     <Content Include="frontCamer.png" />
     <Content Include="greenBg.png" />
+    <Content Include="human.png" />
     <Content Include="lamp.gif" />
     <Content Include="lamp_0.png" />
     <Content Include="lamp_1.png" />

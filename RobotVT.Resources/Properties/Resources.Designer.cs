@@ -123,6 +123,16 @@ namespace RobotVT.Resources.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        public static System.Drawing.Bitmap human {
+            get {
+                object obj = ResourceManager.GetObject("human", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         public static System.Drawing.Bitmap lamp {
             get {
                 object obj = ResourceManager.GetObject("lamp", resourceCulture);

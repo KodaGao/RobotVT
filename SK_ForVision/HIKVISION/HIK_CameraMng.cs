@@ -160,9 +160,9 @@ namespace SK_FVision
                 lpPreviewInfo.dwStreamType = dwstreamType;//码流类型：0-主码流，1-子码流，2-码流3，3-码流4，以此类推
                 lpPreviewInfo.dwLinkMode = 0;//连接方式：0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP 
                 lpPreviewInfo.bBlocked = true; //0- 非阻塞取流，1- 阻塞取流
+                lpPreviewInfo.dwDisplayBufNum = 1; //播放库播放缓冲区最大缓冲帧数
                 lpPreviewInfo.byPreviewMode = 0;
                 lpPreviewInfo.byProtoType = 0;
-                lpPreviewInfo.dwDisplayBufNum = 1; //播放库显示缓冲区最大帧数
 
                 IntPtr pUser = IntPtr.Zero;
                 lpPreviewInfo.hPlayWnd = IntPtr.Zero;
