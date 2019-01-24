@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace SK_FVision
 {
@@ -22,10 +17,12 @@ namespace SK_FVision
 
             InitializeComponent();
             this.Load += new System.EventHandler(this.ViedoPlayer_Load);
+            RealPlayWnd.MouseDown += new MouseEventHandler(this.RealPlayWnd_MouseDown); 
             RealPlayWnd.MouseUp += new MouseEventHandler(this.RealPlayWnd_MouseUp);
             RealPlayWnd.MouseDoubleClick += new MouseEventHandler(this.RealPlayWnd_MouseDoubleClick);
             RealPlayWnd.MouseMove += new MouseEventHandler(this.RealPlayWnd_MouseMove);
         }
+
 
         public virtual void ViedoPlayer_Load(object sender, EventArgs e)
         {
@@ -39,6 +36,10 @@ namespace SK_FVision
 
         public virtual void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         { }
+
+        public virtual void RealPlayWnd_MouseDown(object sender, MouseEventArgs e)
+        {
+        }
 
         public bool CanPlay { set; get; } = false;
 
@@ -117,33 +118,33 @@ namespace SK_FVision
 
         private void AddImage(Image image)
         {
-            //lock (_listImage)
-            //{
-            _listImage.Enqueue(image);
-            //}
+            lock (_listImage)
+            {
+                _listImage.Enqueue(image);
+            }
         }
 
         private int ImagePoolCoount
         {
             get
             {
-                //lock (_listImage)
-                //{
-                return _listImage.Count;
-                //}
+                lock (_listImage)
+                {
+                    return _listImage.Count;
+                }
             }
         }
 
         private Image GetImage()
         {
-            //lock (_listImage)
-            //{
-            if (_listImage.Count == 0)
-                return null;
+            lock (_listImage)
+            {
+                if (_listImage.Count == 0)
+                    return null;
 
-            Image result = _listImage.Dequeue();
-            return result;
-            //}
+                Image result = _listImage.Dequeue();
+                return result;
+            }
         }
     }
 }

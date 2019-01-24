@@ -40,7 +40,7 @@
             this.RealPlayWnd.Location = new System.Drawing.Point(0, 0);
             this.RealPlayWnd.Name = "RealPlayWnd";
             this.RealPlayWnd.Size = new System.Drawing.Size(410, 208);
-            this.RealPlayWnd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.RealPlayWnd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.RealPlayWnd.TabIndex = 0;
             this.RealPlayWnd.TabStop = false;
             // 
