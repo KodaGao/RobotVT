@@ -60,7 +60,7 @@ namespace RobotVT.Controller
         }
         private void ModbusHelper_Event_DataReceived(string PortName, byte[] Order)
         {
-            //Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
+            Methods.SaveModbusLog(SK_FModel.SystemEnum.LogType.Normal, "[" + PortName + "]" + "接收：" + BitConverter.ToString(Order).Replace("-", " "));
         }
         private void ModbusHelper_Event_UpdateRealTimeData(object sender)
         {
@@ -114,6 +114,7 @@ namespace RobotVT.Controller
 
             ReturnOrder returnOrder = StaticInfo.ModbusHelper.CreateReturnOrder(ReceiveData.DeviceAddressId, ReceiveData.FunctionCode, ReceiveData.RegisterAddress, ReceiveData.Quantity, value);
             StaticInfo.ModbusHelper.SubmitOrder(returnOrder);
+
         }
 
         private void ModbusHelper_Event_ReceiveOrder(ReceiveData ReceiveData)
@@ -180,6 +181,9 @@ namespace RobotVT.Controller
                 SerialPortInfo = new SK_FModel.SerialPortInfo();
             }
             SerialPortInfo.SenderOrderInterval = StaticInfo.SenderOrderInterval;
+            SerialPortInfo.RtsEnable = true;
+            SerialPortInfo.DtrEnable = true;
+           
             StaticInfo.ModbusHelper.Init(SerialPortInfo);
         }
 
@@ -187,6 +191,17 @@ namespace RobotVT.Controller
         {
             //receiveDataInfoList = ReceiveDataInfoList;
         }
+
+        public void SendOrder()
+        {
+            SendOrder SendOrder = StaticInfo.ModbusHelper.CreateSendOrder(1, SerialPortEnum.ReadWriteType.Read, SerialPortEnum.FunctionCode.Code03, 0, 5, null);
+            StaticInfo.ModbusHelper.SubmitOrder(SendOrder);
+
+            SendOrder SendOrder1 = StaticInfo.ModbusHelper.CreateSendOrder(1, SerialPortEnum.ReadWriteType.Write, SerialPortEnum.FunctionCode.Code16, 0, 5, data);
+            StaticInfo.ModbusHelper.SubmitOrder(SendOrder);
+
+        }
+
 
     }
 

@@ -35,7 +35,6 @@
             this.label4 = new DevComponents.DotNetBar.LabelX();
             this.label3 = new DevComponents.DotNetBar.LabelX();
             this.mainWindow = new DevComponents.DotNetBar.PanelEx();
-            this.hiK_CloudControl = new SK_FVision.HIK_CloudControl();
             this.backCamera = new DevComponents.DotNetBar.PanelEx();
             this.hiK_BackView = new RobotVT.Controller.HIK_PlayView_New();
             this.leftCamera = new DevComponents.DotNetBar.PanelEx();
@@ -48,6 +47,7 @@
             this.hiK_CloudView = new RobotVT.Controller.HIK_PlayView_New();
             this.mainCamera = new DevComponents.DotNetBar.PanelEx();
             this.hiK_MainView = new RobotVT.Controller.HIK_PlayView_New();
+            this.hiK_CloudControl = new SK_FVision.HIK_CloudControl();
             this.centerMain.SuspendLayout();
             this.mainWindow2.SuspendLayout();
             this.mainWindow.SuspendLayout();
@@ -107,7 +107,6 @@
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
             // 
             // 
             // 
@@ -124,7 +123,6 @@
             // mainWindow
             // 
             this.mainWindow.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.mainWindow.Controls.Add(this.hiK_CloudControl);
             this.mainWindow.Controls.Add(this.backCamera);
             this.mainWindow.Controls.Add(this.leftCamera);
             this.mainWindow.Controls.Add(this.rightCamera);
@@ -136,14 +134,6 @@
             this.mainWindow.Name = "mainWindow";
             this.mainWindow.Size = new System.Drawing.Size(1904, 964);
             this.mainWindow.TabIndex = 1;
-            // 
-            // hiK_CloudControl
-            // 
-            this.hiK_CloudControl.BackColor = System.Drawing.Color.Transparent;
-            this.hiK_CloudControl.Location = new System.Drawing.Point(1168, 36);
-            this.hiK_CloudControl.Name = "hiK_CloudControl";
-            this.hiK_CloudControl.Size = new System.Drawing.Size(128, 128);
-            this.hiK_CloudControl.TabIndex = 22;
             // 
             // backCamera
             // 
@@ -289,6 +279,14 @@
             this.hiK_MainView.Size = new System.Drawing.Size(1056, 565);
             this.hiK_MainView.TabIndex = 0;
             // 
+            // hiK_CloudControl
+            // 
+            this.hiK_CloudControl.BackColor = System.Drawing.Color.Transparent;
+            this.hiK_CloudControl.Location = new System.Drawing.Point(1168, 36);
+            this.hiK_CloudControl.Name = "hiK_CloudControl";
+            this.hiK_CloudControl.Size = new System.Drawing.Size(128, 128);
+            this.hiK_CloudControl.TabIndex = 22;
+            // 
             // VisualTracking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -298,6 +296,7 @@
             this.Controls.Add(this.centerMain);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "VisualTracking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

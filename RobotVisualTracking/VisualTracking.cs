@@ -20,7 +20,7 @@ namespace RobotVT
             InitializeComponent();
             InitMatchInfo(); InitRobotInfo(); InitHIKCarmera();
 
-            this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
+            //this.SizeChanged += new System.EventHandler(this.VisualTracking_SizeChanged);
             this.FormClosing += new FormClosingEventHandler(this.VisualTracking_FormClosing);
             this.FormClosed += new FormClosedEventHandler(VisualTracking_FormClosed);
             this.Shown += new EventHandler(this.VisualTracking_Shown);
@@ -29,10 +29,27 @@ namespace RobotVT
             this.Icon = Properties.Resources.ZX32x32;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.WindowState = FormWindowState.Normal;
-            
+
+
+            StaticInfo.HIKAnalysis.Event_FaceSnapAlarm += HIKAnalysis_Event_FaceSnapAlarm;
+
             //X = this.Width;//赋值初始窗体宽度
             //Y = this.Height;//赋值初始窗体高度
             //setTag(this);
+        }
+
+        private void HIKAnalysis_Event_FaceSnapAlarm(HIK_AlarmInfo HIKAlarmInfo)
+        {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                //if (HIKAlarmInfo.Name != "")
+                    label3.Text = "姓名:" + HIKAlarmInfo.Name;
+
+
+                //if (HIKAlarmInfo.CertificateNumber != "")
+                label4.Text = "身份证号:" + HIKAlarmInfo.CertificateNumber;
+                //label3.Show();
+            }));
         }
 
         #region 窗体事件
@@ -331,6 +348,9 @@ namespace RobotVT
                             hiK_MainView.SetHIKAlarm();
                             //hiK_MainView.PlayHIKScreen();
 
+                            StaticInfo.HIKAnalysis.UserName = DVRUserName;
+                            StaticInfo.HIKAnalysis.Password = DVRPassword;
+
                             hiK_MainView.ShowTarget = true;
                             hiK_MainView.InitH264Decode();
                             break;
@@ -339,9 +359,6 @@ namespace RobotVT
                             hiK_CloudView.LoginHIKCamera(DVRIPAddress, DVRPortNumber, DVRUserName, DVRPassword);
                             hiK_CloudView.ShowTarget = true;
                             hiK_CloudView.InitH264Decode();
-
-                            //hiK_CloudView.PlayHIKScreen();
-                            //hiK_MainView.PlayHIKScreen(hiK_CloudView.UserID);
 
                             hiK_CloudControl.m_lUserID = hiK_CloudView.UserID;
                             hiK_CloudControl.m_lChannel = 1;

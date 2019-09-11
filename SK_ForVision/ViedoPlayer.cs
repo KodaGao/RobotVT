@@ -41,6 +41,83 @@ namespace SK_FVision
         {
         }
 
+        /// <summary>
+        /// 焦距变大
+        /// </summary>
+        /// <param name="lUserID"></param>
+        /// <param name="lChannel"></param>
+        /// <param name="bAuto"></param>
+        /// <param name="lRealHandle">摄像机句柄</param>
+        /// <param name="dwstop">0，开始；1，停止</param>
+        public void PTZControl_ZoomIn(int lUserID, int lChannel, bool bAuto, int lRealHandle, uint dwstop)
+        {
+            if (bAuto)
+            {
+                HIK_NetSDK.NET_DVR_PTZControl(lRealHandle, HIK_NetSDK.ZOOM_IN, dwstop);
+            }
+            else
+            {
+                HIK_NetSDK.NET_DVR_PTZControl_Other(lUserID, lChannel, HIK_NetSDK.ZOOM_IN, dwstop);
+            }
+        }
+        /// <summary>
+        /// 焦距变小
+        /// </summary>
+        /// <param name="lUserID"></param>
+        /// <param name="lChannel"></param>
+        /// <param name="bAuto"></param>
+        /// <param name="lRealHandle">摄像机句柄</param>
+        /// <param name="dwstop">0，开始；1，停止</param>
+        public void PTZControl_ZoomOut(int lUserID, int lChannel, bool bAuto, int lRealHandle, uint dwstop)
+        {
+            if (bAuto)
+            {
+                HIK_NetSDK.NET_DVR_PTZControl(lRealHandle, HIK_NetSDK.ZOOM_OUT, dwstop);
+            }
+            else
+            {
+                HIK_NetSDK.NET_DVR_PTZControl_Other(lUserID, lChannel, HIK_NetSDK.ZOOM_OUT, dwstop);
+            }
+        }
+        /// <summary>
+        /// 焦距前调
+        /// </summary>
+        /// <param name="lUserID"></param>
+        /// <param name="lChannel"></param>
+        /// <param name="bAuto"></param>
+        /// <param name="lRealHandle">摄像机句柄</param>
+        /// <param name="dwstop">0，开始；1，停止</param>
+        public void PTZControl_FocusNear(int lUserID, int lChannel, bool bAuto, int lRealHandle, uint dwstop)
+        {
+            if (bAuto)
+            {
+                HIK_NetSDK.NET_DVR_PTZControl(lRealHandle, HIK_NetSDK.FOCUS_NEAR, dwstop);
+            }
+            else
+            {
+                HIK_NetSDK.NET_DVR_PTZControl_Other(lUserID, lChannel, HIK_NetSDK.FOCUS_NEAR, dwstop);
+            }
+        }
+        /// <summary>
+        /// 焦距后调
+        /// </summary>
+        /// <param name="lUserID"></param>
+        /// <param name="lChannel"></param>
+        /// <param name="bAuto"></param>
+        /// <param name="lRealHandle">摄像机句柄</param>
+        /// <param name="dwstop">0，开始；1，停止</param>
+        public void PTZControl_FocusFar(int lUserID, int lChannel, bool bAuto, int lRealHandle, uint dwstop)
+        {
+            if (bAuto)
+            {
+                HIK_NetSDK.NET_DVR_PTZControl(lRealHandle, HIK_NetSDK.FOCUS_FAR, dwstop);
+            }
+            else
+            {
+                HIK_NetSDK.NET_DVR_PTZControl_Other(lUserID, lChannel, HIK_NetSDK.FOCUS_FAR, dwstop);
+            }
+        }
+
         public bool CanPlay { set; get; } = false;
 
 

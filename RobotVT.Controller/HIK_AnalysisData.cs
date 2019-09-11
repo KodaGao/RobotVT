@@ -20,11 +20,25 @@ namespace RobotVT.Controller
         /// 人脸抓拍报警信号处理
         /// </summary>
         /// <param name="FaceSnapAlarm"></param>
-        internal delegate void FaceSnapAlarmEventHandler(HIK_AlarmInfo HIKAlarmInfo);
+        public delegate void FaceSnapAlarmEventHandler(HIK_AlarmInfo HIKAlarmInfo);
         /// <summary>
         /// 接收数据事件事件
         /// </summary>
-        internal event FaceSnapAlarmEventHandler Event_FaceSnapAlarm;
+        public event FaceSnapAlarmEventHandler Event_FaceSnapAlarm;
+
+        /// <summary>
+        /// 报警信号处理
+        /// </summary>
+        /// <param name="FaceSnapAlarm"></param>
+        internal delegate void AlarmEventHandler(string message);
+        /// <summary>
+        /// 接收数据事件事件
+        /// </summary>
+        internal event AlarmEventHandler Event_Alarm;
+
+        public string UserName { get; set; }
+        public string Password { get; set; }
+
 
         public string AbsTimetoDatetime(uint _time_)
         {
@@ -74,11 +88,12 @@ namespace RobotVT.Controller
                     break;
                 case SK_FVision.HIK_NetSDK.COMM_SNAP_MATCH_ALARM:
                     ste = "人脸比对结果信息 " + lCommand.ToString();
-                    ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
+                        ProcessCommAlarm_SNAPMatch(ref pAlarmer, pAlarmInfo, dwBufLen, pUser);
                     break;
                 default:
                     break;
             }
+            Event_Alarm?.Invoke(ste);
         }
         
         private void ProcessCommAlarm_FaceDetect(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
@@ -137,7 +152,7 @@ namespace RobotVT.Controller
             //人脸抓拍
             if (struAlarm.dwFacePicLen > 0)
             {
-                HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
+                //HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
 
                 string devIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString().Replace('.', '_');
                 string time = AbsTimetoDatetime(struAlarm.dwAbsTime).Replace(':', '~');
@@ -147,28 +162,27 @@ namespace RobotVT.Controller
                 int iBackgroudLen = (int)struAlarm.dwBackgroundPicLen;
                 byte[] byBackgroud = new byte[iBackgroudLen];
                 Marshal.Copy(struAlarm.pBuffer2, byBackgroud, 0, iBackgroudLen);
-                //SK_FCommon.DirFile.CreateFile(strname, byBackgroud, iBackgroudLen);
+                SK_FCommon.DirFile.CreateFile(strname, byBackgroud, iBackgroudLen);
 
-                string strFace = devIP + "@" + time + "@face.jpg";
-                string strnameFace = StaticInfo.CapturePath + strFace;
-                int iFaceLen = (int)struAlarm.dwFacePicLen;
-                byte[] byFace = new byte[iFaceLen];
-                Marshal.Copy(struAlarm.pBuffer1, byFace, 0, iFaceLen);
+                //string strFace = devIP + "@" + time + "@face.jpg";
+                //string strnameFace = StaticInfo.CapturePath + strFace;
+                //int iFaceLen = (int)struAlarm.dwFacePicLen;
+                //byte[] byFace = new byte[iFaceLen];
+                //Marshal.Copy(struAlarm.pBuffer1, byFace, 0, iFaceLen);
                 //SK_FCommon.DirFile.CreateFile(strnameFace, byFace, iFaceLen);
 
-                System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
-                iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
-                System.IO.MemoryStream msface = new System.IO.MemoryStream(byFace);
-                iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
-                iK_AlarmInfo.FaceScore = struAlarm.dwFaceScore;
-                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.dwAbsTime);
-                iK_AlarmInfo.DevIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString();
+                //System.IO.MemoryStream ms = new System.IO.MemoryStream(byBackgroud);
+                //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
+                //System.IO.MemoryStream msface = new System.IO.MemoryStream(byFace);
+                //iK_AlarmInfo.FacePic = System.Drawing.Image.FromStream(msface);
+                //iK_AlarmInfo.FaceScore = struAlarm.dwFaceScore;
+                //iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.dwAbsTime);
+                //iK_AlarmInfo.DevIP = struAlarm.struDevInfo.struDevIP.sIpV4.ToString();
 
-                AlarmInfoListQueue(iK_AlarmInfo);
-                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                //AlarmInfoListQueue(iK_AlarmInfo);
+                //Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
             }
         }
-
 
         private void ProcessCommAlarm_SNAPMatch(ref SK_FVision.HIK_NetSDK.NET_DVR_ALARMER pAlarmer, IntPtr pAlarmInfo, uint dwBufLen, IntPtr pUser)
         {
@@ -181,51 +195,116 @@ namespace RobotVT.Controller
 
             struFaceMatchAlarm = (SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM)Marshal.PtrToStructure(pAlarmInfo, typeof(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM));
 
-            if (struFaceMatchAlarm.fSimilarity > 0 && struFaceMatchAlarm.struSnapInfo.pBuffer1 != null)
+            if (struFaceMatchAlarm.fSimilarity > 0)
             {
                 Facesnap_MathchAsync(struFaceMatchAlarm);
             }
 
             if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.struBlackListInfo.byType == 1)
             {
-                ////陌生人
-                //Facesnap_MathchAsync(struFaceMatchAlarm);
+                //陌生人
+                Facesnap_MathchAsync(struFaceMatchAlarm);
             }
-            if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.struBlackListInfo.byType == 1)
+            if (struFaceMatchAlarm.fSimilarity == 0 && struFaceMatchAlarm.struBlackListInfo.struBlackListInfo.byType == 2)
             {
-                ////人脸比对失败
-                //Facesnap_MathchAsync(struFaceMatchAlarm);
+                //人脸比对失败
+                Facesnap_MathchAsync(struFaceMatchAlarm);
             }
+        }
+
+
+        public Image GetRequest(string Url, string user, string pwd, Encoding MsgEncode)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(Url))
+                {
+                    throw new ArgumentNullException("Url");
+                }
+                if (MsgEncode == null)
+                {
+                    throw new ArgumentNullException("MsgEncoding");
+                }
+
+                string username = user;
+                string password = pwd;
+                string usernamePassword = username + ":" + password;
+                CredentialCache mycache = new CredentialCache();
+                    mycache.Add(new Uri(Url), "Digest", new NetworkCredential(username, password));
+
+                HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(new Uri(Url));
+                Request.Credentials = mycache;
+                Request.Headers.Add("Authorization", "Digest" + Convert.ToBase64String(MsgEncode.GetBytes(usernamePassword)));
+
+                Request.Method = "GET";
+
+                HttpWebResponse response;
+                try
+                {
+                    response = (HttpWebResponse)Request.GetResponse();
+                }
+                catch (WebException ex)
+                {
+                    response = (HttpWebResponse)ex.Response;
+                }
+
+                int ret = 0;
+                ret = (int)response.StatusCode;
+
+                Stream stream = response.GetResponseStream();
+                Image im = System.Drawing.Image.FromStream(stream);
+                stream.Close();
+                response.Close();
+                return im;
+            }
+            catch (Exception ex)
+            {
+            }
+            return null;
         }
 
         private void Facesnap_MathchAsync(SK_FVision.HIK_NetSDK.NET_VCA_FACESNAP_MATCH_ALARM struAlarm)
         {
             try
             {
-                //人脸抓拍
-                if (struAlarm.struSnapInfo.dwSnapFacePicLen > 0)
+                HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
+                iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
+                string sip = System.Text.Encoding.Default.GetString(struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4);
+                iK_AlarmInfo.DevIP = sip;
+
+
+                iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
+                iK_AlarmInfo.FaceType = struAlarm.struBlackListInfo.struBlackListInfo.byType;
+                iK_AlarmInfo.Name = System.Text.Encoding.Default.GetString(struAlarm.struBlackListInfo.struBlackListInfo.struAttribute.byName).Replace("\0","");
+                iK_AlarmInfo.CertificateNumber = System.Text.Encoding.Default.GetString(struAlarm.struBlackListInfo.struBlackListInfo.struAttribute.byCertificateNumber).Replace("\0", "");
+                string urlstr = "";
+                //保存抓拍人脸子图图片数据
+                if ((struAlarm.struSnapInfo.dwSnapFacePicLen != 0) && (struAlarm.struSnapInfo.pBuffer1 != IntPtr.Zero))
                 {
-                //    HIK_AlarmInfo iK_AlarmInfo = new HIK_AlarmInfo();
-
-                //    int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
-                //    byte[] bySnap = new byte[iSnapLen];
-                //    Marshal.Copy(struAlarm.pSnapPicBuffer, bySnap, 0, iSnapLen);
-                //    iK_AlarmInfo.FacePic = Image.FromStream(new System.IO.MemoryStream(bySnap)); ;
-
-                //    //int iModelLen = (int)struAlarm.dwModelDataLen;
-                //    //byte[] byModel = new byte[iModelLen];
-                //    //Marshal.Copy(struAlarm.pModelDataBuffer, byModel, 0, iModelLen);
-                //    //System.IO.MemoryStream ms = new System.IO.MemoryStream(byModel);
-                //    //iK_AlarmInfo.BackgroudPic = System.Drawing.Image.FromStream(ms);
-
-                //    iK_AlarmInfo.Abstime = AbsTimetoDatetime(struAlarm.struSnapInfo.dwAbsTime);
-                //    iK_AlarmInfo.DevIP = struAlarm.struSnapInfo.struDevInfo.struDevIP.sIpV4.ToString();
-                //    iK_AlarmInfo.FaceScore = (uint)(struAlarm.fSimilarity * 100);
-                //    iK_AlarmInfo.FaceType = 1;
-
-                //    AlarmInfoListQueue(iK_AlarmInfo);
-                //    Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+                    int iSnapLen = (int)struAlarm.struSnapInfo.dwSnapFacePicLen;
+                    byte[] bySnap = new byte[iSnapLen];
+                    Marshal.Copy(struAlarm.struSnapInfo.pBuffer1, bySnap, 0, iSnapLen);
+                    urlstr = System.Text.Encoding.Default.GetString(bySnap);
+                    Image m = GetRequest(urlstr, UserName, Password, Encoding.Default);
+                    if (m != null)
+                        iK_AlarmInfo.FacePic = m;
                 }
+
+                //保存比对结果人脸库人脸图片数据
+                if ((struAlarm.struBlackListInfo.dwBlackListPicLen != 0) && (struAlarm.struBlackListInfo.pBuffer1 != IntPtr.Zero))
+                {
+                    int iLen = (int)struAlarm.struBlackListInfo.dwBlackListPicLen;
+                    byte[] by = new byte[iLen];
+                    Marshal.Copy(struAlarm.struBlackListInfo.pBuffer1, by, 0, iLen);
+                    urlstr = System.Text.Encoding.Default.GetString(by);
+                    Image m = GetRequest(urlstr, UserName, Password, Encoding.Default);
+                    if (m != null)
+                        iK_AlarmInfo.BackgroudPic = m;
+                }
+                AlarmInfoListQueue(iK_AlarmInfo);
+                Event_FaceSnapAlarm?.Invoke(iK_AlarmInfo);
+
             }
             catch (Exception _Ex)
             {
@@ -264,79 +343,7 @@ namespace RobotVT.Controller
                 throw new Exception("黑名单图片转换失败，错误信息：" + _Ex.Message);
             }
         }
-
-        private void PostISAPI()
-        {
-            ////POST / ISAPI / Intelligent / analysisImage / face
-            //string strURL = "http://localhost/WinformSubmit.php";
-            //System.Net.HttpWebRequest request;
-            //request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(strURL);
-            ////Post请求方式
-            //request.Method = "POST";
-            //// 内容类型
-            //request.ContentType = "application/x-www-form-urlencoded";
-
-            //byte[] payload;
-
-            ////设置请求的 ContentLength 
-            //request.ContentLength = payload.Length;
-            ////获得请 求流
-            //System.IO.Stream writer = request.GetRequestStream();
-            ////将请求参数写入流
-            //writer.Write(payload, 0, payload.Length);
-            //// 关闭请求流
-            //writer.Close();
-            //System.Net.HttpWebResponse response;
-            //// 获得响应流
-            //response = (System.Net.HttpWebResponse)request.GetResponse();
-            //System.IO.StreamReader myreader = new System.IO.StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            //string responseText = myreader.ReadToEnd();
-            //myreader.Close();
-
-        }
-
-
-        private uint m_dwAbilityType = 0;
-        private string xmlInput;
-        private uint iLastErr = 0;
-        public Int32 m_lUserID = -1;
-        private void GetDeviceAbility()
-        {
-            IntPtr pInBuf;
-            Int32 nSize;
-            if (xmlInput == null)
-            {
-                pInBuf = IntPtr.Zero;
-                nSize = 0;
-            }
-            else
-            {
-                nSize = xmlInput.Length;
-                pInBuf = Marshal.AllocHGlobal(nSize);
-                pInBuf = Marshal.StringToHGlobalAnsi(xmlInput);
-            }
-            DeviceAbility(12);
-
-            int XML_ABILITY_OUT_LEN = 3 * 1024 * 1024;
-            IntPtr pOutBuf = Marshal.AllocHGlobal(XML_ABILITY_OUT_LEN);
-
-            if (!SK_FVision.HIK_NetSDK.NET_DVR_GetDeviceAbility(m_lUserID, m_dwAbilityType, pInBuf, (uint)nSize, pOutBuf, (uint)XML_ABILITY_OUT_LEN))
-            {
-                iLastErr = SK_FVision.HIK_NetSDK.NET_DVR_GetLastError();
-                string strErr = "NET_DVR_GetDeviceAbility failed, error code= " + iLastErr + "\r\n" + GetErrorDescription(iLastErr);
-                //获取设备能力集失败，输出错误号 Failed to get the capability set and output the error code
-                //textBoxCapability.Text = strErr;
-            }
-            else
-            {
-                string strOutBuf = Marshal.PtrToStringAnsi(pOutBuf, XML_ABILITY_OUT_LEN);
-                strOutBuf = strOutBuf.Replace(">\n<", ">\r\n<");
-                //textBoxCapability.Text = strOutBuf;
-            }
-            Marshal.FreeHGlobal(pInBuf);
-            Marshal.FreeHGlobal(pOutBuf);
-
-        }
+        
         private string GetErrorDescription(uint iErrCode)
         {
             string strDescription = "";
@@ -373,66 +380,6 @@ namespace RobotVT.Controller
                     break;
             }
             return strDescription;
-        }
-
-        private void DeviceAbility(int index)
-        {
-            switch (index)
-            {
-                case 0:	//软硬件能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_SOFTHARDWARE_ABILITY;
-                    break;
-                case 1:	//Wifi能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_NETWORK_ABILITY;
-                    break;
-                case 2: //编码能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ENCODE_ALL_ABILITY_V20;
-                    xmlInput = "<AudioVideoCompressInfo><AudioChannelNumber>1</AudioChannelNumber><VoiceTalkChannelNumber>1</VoiceTalkChannelNumber><VideoChannelNumber>1</VideoChannelNumber></AudioVideoCompressInfo>";
-                    break;
-                case 3:	//设备前端参数能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.IPC_FRONT_PARAMETER_V20;
-                    xmlInput = "<CAMERAPARA><ChannelNumber>1</ChannelNumber></CAMERAPARA>";
-                    break;
-                case 4:	//Raid能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_RAID_ABILITY;
-                    break;
-                case 5:	//设备报警能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ALARM_ABILITY;
-                    xmlInput = "<AlarmAbility version='2.0'><channelID>1</channelID></AlarmAbility>";
-                    break;
-                case 6:	//设备数字通道能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_DYNCHAN_ABILITY;
-                    xmlInput = "<DynChannelAbility version='2.0'><channelNO>1</channelNO></DynChannelAbility>";
-                    break;
-                case 7: //设备用户管理参数能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_USER_ABILITY;
-                    xmlInput = "<UserAbility version='2.0'/>";
-                    break;
-                case 8: //设备网络应用参数能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_NETAPP_ABILITY;
-                    xmlInput = "<NetAppAbility version='2.0'></NetAppAbility>";
-                    break;
-                case 9: //设备图像参数能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_VIDEOPIC_ABILITY;
-                    xmlInput = "<VideoPicAbility version='2.0'><channelNO>1</channelNO></VideoPicAbility>";
-                    break;
-                case 10: //设备JPEG抓图能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_JPEG_CAP_ABILITY;
-                    xmlInput = "<JpegCaptureAbility version='2.0'><channelNO>1</channelNO></JpegCaptureAbility>";
-                    break;
-                case 11: //设备RS232和RS485串口能力
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_SERIAL_ABILITY;
-                    xmlInput = "<SerialAbility version='2.0'/>";
-                    break;
-                case 12: //报警事件处理能力集
-                    m_dwAbilityType = SK_FVision.HIK_NetSDK.DEVICE_ABILITY_INFO;
-                    xmlInput = "<EventAbility version='2.0'><channelNO>1</channelNO></EventAbility>";
-                    break;
-                default:
-                    m_dwAbilityType = 0;
-                    break;
-            }
-           // 能力集类型：DEVICE_ABILITY_INFO，能力集：EventAbility，节点：< FaceDetection >）
         }
 
     }

@@ -66,7 +66,7 @@ namespace RobotVT.Controller
         /// <summary>
         /// 指令发送间隔 单位：ms
         /// </summary>
-        public static int SenderOrderInterval = 500;
+        public static int SenderOrderInterval = 10;
 
         /// <summary>
         /// 海康数据解析

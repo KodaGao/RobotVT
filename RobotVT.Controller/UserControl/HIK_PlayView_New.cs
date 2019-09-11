@@ -64,6 +64,7 @@ namespace RobotVT.Controller
 
             PlayModel = "";
             ShowTarget = false;
+
         }
 
         private void HIK_PlayView_New_Disposed(object sender, EventArgs e)
@@ -80,6 +81,7 @@ namespace RobotVT.Controller
             HIK_CameraMng = new SK_FVision.HIK_CameraMng();
             HIK_CameraMng.Event_DebugMessage += HIK_CameraMng_Event_DebugMessage;
             HIK_CameraMng.Event_RuningMessage += HIK_CameraMng_Event_RuningMessage;
+
         }
         public void InitH264Decode()
         {
@@ -92,45 +94,54 @@ namespace RobotVT.Controller
             StopH264Thread();
         }
 
-
-
         public override void RealPlayWnd_MouseUp(object sender, MouseEventArgs e)
         {
-            //右键进行设备登陆设置
-            if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() != StaticInfo.MainView)
-            {
-                Model.S_D_CameraSet _cameraSet = new Controller.DataAccess().GetCameraSet(PlayModel.ToUpper());
-                if (_cameraSet != null)
-                {
-                    hIK_CameraSet._CameraSet = _cameraSet;
-                }
-                hIK_CameraSet.PlayModel = PlayModel.ToUpper();
-                hIK_CameraSet.ShowDialog();
-            }
+            ////主窗口右键进行设备登陆设置
+            //if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() != StaticInfo.MainView)
+            //{
+            //    Model.S_D_CameraSet _cameraSet = new Controller.DataAccess().GetCameraSet(PlayModel.ToUpper());
+            //    if (_cameraSet != null)
+            //    {
+            //        hIK_CameraSet._CameraSet = _cameraSet;
+            //    }
+            //    hIK_CameraSet.PlayModel = PlayModel.ToUpper();
+            //    hIK_CameraSet.ShowDialog();
+            //}
 
-            //右键进行设备登陆设置
+            //主窗口右键取消目标跟踪
             if (e.Button == MouseButtons.Right && this.PlayModel.ToLower() == StaticInfo.MainView)
             {
                 Point _mousePoint = e.Location;
                 base.GetPictureSize();
-                //GetHIKSize();
-                StaticInfo.TargetFollow.SendingCoordinates(1, pWidth, pHeight, _mousePoint);
+                StaticInfo.TargetFollow.SendingCoordinates(1, RealPlayWnd.Width, RealPlayWnd.Height, _mousePoint);
             }
 
             //主窗口左键单击目标跟踪
-            if (e.Button == MouseButtons.Left && this.PlayModel.ToLower() == StaticInfo.MainView)
+            if (!gbMove && e.Button == MouseButtons.Left && this.PlayModel.ToLower() == StaticInfo.MainView)
             {
                 Point _mousePoint = e.Location;
                 base.GetPictureSize();
                 //GetHIKSize();
                 //_mousePoint = new Point(0, pHeight / 2);
-                StaticInfo.TargetFollow.SendingCoordinates(0, pWidth, pHeight, _mousePoint);
+
+                //StaticInfo.TargetFollow.SendingCoordinates(0, pWidth, pHeight, _mousePoint);
+                StaticInfo.TargetFollow.SendingCoordinates(0, RealPlayWnd.Width, RealPlayWnd.Height, _mousePoint);
+            }
+
+            if (gbMove && e.Button == MouseButtons.Left && this.PlayModel.ToLower() == StaticInfo.MainView)
+            {
+                PTZControl_FocusFar(0, 0, true, RealHandle, 1);
+                PTZControl_FocusNear(0, 0, true, RealHandle, 1);
+                PTZControl_ZoomOut(0, 0, true, RealHandle, 1);
+                PTZControl_ZoomIn(0, 0, true, RealHandle, 1);
+                gbMove = false;
             }
         }
 
         public override void RealPlayWnd_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            //双击取消目标跟踪
+            //主窗口双击进行超脑设备登陆设置
+            //其他窗口进行切换
             if (this.PlayModel.ToLower() == StaticInfo.MainView)
             {
                 Model.S_D_CameraSet _cameraSet = new Controller.DataAccess().GetCameraSet(PlayModel.ToUpper());
@@ -145,7 +156,49 @@ namespace RobotVT.Controller
             {
                 Event_PlayViewMouseDoubleClick?.Invoke(PlayModel, HIK_CameraMng.UserID, HIK_CameraMng.RealHandle);
             }
-            //base.RealPlayWnd_MouseDoubleClick(sender, e);
+        }
+
+        bool gbMove = false;
+        Point _LastPoint = new Point(0, 0);
+
+        public override void RealPlayWnd_MouseDown(object sender, MouseEventArgs e)
+        {
+            //主窗口左键记录起始位置
+            if (e.Button == MouseButtons.Left && gbMove == false && this.PlayModel.ToLower() == StaticInfo.MainView)
+            {
+                _LastPoint = e.Location;
+            }
+        }
+
+        public override void RealPlayWnd_MouseMove(object sender, MouseEventArgs e)
+        {
+            //判断鼠标移动方向，进行摄像头缩放控制
+            //松开鼠标后停止缩放
+            if (this.PlayModel.ToLower() == StaticInfo.MainView && gbMove == false)
+            {
+                gbMove = true;
+                NotifyMouseMove(e.Location);
+            }
+        }
+        private void NotifyMouseMove(Point newPoint)
+        {
+            if (newPoint.X > _LastPoint.X)
+            {
+                PTZControl_FocusFar(0, 0, true, RealHandle, 0);
+            }
+            else
+            {
+               PTZControl_FocusNear(0, 0, true, RealHandle, 0);
+            }
+
+            if (newPoint.Y > _LastPoint.Y)
+            {
+                PTZControl_ZoomOut(0, 0, true, RealHandle, 0);
+            }
+            else
+            {
+                PTZControl_ZoomIn(0, 0, true, RealHandle, 0);
+            }
         }
 
         private void HIK_CameraSet_Event_SetFinish()

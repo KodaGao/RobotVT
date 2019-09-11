@@ -39,15 +39,22 @@ namespace RobotVT.Controller
             {
                 pictureA.Image = AlarmInfo.FacePic;
                 pictureB.Image = AlarmInfo.BackgroudPic;
-                if (AlarmInfo.FaceType == 1)
+                if (AlarmInfo.FaceScore >0)
                 { 
                     lbXCompare.Text = "相似度 " + AlarmInfo.FaceScore;
                     lbXCompare.ForeColor = Color.Green;
                 }
-                if (AlarmInfo.FaceType == 0)
+                if (AlarmInfo.FaceScore == 0 && AlarmInfo.FaceType == 1)
                 { 
                     lbXCompare.Text = "陌生人";
                     lbXCompare.ForeColor = Color.Red;
+                    pictureB.Image = RobotVT.Resources.Properties.Resources.human;
+                }
+                if (AlarmInfo.FaceScore == 0 && AlarmInfo.FaceType == 2)
+                {
+                    lbXCompare.Text = "比对失败";
+                    lbXCompare.ForeColor = Color.Red;
+                    pictureB.Image = RobotVT.Resources.Properties.Resources.human;
                 }
                 lbXAbstime.Text = AlarmInfo.Abstime;
                 lbXDevInfo.Text = AlarmInfo.DevIP;

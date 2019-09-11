@@ -120,7 +120,6 @@ namespace SK_FModbus
                 {
                     case 03:
                     case 04:
-
                         #region 读
 
                         _Result = new byte[8];
@@ -139,14 +138,12 @@ namespace SK_FModbus
                         _Result[7] = _CRC16Byte[1];
 
                         #endregion 读
-
                         break;
 
                     case 05:
                     case 06:
                     case 15:
                     case 16:
-
                         _Result = new byte[8];
                         _Result[0] = AddressId;
                         _Result[1] = FunctionCode;
@@ -174,6 +171,7 @@ namespace SK_FModbus
         {
             try
             {
+                Thread.Sleep(20);
                 int _DataLen = SerialPortMng.BytesToRead;
                 if (_DataLen > 0)
                 {

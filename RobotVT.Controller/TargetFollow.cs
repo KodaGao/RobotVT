@@ -113,7 +113,7 @@ namespace RobotVT.Controller
                     {
                         PicRecBuf(in_buffer, ref retlen, ref recvBuflist);
                     }
-                    System.Threading.Thread.Sleep(1);
+                    //System.Threading.Thread.Sleep(1);
                 }
             }
             catch (Exception _Ex)
@@ -135,7 +135,7 @@ namespace RobotVT.Controller
                     {
                         TargetRecBuf(in_buffer);
                     }
-                    System.Threading.Thread.Sleep(10);
+                    System.Threading.Thread.Sleep(1);
                 }
             }
             catch (Exception _Ex)
@@ -146,6 +146,7 @@ namespace RobotVT.Controller
         }
 
 
+        //FileStream fs = new FileStream(Directory.GetCurrentDirectory() + "\\123.h264", FileMode.Create);
         private void PicRecBuf(byte[] recvBuf, ref int retlen, ref List<byte> recvBuflist)
         {
             byte[] packethead = new byte[8];
@@ -168,6 +169,10 @@ namespace RobotVT.Controller
                 Array.Copy(recvBuf, 8, packetContect, 0, packetContect.Length);
                 retlen += iPacketLength;
                 recvBuflist.AddRange(packetContect);
+
+                ////开始写入
+                //fs.Write(recvBuflist.ToArray(), 0, recvBuflist.Count);
+
 
                 if (retlen == recvBuflist.Count)
                 {
@@ -203,8 +208,8 @@ namespace RobotVT.Controller
                     int centerX = imageWidth / 2;
                     int centerY = imageHeight / 2;
 
-                    AzimuthCoordinate = (short)((float)(MouseLocation.X  - centerX) / imageWidth * 1024 - 240);
-                    PitchCoordinate = (short)((float)(centerY - MouseLocation.Y) / imageHeight * 1024 - 20);
+                    AzimuthCoordinate = (short)((float)(MouseLocation.X - centerX) / imageWidth * 1080);
+                    PitchCoordinate = (short)((float)(centerY - MouseLocation.Y) / imageHeight * 1080);
                 }
 
                 byte[] buf = BuildTargetFollowInfo(tracking,PitchCoordinate, AzimuthCoordinate);
@@ -241,6 +246,9 @@ namespace RobotVT.Controller
                     break;
                 case 1:
                     TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.Cancel;
+                    break;
+                case 2:
+                    TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.SDI;
                     break;
                 default:
                     TargetFollowInfo.Command = TargetFollowEnum.TargetCommand.Check;

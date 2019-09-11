@@ -72,7 +72,7 @@ namespace RobotVT.Controller.SerialPortMethods
             ModbusMng.Init(serialPortInfo);
             ModbusMng.CRC16CodeCheckType = SK_FModel.SerialPortEnum.CRC16CodeCheckType.CRCTable;
             ModbusMng.SenderOrderInterval = serialPortInfo.SenderOrderInterval;
-    }
+        }
 
 
         /// <summary>
@@ -325,6 +325,7 @@ namespace RobotVT.Controller.SerialPortMethods
                 throw new Exception("仪器未连接！");
             try
             {
+                ModbusMng.ClearSendOrder();
                 byte[] _OrderItem = CreateOrder(SendOrder.DeviceAddressId, SendOrder.RegisterAddress, SendOrder.ReadWriteType, SendOrder.FunctionCode, SendOrder.RegisterNum, SendOrder.value == null ? new byte[] { } : SendOrder.value.ToArray());
                 ModbusMng.AddSendOrder(_OrderItem);
             }
@@ -339,8 +340,11 @@ namespace RobotVT.Controller.SerialPortMethods
                 throw new Exception("仪器未连接！");
             try
             {
+                ModbusMng.ClearSendOrder();
                 byte[] _OrderItem = CreateReturnOrder(SendOrder.DeviceAddressId, SendOrder.RegisterAddressN, SendOrder.FunctionCode, SendOrder.RegisterNum, SendOrder.value == null ? new byte[] { } : SendOrder.value.ToArray());
                 ModbusMng.AddSendOrder(_OrderItem);
+                //ModbusMng.write(_OrderItem);
+                Thread.Sleep(1);
             }
             catch (Exception ex)
             {
@@ -430,7 +434,8 @@ namespace RobotVT.Controller.SerialPortMethods
                                         _ReceiveData.DataItem = new byte[_ByteLen];
                                         Array.Copy(_DataItem, 0, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
 
-                                        Event_SendOrder?.Invoke(_ReceiveData);
+                                        Event_UpdateRealTimeData?.Invoke(_ReceiveData);
+                                        //Event_SendOrder?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -443,8 +448,8 @@ namespace RobotVT.Controller.SerialPortMethods
                                         _ReceiveData.DataItem = new byte[_ByteLen];
                                         Array.Copy(_DataItem, 7, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
 
-                                        Event_UpdateRealTimeData?.Invoke(_ReceiveData);
-                                        Event_SendOrder?.Invoke(_ReceiveData);
+                                        //Event_UpdateRealTimeData?.Invoke(_ReceiveData);
+                                        //Event_SendOrder?.Invoke(_ReceiveData);
                                     }
                                     else
                                         throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
@@ -452,6 +457,7 @@ namespace RobotVT.Controller.SerialPortMethods
                             }
                         }
                     }
+                    Thread.Sleep(1);
                 }
                 catch (Exception ex)
                 {
@@ -469,6 +475,33 @@ namespace RobotVT.Controller.SerialPortMethods
 
         private void ModbusMng_Event_DataReceived(string PortName, byte[] Order)
         {
+            SK_FModel.ReceiveData _ReceiveData = new SK_FModel.ReceiveData();
+            _ReceiveData.DeviceAddressId = Order[0];
+            _ReceiveData.FunctionCode = (SK_FModel.SerialPortEnum.FunctionCode)Order[1];
+            _ReceiveData.Quantity = Order[2];
+
+            switch (_ReceiveData.FunctionCode)
+            {
+                case SK_FModel.SerialPortEnum.FunctionCode.Code03:
+                    _ReceiveData.DataItem = new byte[_ReceiveData.Quantity];
+                    Array.Copy(Order, 3, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
+
+                    Event_UpdateRealTimeData?.Invoke(_ReceiveData);
+                    break;
+                case SK_FModel.SerialPortEnum.FunctionCode.Code16:
+                    //_ByteLen = _DataItem[6];
+                    //if (_DataItem.Length == _ByteLen + 9)
+                    //{
+                    //    _ReceiveData.DataItem = new byte[_ByteLen];
+                    //    Array.Copy(_DataItem, 7, _ReceiveData.DataItem, 0, _ReceiveData.DataItem.Length);
+
+                    //    //Event_UpdateRealTimeData?.Invoke(_ReceiveData);
+                    //    //Event_SendOrder?.Invoke(_ReceiveData);
+                    //}
+                    //else
+                    //    throw new Exception("解析数据失败，错误信息：数据长度不正确！" + "\r\n" + BitConverter.ToString(_DataItem).Replace("-", " "));
+                    break;
+            }
             Event_DataReceived?.Invoke(PortName,Order);
         }
 
